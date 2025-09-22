@@ -1,0 +1,6 @@
+.title {
+    font-family: var(--font-family);
+    color:black;
+    margin-top: 1rem;
+    font-weight: bold;
+}

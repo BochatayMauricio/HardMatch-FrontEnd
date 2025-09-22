@@ -1,0 +1,32 @@
+footer{
+    background: var(--buttons-primary-color);
+}
+.footer-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    font-family: var(--font-family);
+}
+
+.footer-content p{
+    color: var(--text-color);
+    margin: 0.5rem 0;
+}
+
+.social-icons {
+    display: flex;
+    gap: 2rem;
+}
+
+.social-icons a {
+    color: var(--text-color); /* Color blanco por defecto */
+    font-size: 20px; /* Tamaño del icono */
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.social-icons a:hover {
+    color: var(--buttons-secondary-color); /* Color al hacer hover */
+}

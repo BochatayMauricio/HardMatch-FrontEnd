@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+/* You can add global styles to this file, and also import other style files */
+:root{
+    --primary-color:#7C3AED;
+    --text-color:#FFFFFF;
+    --buttons-secondary-color:#C4B5FD;
+    --background-color:#F9FAFB;
+    --text-principal-color:#282A2B;
+    --text-secondary-color:#9DA0A4;
+    --buttons-primary-color: linear-gradient(45deg, #7C3AED 0%, #2563EB 100%);
+    --secondary-color: #2563EB;
+    --font-family: 'Montserrat', sans-serif;
+}
+

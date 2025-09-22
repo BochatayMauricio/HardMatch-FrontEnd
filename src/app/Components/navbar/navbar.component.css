@@ -1,0 +1,110 @@
+.navbar{
+    background: var(--buttons-primary-color);
+}
+
+/* Contenedor del buscador */
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  min-width: 300px;
+  margin: 0 auto;
+}
+
+/* Input de búsqueda */
+.search-input {
+  padding-right: 50px !important;
+  border-radius: 0.7rem;
+  font-family: var(--font-family);
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  color: var(--primary-color);
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: var(--buttons-primary-color);
+}
+
+/* Botón del icono dentro del input */
+.search-icon-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.search-icon-btn svg path {
+  fill: var(--secondary-color) !important;
+}
+
+/* Estilos para los iconos de la derecha */
+.navbar svg {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.navbar svg:hover {
+  opacity: 0.7;
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+  .search-container {
+    margin: 1rem 0;
+    max-width: 100%;
+    min-width: 100%;
+  }
+  
+  .d-flex.align-items-center {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+.category-menu{
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    border-radius: 0.7rem;
+    border: 1px solid var(--border-color);
+    align-items: center;
+    padding: 6px;
+    text-align: center;
+    font-family: var(--font-family);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: opacity 0.3s ease;
+}
+
+.icon:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.hard-text {
+  color: transparent;
+  -webkit-text-stroke: 2px white;
+  font-family: 'Fredoka One', sans-serif;
+  font-size: x-large;
+}
+
+/* Estilo para "match" - texto blanco sólido */
+.match-text {
+  color: white;
+  font-family: 'Fredoka One', sans-serif;
+  font-size: x-large;
+}
