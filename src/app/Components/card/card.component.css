@@ -1,0 +1,37 @@
+.card{
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+.card:hover{
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+.card-title{
+    font-family: var(--font-family);
+    font-weight: bold;
+    font-size: medium;
+}
+.card-text{
+    font-family: var(--font-family);
+    color: var(--buttons-secondary-color);
+    font-size: small;
+}
+.card-price{
+    font-family: var(--font-family);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: x-large;
+}
+.btn{
+    background: var(--buttons-primary-color);
+    border-radius: 0.5rem;
+    color: white;
+    font-family: var(--font-family);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: 0.8rem;
+}
