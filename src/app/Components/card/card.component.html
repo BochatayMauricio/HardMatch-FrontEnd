@@ -1,9 +1,11 @@
 <div class="card">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" class="card-img-top" alt="...">
+      @if(product.offer) {<p class="card-offer">{{product.offer}}% off</p>}
+      <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" height="200" width="100" class="card-img-top" alt="...">
       <div class="card-body">
-        <h5 class="card-title">Notebook Hp Victus Gaming</h5>
-        <p class="card-text">15-fa2010la Core I5 16gb 512gb W11</p>
-        <span class="card-price">$15000</span>
+        <h5 class="card-title">{{product.name}}</h5>
+        <p class="card-text">{{product.description}}</p>
+        <span class="card-price">${{product.price}}</span>
         <button class="btn btn-primary">Comparar</button>
+        <p class="card-stock">{{product.stock}} Unidades</p>
       </div>
 </div>

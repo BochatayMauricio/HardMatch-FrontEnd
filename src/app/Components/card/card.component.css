@@ -3,6 +3,7 @@
     border: 1px solid #E5E7EB;
     border-radius: 1rem;
     padding: 1rem;
+    height: auto;
 }
 .card:hover{
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -12,11 +13,28 @@
     font-family: var(--font-family);
     font-weight: bold;
     font-size: medium;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
 }
 .card-text{
     font-family: var(--font-family);
     color: var(--buttons-secondary-color);
     font-size: small;
+    margin: 0.5rem 0;
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
 }
 .card-price{
     font-family: var(--font-family);
@@ -32,6 +50,32 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     border-radius: 0.8rem;
+    margin:0 0 10px 0;
+}
+.card-stock{
+    font-family: var(--font-family);
+    color: var(--text-secondary-color);
+    font-size: small;
+    width: fit-content;
+    padding: 0.25rem 0.5rem;
+    position:absolute;
+    margin:0;
+    z-index: 10;
+    bottom:8px;
+    right:8px;
+}
+.card-offer{
+    font-family: var(--font-family);
+    color: white;
+    background: var(--buttons-primary-color);
+    font-size: small;
+    width: fit-content;
+    padding: 0.25rem 0.5rem;
+    margin:0;
+    z-index: 10;
+    border-radius: 0.75rem;
+    position:absolute;
+    
 }

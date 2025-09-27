@@ -2,19 +2,26 @@
 <div class="container">
     <h2 class="title">Inspirado en lo ultimo que viste</h2>
     <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
-            <app-card></app-card>
-        </div>
-        <div class="col">
-            <app-card></app-card>
-        </div>
-        <div class="col">
-            <app-card></app-card>
-        </div>
-        <div class="col">
-            <app-card></app-card>
-        </div>
+        @for(product of products; track product.id){
+            <div class="col">
+                <app-card [product]="product"></app-card>
+            </div>
+        }
     </div>
     <h2 class="title">Los mejores descuentos</h2>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @for(product of products; track product.id){
+            <div class="col">
+                <app-card [product]="product"></app-card>
+            </div>
+        }
+    </div>
     <h2 class="title">Categorias populares</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+        @for(product of products; track product.id){
+            <div class="col">
+                <app-card [product]="product"></app-card>
+            </div>
+        }
+    </div>
 </div>
