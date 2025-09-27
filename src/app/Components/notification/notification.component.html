@@ -1,0 +1,21 @@
+<div class="row row-cols-1 row-cols-md-1 g-4">
+    <button class="btn btn-secondary" (click)="toggleShowRead()">{{titleButton}}</button>
+    @for (item of notifications; track item.id) {
+        @if(item.isRead == false || showRead) {
+            <div class="col">
+                <div class="card text-center" style="background-color: #E5E7EB;">
+                    <div class="card-header">
+                        {{item.title}}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{item.explanation}}</p>
+                    </div>
+                    <button class="btn btn-primary" (click)="markAsRead(item.id)">Marcar como leido</button>
+                    <div class="card-footer text-body-secondary">
+                        {{item.createdAt | date:'short'}}
+                    </div>
+                </div> 
+            </div>
+        }
+    }
+</div>

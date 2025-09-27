@@ -2,7 +2,6 @@
     background: var(--buttons-primary-color);
 }
 
-/* Contenedor del buscador */
 .search-container {
   position: relative;
   width: 100%;
@@ -11,7 +10,6 @@
   margin: 0 auto;
 }
 
-/* Input de búsqueda */
 .search-input {
   padding-right: 50px !important;
   border-radius: 0.7rem;
@@ -26,7 +24,6 @@
   color: var(--buttons-primary-color);
 }
 
-/* Botón del icono dentro del input */
 .search-icon-btn {
   position: absolute;
   right: 8px;
@@ -47,7 +44,6 @@
   fill: var(--secondary-color) !important;
 }
 
-/* Estilos para los iconos de la derecha */
 .navbar svg {
   cursor: pointer;
   transition: opacity 0.3s ease;
@@ -55,20 +51,6 @@
 
 .navbar svg:hover {
   opacity: 0.7;
-}
-
-/* Responsivo */
-@media (max-width: 991px) {
-  .search-container {
-    margin: 1rem 0;
-    max-width: 100%;
-    min-width: 100%;
-  }
-  
-  .d-flex.align-items-center {
-    justify-content: center;
-    margin-top: 1rem;
-  }
 }
 
 .category-menu{
@@ -102,9 +84,28 @@
   font-size: x-large;
 }
 
-/* Estilo para "match" - texto blanco sólido */
 .match-text {
   color: white;
   font-family: 'Fredoka One', sans-serif;
   font-size: x-large;
+}
+
+.offcanvas{
+    background: var(--buttons-primary-color);
+    color: var(--background-color);
+    
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+  .search-container {
+    margin: 1rem 0;
+    max-width: 100%;
+    min-width: 100%;
+  }
+  
+  .d-flex.align-items-center {
+    justify-content: center;
+    margin-top: 1rem;
+  }
 }
