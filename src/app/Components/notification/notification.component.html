@@ -1,21 +1,25 @@
-<div class="row row-cols-1 row-cols-md-1 g-4">
-    <button class="btn btn-secondary" (click)="toggleShowRead()">{{titleButton}}</button>
-    @for (item of notifications; track item.id) {
-        @if(item.isRead == false || showRead) {
-            <div class="col">
-                <div class="card text-center" style="background-color: #E5E7EB;">
-                    <div class="card-header">
-                        {{item.title}}
+<div class="notifications-container">
+    <div class="notifications-header">
+        <button class="btn-toggle" (click)="toggleShowRead()">{{titleButton}}</button>
+    </div>
+    <div class="notifications-list">
+        @for (item of notifications; track item.id) {
+            @if(item.isRead == false || showRead) {
+                <div class="notification-card" [class.unread]="!item.isRead">
+                    <div class="notification-content">
+                        <h6 class="notification-title">{{item.title}}</h6>
+                        <p class="notification-text">{{item.explanation}}</p>
+                        <span class="notification-date">{{item.createdAt | date:'short'}}</span>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">{{item.explanation}}</p>
-                    </div>
-                    <button class="btn btn-primary" (click)="markAsRead(item.id)">Marcar como leido</button>
-                    <div class="card-footer text-body-secondary">
-                        {{item.createdAt | date:'short'}}
-                    </div>
-                </div> 
-            </div>
+                    @if(!item.isRead) {
+                        <button class="btn-mark-read" (click)="markAsRead(item.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512">
+                                <path fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                            </svg>
+                        </button>
+                    }
+                </div>
+            }
         }
-    }
+    </div>
 </div>
