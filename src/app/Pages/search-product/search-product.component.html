@@ -1,0 +1,82 @@
+<div class="container-fluid search-container">
+  <div class="row">
+    
+    <div class="col-lg-3 col-md-4 filters-sidebar">
+      <div class="filters-card">
+        <h3 class="filters-title">Filtros</h3>
+        
+        <div class="filter-group">
+          <h5 class="filter-label">Marca</h5>
+          <select class="form-select filter-select" [(ngModel)]="selectedBrand" (change)="applyFilters()">
+            <option value="">Todas las marcas</option>
+            @for (brand of brands; track brand) {
+              <option [value]="brand">{{brand}}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5 class="filter-label">Rango de precio</h5>
+          <div class="price-range-container">
+            <input 
+              type="range" 
+              class="form-range price-slider" 
+              [min]="minPrice" 
+              [max]="maxPrice" 
+              [(ngModel)]="priceRange" 
+              (input)="applyFilters()">
+            <div class="price-display">
+              <span>Hasta: ${{priceRange | number}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h5 class="filter-label">Ordenar por</h5>
+          <select class="form-select filter-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+            <option value="">Relevancia</option>
+            <option value="price-asc">Menor precio</option>
+            <option value="price-desc">Mayor precio</option>
+            <option value="name">Nombre A-Z</option>
+          </select>
+        </div>
+
+        <button class="btn reset-btn" (click)="resetFilters()">Limpiar filtros</button>
+      </div>
+    </div>
+
+    <div class="col-lg-9 col-md-8">
+      <div class="results-header">
+        <h2 class="results-title">
+          @if (categoryParam) {
+            {{categoryParam | uppercase}}
+          } @else if (searchTerm) {
+            Resultados para "{{searchTerm}}"
+          } @else {
+            Todos los productos
+          }
+        </h2>
+        <p class="results-count">{{filteredProducts.length}} productos encontrados</p>
+      </div>
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @for(product of filteredProducts; track product.id) {
+          <div class="col">
+            <app-card [product]="product"></app-card>
+          </div>
+        }
+        @empty {
+          <div class="col-12">
+            <div class="no-results">
+              <svg xmlns="http://www.w3.org/2000/svg" height="80" width="80" viewBox="0 0 512 512">
+                <path fill="var(--text-secondary-color)" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+              </svg>
+              <h3>No se encontraron productos</h3>
+              <p>Intenta ajustar los filtros de búsqueda</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

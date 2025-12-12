@@ -91,9 +91,14 @@
 }
 
 .offcanvas{
-    background: var(--buttons-primary-color);
-    color: var(--background-color);
-    
+    background: white;
+    color: black;
+}
+.btn {
+    background: white;
+    color: var(--primary-color);
+    border: 1px solid var(--buttons-primary-color);
+    border-radius: 0.7rem;
 }
 
 /* Responsivo */

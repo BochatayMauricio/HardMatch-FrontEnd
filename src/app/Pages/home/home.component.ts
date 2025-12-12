@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CarruselComponent } from "../../Components/carrusel/carrusel.component";
 import { CardComponent } from "../../Components/card/card.component";
 import { ProductI } from '../../Interfaces/product.interface';
+
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,7 @@ import { ProductI } from '../../Interfaces/product.interface';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent{
 
   products: ProductI[] = [
     {
@@ -171,6 +172,16 @@ export class HomeComponent {
     createdAt: new Date("2025-02-27T09:00:00Z"),
     updatedAt: new Date("2025-09-05T10:30:00Z")
   }
-  ]
+  ];
+
+  constructor() {
+    this.extractCategories();
+  }
+
+  private extractCategories(): string[] {
+    const categorySet = new Set<string>();
+    this.products.forEach(product => categorySet.add(product.category));
+    return Array.from(categorySet);
+  }
 
 }
