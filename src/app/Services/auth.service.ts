@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core/types/core';
+
+import { Injectable } from '@angular/core';
 import { UserI } from '../Interfaces/user.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
 
