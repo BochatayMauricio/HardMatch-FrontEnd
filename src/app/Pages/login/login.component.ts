@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserI } from '../../Interfaces/user.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,11 @@ export class LoginComponent {
     role: new FormControl('Usuario', Validators.required)
   });
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   async onSubmit(): Promise<void> {
     if(this.isLoginMode){
@@ -38,14 +43,14 @@ export class LoginComponent {
         if (email && password) {
           const user = await this.authService.login(email, password);
           if (user) {
-            console.log('Inicio de sesión exitoso:', user);
+            this.toastr.success('Inicio de sesión exitoso', 'Éxito');
             this.router.navigate(['/']);
           } else {
-            console.log('Credenciales inválidas');
+            this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');
           }
         }
       } else {
-        console.log('Formulario no válido');
+        this.toastr.warning('Formulario de inicio de sesión no válido', 'Datos incorrectos');
       }
       this.loginForm.reset();
     }else{
@@ -59,7 +64,7 @@ export class LoginComponent {
         const role = this.registerForm.get('role')?.value;
 
         if (password !== confirmPassword) {
-          console.log('Las contraseñas no coinciden');
+          this.toastr.warning('Las contraseñas ingresadas no coinciden', 'Contraseñas no coinciden');
           return;
         }
 
@@ -75,15 +80,15 @@ export class LoginComponent {
 
           const registeredUser = await this.authService.register(newUser);
           if (registeredUser) {
-            console.log('Registro exitoso:', registeredUser);
+            this.toastr.success('Usuario registrado correctamente', 'Registro exitoso');
             this.isLoginMode = true;
             this.router.navigate(['/']);
           } else {
-            console.log('Error en el registro');
+            this.toastr.error('No se pudo registrar el usuario', 'Error de registro');
           }
         }
       } else {
-        console.log('Formulario no válido');
+        this.toastr.warning('Formulario de registro no válido', 'Datos incorrectos');
       }
       this.registerForm.reset();
     }

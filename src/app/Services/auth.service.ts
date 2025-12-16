@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { UserI } from '../Interfaces/user.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -47,6 +46,10 @@ export class AuthService {
 
   login(email: string, password: string): Promise<UserI|null> {
     // Lógica para iniciar sesión
+    const usersLoguedStorage = localStorage.getItem('users');
+    if (usersLoguedStorage) {
+      this.usersLoguedPrototype = JSON.parse(usersLoguedStorage);
+    }
     const user = this.usersLoguedPrototype.find(u => u.email === email && u.password === password);
     if (user) {
       this.currentUser.next(user);
