@@ -1,59 +1,72 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-
-
-const STATIC_USER = {
-    id: 1,
-    name: 'Carolina',
-    surname: 'Gómez',
-    email: 'carolina.gomez@techshop.com',
-    username: 'caroGomez',
-    role: 'Cliente',
-    createdAt: new Date('2024-03-10T11:00:00'),
-    updatedAt: new Date('2025-12-11T09:15:00')
-};
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { UserI } from '../../Interfaces/user.interface';
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [
-    ReactiveFormsModule
-],
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.css'
 })
-
-export class UserDashboardComponent implements OnInit{
-// Usamos el tipo any o la interfaz UserI si está importada
-  user: any = STATIC_USER; 
+export class UserDashboardComponent implements OnInit {
+  users: UserI[] = [];
   profileForm: FormGroup;
   notificationsEnabled: boolean = true;
+  private readonly STORAGE_KEY = 'users';
 
   constructor(private fb: FormBuilder) {
+    // 1. Inicializamos el formulario con campos vacíos
     this.profileForm = this.fb.group({
-      name: [this.user.name, Validators.required],
-      surname: [this.user.surname, Validators.required],
-      username: [this.user.username, Validators.required],
-      email: [this.user.email, [Validators.required, Validators.email]]
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // 2. Leemos del localStorage
+    const data = localStorage.getItem(this.STORAGE_KEY);
+
+    if (data) {
+      this.users = JSON.parse(data);
+      console.log("Datos del usuario parseados:", this.users);
+
+      for (const user of this.users) {
+        console.log(user.email);
+        console.log(this.users[0].email);
+        if(user.email === JSON.parse(localStorage.getItem('email') || '""')){
+          // 3. Encontramos el usuario actual
+          this.profileForm.patchValue({
+            name: user.name,
+            surname: user.surname,
+            username: user.username,
+            email: user.email
+          });
+          break;
+        }
+      }
+    } else {
+      console.warn("No se encontraron datos en el localStorage bajo la clave:", this.STORAGE_KEY);
+    }
+  }
 
   onSubmitProfile() {
     if (this.profileForm.valid) {
-      // Simulación de actualización de datos estáticos
-      const updatedUser = { ...this.user, ...this.profileForm.value };
-      console.log('Datos ficticios a guardar:', updatedUser);
-      this.user = updatedUser; // Actualiza el objeto local
-      alert('Perfil actualizado (Simulación Estática)');
-      this.profileForm.markAsPristine();
+      // 5. Guardamos los nuevos datos
+      const updatedUser = { ...this.users, ...this.profileForm.value };
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedUser));
+      
+      console.log("Datos actualizados y guardados:", updatedUser);
+      alert('Datos guardados en LocalStorage');
     }
   }
-  
+
   onNotificationChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.notificationsEnabled = input.checked;
-    console.log(`Notificaciones por email: ${this.notificationsEnabled ? 'Activadas' : 'Desactivadas'}`);
+    // También podrías guardar esta preferencia en otro campo del localStorage
+    console.log(`Notificaciones: ${this.notificationsEnabled}`);
   }
 }

@@ -44,6 +44,7 @@ export class LoginComponent {
           const user = await this.authService.login(email, password);
           if (user) {
             this.toastr.success('Inicio de sesión exitoso', 'Éxito');
+            localStorage.setItem('email', JSON.stringify(email));
             this.router.navigate(['/']);
           } else {
             this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');

@@ -2,6 +2,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 
+
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule, CurrencyPipe],

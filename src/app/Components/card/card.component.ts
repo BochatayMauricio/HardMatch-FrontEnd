@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CardComponent{
 
-  @Input() product!: any;
+  @Input() product!: ProductI;
 
   isInComparativeList: boolean = false;
 
