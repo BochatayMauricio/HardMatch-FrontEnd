@@ -79,3 +79,52 @@
     position:absolute;
     
 }
+.card {
+    position: relative; /* Crucial para el posicionamiento de los elementos hijos */
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.btn-favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-favorite:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.btn-favorite.is-favorite {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* Animación de latido al marcar como favorito */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Ajuste para que la oferta y el corazón no se solapen si ambos están arriba */
+.card-offer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    /* Tus estilos actuales de card-offer */
+}

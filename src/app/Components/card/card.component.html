@@ -1,6 +1,15 @@
 <div class="card">
       @if(product.offer) {<p class="card-offer">{{product.offer}}% off</p>}
-      <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" height="200" width="100" class="card-img-top" alt="...">
+
+      <button 
+        class="btn-favorite" 
+        [class.is-favorite]="productService.isFavorite(product.id)"
+        (click)="toggleFav($event)">
+        {{ productService.isFavorite(product.id) ? '❤️' : '🤍' }}
+      </button>
+
+      <img [src]="product.image" height="200" width="100" class="card-img-top" alt="...">
+      
       <div class="card-body">
         <h5 class="card-title">{{product.name}}</h5>
         <p class="card-text">{{product.description}}</p>

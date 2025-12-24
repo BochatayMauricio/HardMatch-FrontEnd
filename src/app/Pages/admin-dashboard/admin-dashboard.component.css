@@ -1,0 +1,162 @@
+.admin-container {
+  padding: 2rem;
+  background-color: var(--background-color);
+  min-height: 100vh;
+  font-family: var(--font-family);
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  color: var(--text-principal-color);
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* Grid de KPIs */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.kpi-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.kpi-icon.sales { background: #ede9fe; color: var(--primary-color); }
+.kpi-icon.orders { background: #e0f2fe; color: var(--secondary-color); }
+.kpi-icon.users { background: #dcfce7; color: #16a34a; }
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-principal-color);
+  margin: 0.2rem 0;
+}
+
+.kpi-trend.positive { color: #16a34a; font-size: 0.85rem; font-weight: 600; }
+
+/* Tabla de Rendimiento */
+.performance-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 1rem;
+  background: var(--background-color);
+  color: var(--text-secondary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.admin-table td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: var(--text-principal-color);
+}
+
+.badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge.stock-ok { background: #dcfce7; color: #16a34a; }
+.badge.stock-low { background: #fee2e2; color: #b91c1c; }
+
+.btn-export {
+  background: var(--buttons-primary-color);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.primary-button {
+    background: var(--buttons-primary-color);
+    color: var(--text-color);
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+.btn.primary-button:hover {
+    opacity: 0.9;
+}
+
+
+/* Grid de Gráficos */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.chart-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Altura fija para los gráficos para que se vean uniformes */
+  height: 400px; 
+}
+
+/* Para gráficos de barra o línea que puedan necesitar más espacio */
+.chart-card.large {
+    grid-column: span 2; /* Ocupa dos columnas si el viewport es lo suficientemente grande */
+}
+
+/* Asegurarse de que Chart.js se renderice correctamente */
+canvas {
+    max-width: 100%;
+    height: 100% !important; /* Chart.js a veces sobrescribe, esto lo fuerza */
+}
+
+/* Ajustes a los Badges de Stock en la tabla */
+.badge-stock-ok { background: #dcfce7; color: #16a34a; } /* Verde */
+.badge-stock-low { background: #fef3c7; color: #b45309; } /* Amarillo */
+.badge-stock-out { background: #fee2e2; color: #b91c1c; } /* Rojo */
