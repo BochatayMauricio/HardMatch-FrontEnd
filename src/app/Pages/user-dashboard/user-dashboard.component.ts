@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 
 const STATIC_USER = {
     id: 1,
@@ -17,9 +17,8 @@ const STATIC_USER = {
 @Component({
   selector: 'app-user-dashboard',
   imports: [
-    CommonModule,         // Necesario para *ngIf, *ngFor, etc.
     ReactiveFormsModule
-  ],
+],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.css'
 })

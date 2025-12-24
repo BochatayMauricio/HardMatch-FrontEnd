@@ -28,18 +28,13 @@ export class AuthService {
     }
   ]
 
-  currentUser = new BehaviorSubject<UserI>({
-    id: 0,
-    name: 'Usuario',
-    surname: 'Invitado',
-    email: '',
-    username: '',
-    role: 'Invitado'
-  });
+  currentUser = new BehaviorSubject<UserI | null>(null);
 
-  constructor() { }
+  constructor() { 
+    localStorage.setItem('users', JSON.stringify(this.usersLoguedPrototype));
+  }
 
-  getCurrentUser(): Observable<UserI> {
+  getCurrentUser(): Observable<UserI | null> {
     // Lógica para obtener el usuario actual
     return this.currentUser.asObservable();
   }
@@ -51,6 +46,10 @@ export class AuthService {
 
   login(email: string, password: string): Promise<UserI|null> {
     // Lógica para iniciar sesión
+    const usersLoguedStorage = localStorage.getItem('users');
+    if (usersLoguedStorage) {
+      this.usersLoguedPrototype = JSON.parse(usersLoguedStorage);
+    }
     const user = this.usersLoguedPrototype.find(u => u.email === email && u.password === password);
     if (user) {
       this.currentUser.next(user);
@@ -61,13 +60,19 @@ export class AuthService {
 
   register(newUser: UserI): Promise<UserI> {
     // Lógica para registrar un nuevo usuario
+    const usersLoguedStorage = localStorage.getItem('users');
+    if (usersLoguedStorage) {
+      this.usersLoguedPrototype = JSON.parse(usersLoguedStorage);
+    }
     newUser.id = this.usersLoguedPrototype.length + 1;
     this.usersLoguedPrototype.push(newUser);
+    localStorage.setItem('users', JSON.stringify(this.usersLoguedPrototype));
     this.currentUser.next(newUser);
     return Promise.resolve(newUser);
   }
 
   logout(): void {
     // Lógica para cerrar sesión
+    this.currentUser.next(null);
   }
 }
