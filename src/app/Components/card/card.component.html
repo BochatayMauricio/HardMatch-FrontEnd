@@ -1,4 +1,4 @@
-<div class="card">
+<!-- <div class="card">
       @if(product.offer) {<p class="card-offer">{{product.offer}}% off</p>}
       <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" height="200" width="100" class="card-img-top" alt="...">
       <div class="card-body">
@@ -14,4 +14,37 @@
         }
         <p class="card-stock">{{product.stock}} Unidades</p>
       </div>
+</div> -->
+
+<div class="card">
+  <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
+    @if (isFav) {
+      <img src="../../../assets/heart.red.png" alt="Favorito" class="heart-img">
+    } @else {
+      <img src="../../../assets/heart.black.png" alt="No favorito" class="heart-img">
+    }
+  </button>
+
+  @if(product.offer) {
+    <p class="card-offer">{{product.offer}}% off</p>
+  }
+  
+  <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" 
+       height="200" width="100" class="card-img-top" alt="...">
+
+  <div class="card-body">
+    <h5 class="card-title">{{product.name}}</h5>
+    <p class="card-text">{{product.description}}</p>
+    <span class="card-price">${{product.price}}</span>
+
+    @if (isInComparativeList) {
+      <p class="text-informative">Añadido para comparar</p>
+      <button class="btn btn-primary">Ver comparación</button>
+      <button class="btn delete" (click)="deleteProductFromCompare(this.product.id)">Eliminar</button>
+    } @else {
+      <button class="btn btn-primary" (click)="addToCompare(product)" [disabled]="isInComparativeList">Comparar</button>
+    }
+    
+    <p class="card-stock">{{product.stock}} Unidades</p>
+  </div>
 </div>

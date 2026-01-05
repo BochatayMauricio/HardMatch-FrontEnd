@@ -1,51 +1,38 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FavoritesService {
-private readonly STORAGE_KEY = 'user_favorites';
+  private storageKey = 'my_favorites';
+  private favoritesSubject = new BehaviorSubject<any[]>(this.getStoredFavorites());
+  
+  favorites$ = this.favoritesSubject.asObservable();
 
-  // Inicializamos el BehaviorSubject con lo que haya en LocalStorage o un array vacío
-  private favoritesIds = new BehaviorSubject<number[]>(this.loadFromStorage());
-  favorites$ = this.favoritesIds.asObservable();
-
-  constructor() {}
-
-  // Carga los datos guardados al arrancar
-  private loadFromStorage(): number[] {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
+  private getStoredFavorites(): any[] {
+    const data = localStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data) : [];
   }
 
-  // Guarda los datos en LocalStorage
-  private saveToStorage(ids: number[]): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(ids));
-  }
+  toggleFavorite(product: any) {
+    let current = this.getStoredFavorites();
+    const index = current.findIndex((p: any) => p.id === product.id);
 
-  toggleFavorite(productId: number): void {
-    const currentIds = this.favoritesIds.value;
-    let updatedIds: number[];
-
-    if (currentIds.includes(productId)) {
-      updatedIds = currentIds.filter(id => id !== productId);
+    if (index > -1) {
+      current.splice(index, 1);
     } else {
-      updatedIds = [...currentIds, productId];
+      current.push(product);
     }
 
-    // Actualizamos el estado de la app y el almacenamiento físico
-    this.favoritesIds.next(updatedIds);
-    this.saveToStorage(updatedIds);
+    this.updateStorage(current);
   }
 
-  isFavorite(productId: number): boolean {
-    return this.favoritesIds.value.includes(productId);
+  // Método para vaciar toda la lista
+  clearAll() {
+    this.updateStorage([]);
   }
 
-  // Bonus: Método para vaciar todo
-  clearAll(): void {
-    this.favoritesIds.next([]);
-    localStorage.removeItem(this.STORAGE_KEY);
+  private updateStorage(favorites: any[]) {
+    localStorage.setItem(this.storageKey, JSON.stringify(favorites));
+    this.favoritesSubject.next(favorites);
   }
 }

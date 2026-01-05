@@ -1,31 +1,31 @@
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="title-fav">❤️ Mis Favoritos</h2>
-            <p class="text-muted">Tienes {{ favoriteProducts.length }} productos guardados</p>
+<div class="container fav-page-wrapper">
+    <header class="fav-header d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 p-4 shadow-sm">
+        <div class="header-content">
+            <h2 class="title-fav fw-bolder">Mis Favoritos <span class="badge-count">{{ favoriteProducts.length }}</span></h2>
+            <p class="subtitle">Artículos que te encantaron y quieres seguir de cerca.</p>
         </div>
         
         @if (favoriteProducts.length > 0) {
-            <button class="btn btn-outline-danger btn-sm" (click)="clearAll()">
-                🗑️ Vaciar lista
+            <button class="btn btn-clear-all mt-3 mt-md-0" (click)="clearAll()">
+                <i class="bi bi-trash3 me-2"></i>Vaciar lista
             </button>
         }
-    </div>
-
-    <hr>
+    </header>
 
     @if (favoriteProducts.length === 0) {
-        <div class="empty-state text-center py-5">
-            <div class="empty-icon">📂</div>
-            <h3>Tu lista está vacía</h3>
-            <p>Explora nuestros productos y guarda tus preferidos aquí.</p>
-            <a class="btn btn-primary mt-3" routerLink="/">Volver a la tienda</a>
+        <div class="empty-state-container shadow-sm border-0">
+            <div class="blob-animation">
+                <div class="empty-icon"><img src="../../../assets/heart.red.png" alt="Favorito" class="heart-img"></div>
+            </div>
+            <h3 class="fw-bold mt-4">¿Aún no tienes favoritos?</h3>
+            <p class="text-secondary mb-4">Explora nuestras ofertas y guarda lo que te guste.</p>
+            <a class="btn btn-shop" routerLink="/">Explorar Tienda</a>
         </div>
     } @else {
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
             @for (product of favoriteProducts; track product.id) {
-                <div class="col animate-fade-in">
-                    <app-card [product]="product"></app-card>
+                <div class="col item-favorite">
+                    <app-card [product]="product" [showDeleteButton]="true"></app-card>
                 </div>
             }
         </div>
