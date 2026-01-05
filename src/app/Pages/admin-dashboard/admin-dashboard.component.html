@@ -1,0 +1,83 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>Panel de Control Administrativo</h1>
+    <p>Métricas de rendimiento y ventas para la toma de decisiones estratégicas.</p>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon sales">💰</div>
+      <div class="kpi-info">
+        <h3>Ingresos Totales</h3>
+        <p class="kpi-value">{{ totalRevenue | currency:'ARS':'symbol':'1.2-2' }}</p>
+        <span class="kpi-trend positive">↑ 12% vs mes anterior</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon orders">📦</div>
+      <div class="kpi-info">
+        <h3>Órdenes Activas</h3>
+        <p class="kpi-value">{{ activeOrders }}</p>
+        <span class="kpi-trend">8 pendientes de envío</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon users">👤</div>
+      <div class="kpi-info">
+        <h3>Clientes Totales</h3>
+        <p class="kpi-value">{{ totalCustomers }}</p>
+        <span class="kpi-trend positive">↑ 5 nuevos hoy</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="charts-grid">
+    <div class="chart-card">
+      <canvas #salesChart></canvas>
+    </div>
+    <div class="chart-card">
+      <canvas #categoryChart></canvas>
+    </div>
+    <div class="chart-card large">
+        <canvas #stockChart></canvas>
+    </div>
+  </section>
+
+  <section class="performance-section">
+    <div class="section-header">
+      <h2>Rendimiento por Producto</h2>
+      <button class="btn primary-button">Exportar Reporte</button>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Vendidos</th>
+            <th>Ingresos Generados</th>
+            <th>Stock Actual</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prod of productsPerformance">
+            <td><strong>{{ prod.name }}</strong></td>
+            <td>{{ prod.category }}</td>
+            <td>{{ prod.unitsSold }} unidades</td>
+            <td>{{ prod.revenue | currency:'ARS':'symbol':'1.0-0' }}</td>
+            <td>{{ prod.stock }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStockClass(prod.stock)">
+                {{ getStockStatusText(prod.stock) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

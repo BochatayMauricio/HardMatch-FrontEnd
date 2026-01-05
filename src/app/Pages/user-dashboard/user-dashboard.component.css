@@ -1,0 +1,225 @@
+.dashboard-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    min-height: 700px;
+    font-family: var(--font-family);
+}
+
+/* Sidebar (Menú de Navegación) */
+.sidebar {
+    width: 250px;
+    padding: 30px 0;
+    border-right: 1px solid #e5e7eb;
+    background-color: var(--background-color);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.nav-menu a {
+    display: flex;
+    align-items: center;
+    color: var(--text-principal-color);
+    padding: 12px 25px;
+    text-decoration: none;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-menu a:hover {
+    background-color: #ede9fe; /* Tono muy claro basado en primary-color */
+    color: var(--primary-color);
+}
+
+.nav-menu a.active {
+    background-color: #ede9fe; 
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Contenido Principal (router-outlet area) */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+}
+
+/* --- Estilos Generales de Contenido --- */
+.page-content {
+    background-color: white;
+    border-radius: 20px;
+    margin: 0 2rem 2rem 2rem;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+}
+
+.page-content h2 {
+    color: var(--text-principal-color);
+    margin-top: 0;
+    margin-bottom: 5px;
+    border-bottom: 2px solid var(--buttons-secondary-color);
+    padding-bottom: 10px;
+}
+
+.section-subtitle {
+    color: var(--text-secondary-color);
+    margin-bottom: 30px;
+}
+
+.separator {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 30px 0;
+}
+
+/* Botones y Formulario Común */
+
+/* Botón Principal (Primary Button) - Uso del gradiente */
+.btn.primary-button {
+    background: var(--buttons-primary-color); 
+    color: var(--text-color);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s;
+    width: 100%; /* Para el formulario */
+}
+
+.btn.primary-button:hover:not([disabled]) {
+    opacity: 0.9;
+}
+
+.btn.primary-button:disabled {
+    background: var(--buttons-secondary-color);
+    opacity: 0.7;
+    cursor: not-allowed;
+    color: var(--primary-color);
+}
+
+/* Botón Secundario (Link en Compras) */
+.btn.secondary-button-link {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    padding: 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn.secondary-button-link:hover {
+    color: var(--primary-color);
+}
+
+/* Formularios */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-principal-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    color: var(--text-principal-color);
+    background-color: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+    outline: none;
+}
+
+/* Toggle Switch para Notificaciones */
+.toggle-group {
+    padding: 15px 0;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-flex; /* Usar flex para alinear checkbox y texto */
+    align-items: center;
+    line-height: 22px;
+    padding-left: 55px; /* Espacio para el switch */
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-principal-color);
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--text-secondary-color);
+    transition: .4s;
+    width: 45px;
+    height: 25px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.slider.round {
+    border-radius: 25px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.note {
+    font-size: 0.8rem;
+    color: var(--text-secondary-color);
+    margin-left: 55px; /* Alineación con el texto del toggle */
+    margin-top: 5px;
+}
+
+/* La clase .form-grid y .primary-button se hereda del CSS del dashboard shell */

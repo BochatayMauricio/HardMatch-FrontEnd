@@ -3,7 +3,9 @@
     border: 1px solid #E5E7EB;
     border-radius: 1rem;
     padding: 1rem;
-    height: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .card:hover{
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -35,24 +37,40 @@
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
+    flex: 1;
 }
 .card-price{
     font-family: var(--font-family);
     color: var(--primary-color);
     font-weight: bold;
     font-size: x-large;
+    margin-bottom: 0.5rem;
 }
 .btn{
     background: var(--buttons-primary-color);
-    border-radius: 0.5rem;
+    border: none;
+    border-radius: 0.8rem;
     color: white;
     font-family: var(--font-family);
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
     width: 100%;
-    margin-top: 0.5rem;
-    border-radius: 0.8rem;
-    margin:0 0 10px 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+    margin-top: 0.25rem;
+}
+.btn:hover{
+    opacity: 0.9;
+}
+.btn.delete{
+    background: transparent;
+    border: 1px solid #E5E7EB;
+    color: var(--text-secondary-color);
+}
+.btn.delete:hover{
+    background: #F9FAFB;
+    opacity: 1;
 }
 .card-stock{
     font-family: var(--font-family);
@@ -77,5 +95,60 @@
     z-index: 10;
     border-radius: 0.75rem;
     position:absolute;
-    
+}
+.text-informative{
+    font-family: var(--font-family);
+    color: var(--text-secondary-color);
+    font-size: small;
+    margin: 0.5rem 0;
+}
+
+.btn-fav.is-fav {
+  color: red; /* Opcional si usas iconos de fuente */
+}
+
+.btn-outline-danger.btn-sm {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%; /* Para que ocupe el ancho del card-body */
+    margin-top: 10px;
+}
+
+.btn-fav {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  /* Sombra muy suave para que parezca elevarse sobre la imagen del producto */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.heart-img {
+  /* Controlamos el tamaño para que sea minimalista (no debe ocupar todo el círculo) */
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  /* Esto ayuda a que el PNG no se vea borroso en algunas pantallas */
+  image-rendering: -webkit-optimize-contrast; 
+}
+
+/* Interacción: Efecto de pulsación al hacer clic */
+.btn-fav:active {
+  transform: scale(0.85);
+}
+
+.btn-fav:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }

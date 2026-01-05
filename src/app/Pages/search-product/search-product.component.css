@@ -1,0 +1,147 @@
+.search-container {
+  padding: 2rem;
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+
+.filters-sidebar {
+  padding-right: 1.5rem;
+}
+
+.filters-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+}
+
+.filters-title {
+  font-family: var(--font-family);
+  color: var(--text-principal-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.filter-group {
+  margin-bottom: 1.5rem;
+}
+
+.filter-label {
+  font-family: var(--font-family);
+  color: var(--text-principal-color);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.filter-select {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.price-range-container {
+  padding: 0.5rem 0;
+}
+
+.price-slider {
+  width: 100%;
+  accent-color: var(--primary-color);
+}
+
+.price-display {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.price-display span {
+  font-size: 0.9rem;
+  color: var(--text-secondary-color);
+  font-weight: 600;
+}
+
+.reset-btn {
+  width: 100%;
+  background: var(--buttons-primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.results-header {
+  margin-bottom: 2rem;
+}
+
+.results-title {
+  font-family: var(--font-family);
+  color: var(--text-principal-color);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.results-count {
+  color: var(--text-secondary-color);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-results svg {
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.no-results h3 {
+  font-family: var(--font-family);
+  color: var(--text-principal-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.no-results p {
+  color: var(--text-secondary-color);
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .filters-sidebar {
+    margin-bottom: 2rem;
+    padding-right: 0;
+  }
+
+  .filters-card {
+    position: static;
+  }
+
+  .results-title {
+    font-size: 1.5rem;
+  }
+}
