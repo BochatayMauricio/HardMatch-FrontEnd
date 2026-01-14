@@ -9,6 +9,9 @@ export interface ProductI{
     image:string;
     stock?:number;
     offer?:string;
+    caracteristics?:JSON;
+    ratings?:number;
+    reviews?:number;
     createdAt:Date;
     updatedAt:Date;
 }

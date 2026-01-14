@@ -1,0 +1,92 @@
+<div class="page-content">
+  <h2>Mis Compras</h2>
+  <p class="section-subtitle">Consulta el historial completo de tus pedidos.</p>
+
+  @if (purchases.length === 0) {
+    <div class="no-data-alert">
+      <p>Aún no has realizado ninguna compra con tu cuenta.</p>
+    </div>
+  }
+
+  @if (purchases.length > 0) {
+    <div class="purchases-list">
+      @for (purchase of purchases; track trackByPurchaseId($index, purchase)) {
+        <div class="purchase-item">
+          <div class="purchase-header">
+            <span class="purchase-id">ORDEN #{{ purchase.id }}</span>
+            <span class="purchase-status"
+              [class.completed]="purchase.status === 'Completada'"
+              [class.pending]="purchase.status === 'Pendiente'"
+              [class.canceled]="purchase.status === 'Cancelada'">
+              {{ purchase.status }}
+            </span>
+          </div>
+          <p class="purchase-date">Fecha: {{ purchase.date | date:'mediumDate' }}</p>
+          <p class="purchase-products">
+            Resumen: {{ getOrderProductNames(purchase.items) }}
+          </p>
+          <div class="purchase-footer">
+            <span class="purchase-total">Total: **$ {{ purchase.totalAmount | number:'1.2-2' }} ARS**</span>
+            <button class="btn secondary-button-link" (click)="viewDetails(purchase)">
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (selectedPurchase) {
+  <div class="detail-overlay">
+    <div class="purchase-detail-drawer">
+      <div class="drawer-header">
+        <h3>Detalle de Orden #{{ selectedPurchase.id }}</h3>
+        <button class="close-btn" (click)="closeDetails()">×</button>
+      </div>
+      <div class="summary-grid">
+        <p><strong>Estado:</strong>
+        <span class="purchase-status"
+          [class.completed]="selectedPurchase.status === 'Completada'"
+          [class.pending]="selectedPurchase.status === 'Pendiente'"
+          [class.canceled]="selectedPurchase.status === 'Cancelada'">
+          {{ selectedPurchase.status }}
+        </span>
+      </p>
+      <p><strong>Fecha:</strong> {{ selectedPurchase.date | date:'mediumDate' }}</p>
+    </div>
+    <hr class="separator">
+    <h4>Productos ({{ selectedPurchase.detailedItems.length }})</h4>
+    <div class="detail-items-list">
+      @for (item of selectedPurchase.detailedItems; track trackByPurchaseId($index, item)) {
+        <div class="detail-item-full">
+          <div class="product-visuals">
+            <img [src]="item.image" [alt]="item.name" class="product-image">
+            <div class="item-info">
+              <p class="item-name">{{ item.name }}</p>
+              <p class="item-brand">{{ item.brand }}</p>
+            </div>
+          </div>
+          <div class="product-pricing-details">
+            <p class="item-meta">Unidades: **{{ item.quantity }}**</p>
+            <p class="item-meta-price">Precio base: $ {{ item.price | number:'1.2-2' }}</p>
+            <div class="price-summary">
+              @if (item.offerUsed > 0) {
+                <span class="item-offer">{{ item.offerUsed }}% OFF</span>
+              }
+              <span class="item-final-price">
+                $ {{ item.lineTotal | number:'1.2-2' }}
+              </span>
+              <p class="item-total-label">(Total Línea)</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="drawer-footer">
+      <p class="total-label">Total Final Orden:</p>
+      <span class="final-total-amount">$ {{ selectedPurchase.totalAmount | number:'1.2-2' }} ARS</span>
+    </div>
+  </div>
+</div>
+}
