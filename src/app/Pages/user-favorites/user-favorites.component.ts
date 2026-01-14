@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ProductsServiceService } from '../../Services/products-service.service';
 import { CardComponent } from '../../Components/card/card.component';
 import { FavoritesService } from '../../Services/favorites.service';
 
@@ -11,17 +10,15 @@ import { FavoritesService } from '../../Services/favorites.service';
   styleUrl: './user-favorites.component.css'
 })
 export class UserFavoritesComponent implements OnInit {
- favoriteProducts: any[] = [];
+  favoriteProducts: any[] = [];
 
-  constructor(
-    private favoritesService: FavoritesService,
-    private productService: ProductsServiceService
-  ) {}
+  constructor(private favoritesService: FavoritesService) {}
 
   ngOnInit(): void {
-    this.favoritesService.favorites$.subscribe(ids => {
-      const allProducts = this.productService.getProducts();
-      this.favoriteProducts = allProducts.filter(p => ids.includes(p.id));
+    // Al suscribirnos, la lista se actualizará automáticamente 
+    // incluso si eliminamos un producto desde dentro de la Card
+    this.favoritesService.favorites$.subscribe(products => {
+      this.favoriteProducts = products;
     });
   }
 

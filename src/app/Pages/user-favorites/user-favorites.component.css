@@ -1,207 +1,160 @@
-/* Contenedor de la página */
-.page-content {
-    animation: fadeIn 0.5s ease-in-out;
-    padding: 30px;
+.container{
+    padding-top: 50px;
 }
 
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+
+.text-muted {
+  font-size: 0.9rem;
 }
 
-.stats-badge {
-    background-color: var(--buttons-secondary-color);
-    color: var(--primary-color);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.85rem;
+hr {
+  border-top: 2px solid #eee;
+  margin-bottom: 2rem;
 }
 
-/* Grid System */
+/* Grilla de Favoritos */
 .favorites-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
-/* Card Principal */
-.favorite-card {
-    background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid rgba(229, 231, 235, 0.5);
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.favorite-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-    border-color: var(--buttons-secondary-color);
-}
-
-/* Contenedor de Imagen */
-.card-image-container {
-    position: relative;
-    height: 220px;
-    background-color: #fcfcfd;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.product-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    transition: transform 0.5s ease;
-}
-
-.favorite-card:hover .product-img {
-    transform: scale(1.08);
-}
-
-/* Overlay de acciones */
-.card-overlay {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 2;
-}
-
-.action-icon-btn {
-    background: white;
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.2s;
-}
-
-.action-icon-btn.remove:hover {
-    background-color: #fee2e2;
-    color: #ef4444;
-}
-
-.action-icon-btn .icon {
-    font-size: 1.4rem;
-    font-weight: 300;
-}
-
-/* Badges */
-.offer-badge {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    background: var(--buttons-primary-color); /* Usamos tu gradiente */
-    color: white;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-/* Información del producto */
-.card-info {
-    padding: 20px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.brand {
-    font-size: 0.7rem;
-    color: var(--text-secondary-color);
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-.product-title {
-    font-size: 1rem;
-    color: var(--text-principal-color);
-    margin: 8px 0;
-    font-weight: 600;
-    line-height: 1.4;
-    height: 2.8em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.price-container {
-    margin-top: auto;
-    padding: 10px 0;
-}
-
-.current-price {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text-principal-color);
-    margin: 0;
-}
-
-/* Botón de acción */
-.card-footer {
-    margin-top: 15px;
-}
-
-.primary-button-full {
-    width: 100%;
-    background: var(--buttons-primary-color);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-}
-
-.primary-button-full:hover {
-    filter: brightness(1.1);
-    transform: scale(1.02);
-}
-
-.primary-button-full:active {
-    transform: scale(0.98);
-}
-
-/* Estado vacío */
-.empty-favorites {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
-    text-align: center;
-    background: white;
-    border-radius: 20px;
-    border: 2px dashed #e5e7eb;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    opacity: 0.5;
+/* Animación de entrada para las cards */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* Estado Vacío */
+.empty-state {
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  border: 2px dashed #dee2e6;
+}
+
+
+/* Botón Vaciar Lista */
+.btn-outline-danger {
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+/* Paleta de colores y variables */
+:host {
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --bg-light: #f8fafc;
+}
+
+.fav-page-wrapper {
+    background-color: var(--bg-light);
+    min-height: 80vh;
+    padding-bottom: 50px;
+}
+
+/* Header Estilo Card Moderna */
+.fav-header {
+    background: white;
+    border-radius: 20px;
+    border-left: 6px solid #6366f1;
+}
+
+.title-fav {
+    font-size: 1.8rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge-count {
+    background: #f1f5f9;
+    color: #6366f1;
+    font-size: 1rem;
+    padding: 4px 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+/* Botones con estilo propio */
+.btn-clear-all {
+    background-color: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-clear-all:hover {
+    background-color: #e11d48;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2);
+}
+
+.btn-shop {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+/* Contenedor de Estado Vacío */
+.empty-state-container {
+    background: white;
+    padding: 80px 20px;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    margin-bottom: 1rem;
+    filter: grayscale(1);
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Animación de los items */
+.item-favorite {
+    transition: all 0.4s ease;
+}
+
+.item-favorite:hover {
+    transform: scale(1.02);
+}
+
+.heart-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  /* Esto ayuda a que el PNG no se vea borroso en algunas pantallas */
+  image-rendering: -webkit-optimize-contrast; 
+}
