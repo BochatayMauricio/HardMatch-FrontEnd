@@ -18,16 +18,16 @@ export class NavbarComponent {
   currentUser: UserI | null = null;
 
   categories:string[]=[
-    "notebook",
-    "pc escritorio",
-    "componentes",
-    "monitores",
-    "gaming",
-    "almacenamiento",
-    "perifericos",
-    "redes",
-    "impresoras",
-    "accesorios"
+    "Notebooks",
+    "PCs de Escritorio",
+    "Componentes",
+    "Monitores",
+    "Gaming",
+    "Almacenamiento",
+    "Perifericos",
+    "Redes",
+    "Impresoras",
+    "Accesorios"
   ];
 
 
