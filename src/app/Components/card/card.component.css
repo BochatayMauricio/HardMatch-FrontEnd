@@ -163,5 +163,8 @@
 
 .btn-fav.is-fav .material-symbols-outlined {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-  color: #ff4d4d;
+  background: linear-gradient(45deg, #7C3AED, #2563EB);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
 }

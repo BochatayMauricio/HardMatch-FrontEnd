@@ -5,29 +5,33 @@
 }
 
 .notifications-header {
-    padding: 1rem 0;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: stretch;
+    gap: 12px;           
+    padding: 1rem;
+    background-color: white;
 }
 
 .btn-toggle {
-    background: var(--buttons-secondary-color, #C4B5FD);
+    flex: 1;             
+    background-color: #C3B5FD;
+    color: #7C3AED;
     border: none;
-    color: var(--primary-color, #7C3AED);
-    padding: 0.6rem 1rem;
     border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 10px 16px; 
+    font-weight: 500;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
+    transition: all 0.2s ease;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .btn-toggle:hover {
-    background: var(--primary-color, #7C3AED);
-    color: var(--text-color, #FFFFFF);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+    background-color: #b4a2fc;
 }
 
 .notifications-list {
@@ -98,4 +102,18 @@
 .btn-mark-read:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
+}
+
+.btn-mark-all{
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--text-color, #FFFFFF);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }

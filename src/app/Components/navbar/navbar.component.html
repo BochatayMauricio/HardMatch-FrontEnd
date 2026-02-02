@@ -41,29 +41,26 @@
       </form>
 
       <div class="d-flex align-items-center gap-3">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 448 512" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="cursor: pointer;">
-                <path fill="#ffffff" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416l384 0c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8l0-18.8c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/>
-            </svg> 
+    
+          <span 
+            class="material-symbols-outlined notification-icon" 
+            [class.has-unread]="hasUnreadNotifications"
+            data-bs-toggle="offcanvas" 
+            data-bs-target="#offcanvasWithBothOptions">
+            {{ hasUnreadNotifications ? 'notifications_unread' : 'notifications' }}
+          </span>
 
-            @if (currentUser) {
-              <div class="dropdown">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                  <path fill="#ffffff" d="M256 496c-54 0-103.9-17.9-144-48c0 0 0 0 0 0c0-61.9 50.1-112 112-112l64 0c61.9 0 112 50.1 112 112c0 0 0 0 0 0c5.3-4 10.4-8.2 15.4-12.6C409.1 370.6 354.5 320 288 320l-64 0c-66.5 0-121.1 50.6-127.4 115.4C47.2 391.5 16 327.4 16 256C16 123.5 123.5 16 256 16s240 107.5 240 240s-107.5 240-240 240zm0 16A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm80-304a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zm-80-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/>
-                </svg>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" routerLink="/perfil">Mi perfil</a></li>
-                  <li><a class="dropdown-item" routerLink="mis-compras">Mis compras</a></li>
-                  <li><a class="dropdown-item" routerLink="/configuration">Configuración</a></li>
-                  <li><a class="dropdown-item" routerLink="/admin">Admin</a></li>
-                  <li><a class="dropdown-item" routerLink="/favoritos">Favoritos</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Cerrar sesión</a></li>
+          @if (currentUser) {
+            <div class="dropdown">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                <path fill="#ffffff" d="M256 496c-54 0-103.9-17.9-144-48c0 0 0 0 0 0c0-61.9 50.1-112 112-112l64 0c61.9 0 112 50.1 112 112c0 0 0 0 0 0c5.3-4 10.4-8.2 15.4-12.6C409.1 370.6 354.5 320 288 320l-64 0c-66.5 0-121.1 50.6-127.4 115.4C47.2 391.5 16 327.4 16 256C16 123.5 123.5 16 256 16s240 107.5 240 240s-107.5 240-240 240zm0 16A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm80-304a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zm-80-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/>
+              </svg>
+              <ul class="dropdown-menu dropdown-menu-end">
                 </ul>
-              </div>
-            } @else {
-              <button class="btn btn-login rounded-pill text-nowrap" routerLink="/login">Iniciar sesión</button>
-            }      
+            </div>
+          } @else {
+            <button class="btn btn-login rounded-pill text-nowrap" routerLink="/login">Iniciar sesión</button>
+          }      
       </div>
 
     </div>
