@@ -52,11 +52,25 @@
 
           @if (currentUser) {
             <div class="dropdown">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                <path fill="#ffffff" d="M256 496c-54 0-103.9-17.9-144-48c0 0 0 0 0 0c0-61.9 50.1-112 112-112l64 0c61.9 0 112 50.1 112 112c0 0 0 0 0 0c5.3-4 10.4-8.2 15.4-12.6C409.1 370.6 354.5 320 288 320l-64 0c-66.5 0-121.1 50.6-127.4 115.4C47.2 391.5 16 327.4 16 256C16 123.5 123.5 16 256 16s240 107.5 240 240s-107.5 240-240 240zm0 16A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm80-304a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zm-80-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/>
-              </svg>
+              <a class="nav-link dropdown-toggle text-white user-name-link" 
+                href="#" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" 
+                style="cursor: pointer;">
+                <span class="material-symbols-outlined me-2 user-icon">account_circle</span>
+                <span>{{ currentUser.name }}</span>
+              </a>
+              
               <ul class="dropdown-menu dropdown-menu-end">
-                </ul>
+                <li><a class="dropdown-item" routerLink="/perfil">Mi perfil</a></li>
+                <li><a class="dropdown-item" routerLink="mis-compras">Mis compras</a></li>
+                <li><a class="dropdown-item" routerLink="/configuration">Configuración</a></li>
+                <li><a class="dropdown-item" routerLink="/admin">Admin</a></li>
+                <li><a class="dropdown-item" routerLink="/favoritos">Favoritos</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Cerrar sesión</a></li>
+              </ul>
             </div>
           } @else {
             <button class="btn btn-login rounded-pill text-nowrap" routerLink="/login">Iniciar sesión</button>

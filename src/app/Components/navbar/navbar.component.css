@@ -179,3 +179,23 @@
 .notification-icon.has-unread {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
 }
+
+.user-name-link {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.4rem 0 !important; 
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+    font-size: 24px;
+    font-variation-settings: 'FILL' 1z, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    margin: 0;
+}
+
+.dropdown-toggle::after {
+    margin-left: 0.6em;
+}
