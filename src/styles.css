@@ -208,4 +208,6 @@ button.toast-close-button {
   }
 }
 
-
+body.ocultar-bot typebot-bubble {
+  display: none !important;
+}
