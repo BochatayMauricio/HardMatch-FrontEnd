@@ -154,3 +154,14 @@
   background-color: #f8f9fa;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
+
+.btn-fav .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+  color: #888a8b;
+  transition: all 0.3s ease;
+}
+
+.btn-fav.is-fav .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+  color: #ff4d4d;
+}
