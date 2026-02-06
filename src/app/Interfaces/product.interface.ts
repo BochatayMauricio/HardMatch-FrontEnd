@@ -15,4 +15,5 @@ export interface ProductI{
     createdAt:Date;
     updatedAt:Date;
     storeLogo?:string;
+    freeShipping?: boolean;
 }

@@ -23,10 +23,20 @@
       <span class="material-symbols-outlined">favorite</span>
     </button>
 
-    @if(product.offer) {
-      <p class="card-offer">{{product.offer}}% off</p>
+    @if(product.freeShipping) {
+      <div class="free-shipping-badge">
+        <span class="material-symbols-outlined truck-icon">delivery_truck_speed</span>
+        <span class="shipping-text">Envío gratis</span>
+      </div>
     }
-    
+
+    @if(product.offer) {
+     <div class="card-offer">
+        <span class="material-symbols-outlined offer-icon">percent_discount</span>
+        <span class="shipping-text">{{product.offer}}% off</span>
+      </div>
+    }
+
     <img [src]="product.image" 
          class="card-img-top" 
          [alt]="product.name">

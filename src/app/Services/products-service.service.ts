@@ -20,7 +20,8 @@ export class ProductsServiceService {
     stock: 10,
     createdAt: new Date("2025-09-10T09:30:00Z"),
     updatedAt: new Date("2025-09-20T14:10:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png"
+    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    freeShipping: true
   },
   {
     id: 2,
@@ -34,7 +35,8 @@ export class ProductsServiceService {
     stock: 5,
     createdAt: new Date("2025-08-22T12:00:00Z"),
     updatedAt: new Date("2025-09-02T08:45:00Z"),
-    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s"
+    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s",
+    freeShipping: true
   },
   {
     id: 3,
@@ -49,7 +51,8 @@ export class ProductsServiceService {
     offer: "20",
     createdAt: new Date("2025-07-30T07:20:00Z"),
     updatedAt: new Date("2025-09-18T11:00:00Z"),
-    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s"
+    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s",
+    freeShipping: true
   },
   {
     id: 4,
@@ -63,7 +66,8 @@ export class ProductsServiceService {
     stock: 7,
     createdAt: new Date("2025-09-01T15:00:00Z"),
     updatedAt: new Date("2025-09-21T09:30:00Z"),
-    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png"
+    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png",
+    freeShipping: true
   },
   {
     id: 5,
@@ -77,7 +81,8 @@ export class ProductsServiceService {
     stock: 4,
     createdAt: new Date("2025-06-12T10:10:00Z"),
     updatedAt: new Date("2025-09-19T13:25:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png"
+    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    freeShipping: true
   },
   {
     id: 6,
@@ -91,7 +96,8 @@ export class ProductsServiceService {
     stock: 15,
     createdAt: new Date("2025-09-15T18:00:00Z"),
     updatedAt: new Date("2025-09-16T08:00:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png"
+    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    freeShipping: false
   },
   {
     id: 7,
@@ -105,7 +111,8 @@ export class ProductsServiceService {
     stock: 6,
     createdAt: new Date("2025-05-05T09:00:00Z"),
     updatedAt: new Date("2025-09-12T16:40:00Z"),
-    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp"
+    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp",
+    freeShipping: false
   },
   {
     id: 8,
@@ -120,7 +127,8 @@ export class ProductsServiceService {
     offer: "15",
     createdAt: new Date("2025-04-22T11:45:00Z"),
     updatedAt: new Date("2025-09-10T10:00:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png"
+    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    freeShipping: true
   },
   {
     id: 9,
@@ -134,7 +142,8 @@ export class ProductsServiceService {
     stock: 9,
     createdAt: new Date("2025-08-03T14:30:00Z"),
     updatedAt: new Date("2025-09-15T09:00:00Z"),
-    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png"
+    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png",
+    freeShipping: true
   },
   {
     id: 10,
@@ -148,7 +157,8 @@ export class ProductsServiceService {
     stock: 12,
     createdAt: new Date("2025-07-18T08:00:00Z"),
     updatedAt: new Date("2025-09-01T12:00:00Z"),
-    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png"
+    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png",
+    freeShipping: true
   },
   {
     id: 11,
@@ -162,7 +172,8 @@ export class ProductsServiceService {
     stock: 4,
     createdAt: new Date("2025-03-10T10:00:00Z"),
     updatedAt: new Date("2025-09-14T17:20:00Z"),
-    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp"
+    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp",
+    freeShipping: true
   },
   {
     id: 12,
@@ -176,7 +187,8 @@ export class ProductsServiceService {
     stock: 5,
     createdAt: new Date("2025-02-27T09:00:00Z"),
     updatedAt: new Date("2025-09-05T10:30:00Z"),
-    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png"
+    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png",
+    freeShipping: true
   }
   ];
 getProducts() {

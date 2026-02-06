@@ -87,18 +87,33 @@
     right:8px;
 }
 .card-offer {
-    font-family: var(--font-family);
-    color: white;
-    background: var(--buttons-primary-color);
-    font-size: small;
-    width: fit-content;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.5rem;
     position: absolute;
     top: 15px;
     left: 15px;
-    margin: 0;
-    z-index: 10;
+    background: var(--buttons-primary-color);
+    padding: 4px 8px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 6;
+    box-shadow: -2px -2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.offer-icon {
+    font-size: 18px;
+    color: white;
+    font-variation-settings: 'FILL' 1;
+}
+
+.offer-text {
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .text-informative{
@@ -203,4 +218,34 @@
     aspect-ratio: 1 / 1;
     object-fit: contain;
     mix-blend-mode: multiply;
+}
+
+.free-shipping-badge {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: linear-gradient(45deg, #009744 0%, #046c33 100%);
+    padding: 4px 8px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 6;
+    box-shadow: -2px -2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.truck-icon {
+    font-size: 18px;
+    color: white;
+    font-variation-settings: 'FILL' 1;
+}
+
+.shipping-text {
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
