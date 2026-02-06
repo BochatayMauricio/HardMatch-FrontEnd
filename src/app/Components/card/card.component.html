@@ -17,16 +17,27 @@
 </div> -->
 
 <div class="card">
-  <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
-    <span class="material-symbols-outlined">favorite</span>
-  </button>
+  <div class="card-image-wrapper">
+    
+    <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
+      <span class="material-symbols-outlined">favorite</span>
+    </button>
 
-  @if(product.offer) {
-    <p class="card-offer">{{product.offer}}% off</p>
-  }
-  
-  <img src="https://http2.mlstatic.com/D_NQ_NP_787248-MLA92579076657_092025-O.webp" 
-       height="200" width="100" class="card-img-top" alt="...">
+    @if(product.offer) {
+      <p class="card-offer">{{product.offer}}% off</p>
+    }
+    
+    <img [src]="product.image" 
+         class="card-img-top" 
+         [alt]="product.name">
+
+    <div class="store-logo-badge">
+      <img [src]="product.storeLogo || 'assets/default-store.png'" 
+           class="store-logo-img" 
+           alt="Logo tienda">
+    </div>
+    
+  </div>
 
   <div class="card-body">
     <h5 class="card-title">{{product.name}}</h5>

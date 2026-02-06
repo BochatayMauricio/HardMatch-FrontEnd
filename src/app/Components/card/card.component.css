@@ -86,18 +86,21 @@
     bottom:8px;
     right:8px;
 }
-.card-offer{
+.card-offer {
     font-family: var(--font-family);
     color: white;
     background: var(--buttons-primary-color);
     font-size: small;
     width: fit-content;
     padding: 0.25rem 0.5rem;
-    margin:0;
+    border-radius: 0.5rem;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    margin: 0;
     z-index: 10;
-    border-radius: 0.75rem;
-    position:absolute;
 }
+
 .text-informative{
     font-family: var(--font-family);
     color: var(--text-secondary-color);
@@ -106,14 +109,14 @@
 }
 
 .btn-fav.is-fav {
-  color: red; /* Opcional si usas iconos de fuente */
+  color: red;
 }
 
 .btn-outline-danger.btn-sm {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    width: 100%; /* Para que ocupe el ancho del card-body */
+    width: 100%;
     margin-top: 10px;
 }
 
@@ -131,21 +134,16 @@
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  /* Sombra muy suave para que parezca elevarse sobre la imagen del producto */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
 }
 
 .heart-img {
-  /* Controlamos el tamaño para que sea minimalista (no debe ocupar todo el círculo) */
   width: 22px;
   height: 22px;
   object-fit: contain;
-  /* Esto ayuda a que el PNG no se vea borroso en algunas pantallas */
   image-rendering: -webkit-optimize-contrast; 
 }
-
-/* Interacción: Efecto de pulsación al hacer clic */
 .btn-fav:active {
   transform: scale(0.85);
 }
@@ -167,4 +165,42 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent !important;
+}
+
+.card-image-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0 0 1rem 0; 
+}
+
+.store-logo-badge {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 42px;
+    height: 42px;
+    background: white;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.card-img-top {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    mix-blend-mode: multiply;
 }

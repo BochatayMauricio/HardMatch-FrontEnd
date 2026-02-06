@@ -14,4 +14,5 @@ export interface ProductI{
     reviews?:number;
     createdAt:Date;
     updatedAt:Date;
+    storeLogo?:string;
 }
