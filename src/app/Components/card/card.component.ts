@@ -8,10 +8,9 @@ import { FavoritesService } from '../../Services/favorites.service';
   selector: 'app-card',
   imports: [],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css'
+  styleUrl: './card.component.css',
 })
-export class CardComponent{
-
+export class CardComponent {
   @Input() product!: ProductI;
   @Input() isInComparativeList: boolean = false;
   @Input() showDeleteButton: boolean = false;
@@ -21,28 +20,36 @@ export class CardComponent{
 
   constructor(
     private comparativesService: ComparativesService,
-    private toastr: ToastrService
-  ) {
-   
-  }
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
-    this.comparativesService.getProducts().subscribe(products => {
-      this.isInComparativeList = products.some(p => p.id === this.product.id);
+    this.comparativesService.getProducts().subscribe((products) => {
+      this.isInComparativeList = products.some((p) => p.id === this.product.id);
     });
-    this.favService.favorites$.subscribe(favs => {
-      this.isFav = favs.some(p => p.id === this.product.id);
+    this.favService.favorites$.subscribe((favs) => {
+      this.isFav = favs.some((p) => p.id === this.product.id);
     });
   }
-  
+
   addToCompare(product: ProductI): void {
     const added = this.comparativesService.addProduct(product);
-    if (added){
+    if (added) {
       this.isInComparativeList = true;
       return;
     }
     this.isInComparativeList = false;
-    this.toastr.warning('Solo puedes comparar hasta 3 productos a la vez', 'Límite alcanzado');
+    this.toastr.warning(
+      'Solo puedes comparar hasta 3 productos a la vez',
+      'Límite alcanzado',
+    );
+  }
+
+  seeDetails(product: ProductI): void {
+    this.toastr.info(
+      `Detalles de ${product.name} (ID: ${product.id})`,
+      'Aca iria una nueva pagina con toda la info del producto',
+    );
   }
 
   deleteProductFromCompare(productId: number): void {
@@ -53,5 +60,4 @@ export class CardComponent{
   toggleFavorite() {
     this.favService.toggleFavorite(this.product);
   }
-
 }

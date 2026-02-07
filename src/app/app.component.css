@@ -1,0 +1,93 @@
+.floating-compare-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px; /* A LA IZQUIERDA, para no tapar el Typebot (derecha) */
+  z-index: 1000; /* Alto para estar sobre el contenido */
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background-color: var(
+    --primary-color
+  ); /* Un color oscuro/negro para contrastar */
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 24px;
+
+  cursor: pointer;
+
+  /* Animación de entrada */
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s;
+}
+
+.floating-compare-btn:hover {
+  transform: translateY(-5px); /* Efecto de levitación */
+  background-color: var(--primary-color);
+}
+
+.icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-compare-btn i {
+  font-size: 1.2rem;
+}
+
+/* El numerito rojo (Badge) */
+.badge-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #dc3545; /* Rojo Bootstrap */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #212529; /* Borde del mismo color del botón para separarlo */
+}
+
+.btn-text {
+  font-weight: 600;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.95rem;
+}
+
+/* Animación */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividad: En celulares muy chicos, solo mostramos el ícono */
+@media (max-width: 576px) {
+  .btn-text {
+    display: none;
+  }
+  .floating-compare-btn {
+    padding: 15px;
+    border-radius: 50%;
+  }
+  .badge-count {
+    top: -5px;
+    right: -5px;
+  }
+}

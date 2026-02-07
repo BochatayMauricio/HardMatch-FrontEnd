@@ -8,14 +8,13 @@ import { AdminDashboardComponent } from './Pages/admin-dashboard/admin-dashboard
 import { UserFavoritesComponent } from './Pages/user-favorites/user-favorites.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'categoria/:category', component: SearchProductComponent },
-    { path: 'buscar/:search', component: SearchProductComponent },
-    {path: 'login', component:LoginComponent},
-    {path: 'perfil', component: UserDashboardComponent},
-    {path: 'mis-compras', component: UserPurchasesComponent},
-    { path: 'admin', component: AdminDashboardComponent },
-    { path: 'favoritos', component: UserFavoritesComponent },
-    {path: '**', redirectTo: '' },
-
+  { path: '', component: HomeComponent },
+  { path: 'categoria/:category', component: SearchProductComponent },
+  { path: 'buscar/:search', component: SearchProductComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'perfil', component: UserDashboardComponent },
+  { path: 'mis-compras', component: UserPurchasesComponent },
+  { path: 'admin', component: AdminDashboardComponent },
+  { path: 'favoritos', component: UserFavoritesComponent },
+  { path: '**', redirectTo: '' },
 ];

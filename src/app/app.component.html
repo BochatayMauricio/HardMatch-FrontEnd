@@ -1,7 +1,24 @@
-<app-navbar *ngIf="showMainHeader"></app-navbar> 
+<app-navbar *ngIf="showMainHeader"></app-navbar>
 
-<div class="main-content" style="background-color: var(--background-color); min-height: 100vh;">
-    <router-outlet />
+<div
+  class="main-content"
+  style="background-color: var(--background-color); min-height: 100vh"
+>
+  <router-outlet />
+</div>
+
+<div *ngIf="showMainHeader && (productCount$ | async) as count">
+  <button
+    *ngIf="count >= 2"
+    class="floating-compare-btn"
+    (click)="goToComparison()"
+  >
+    <div class="icon-container">
+      <i class="fa-solid fa-scale-balanced"></i>
+      <span class="badge-count">{{ count }}</span>
+    </div>
+    <span class="btn-text">Ver Comparación</span>
+  </button>
 </div>
 
 <app-footer *ngIf="showMainHeader"></app-footer>

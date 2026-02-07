@@ -1,45 +1,52 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductI } from '../Interfaces/product.interface';
-import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComparativesService {
-  products = new BehaviorSubject<ProductI[]>([]);
-  
-  constructor(private storageService: StorageService) {}
+  private _products = new BehaviorSubject<ProductI[]>([]);
+  public products$: Observable<ProductI[]> = this._products.asObservable();
+
+  constructor() {}
+
+  currentProductsValue(): ProductI[] {
+    return this._products.getValue();
+  }
+
+  getProducts(): Observable<ProductI[]> {
+    return this.products$;
+  }
 
   addProduct(product: ProductI): boolean {
-    const currentProducts = this.products.getValue();
-    if(currentProducts.length == 3){
+    const current = this.currentProductsValue();
+
+    // Validación de límite
+    if (current.length >= 3) {
+      console.warn('Límite de comparación alcanzado (3 productos)');
       return false;
     }
-    if (!currentProducts.find(p => p.id === product.id)) {
-      this.products.next([...currentProducts, product]);
+
+    // Validación de duplicados
+    const exists = current.some((p) => p.id === product.id);
+    if (exists) {
+      return false;
     }
-    this.storageService.setItem('comparativeProducts', this.products.getValue());
+
+    // Emitimos el nuevo estado
+    this._products.next([...current, product]);
     return true;
   }
 
   removeProduct(productId: number): void {
-    const currentProducts = this.products.getValue();
-    const updatedProducts = currentProducts.filter(p => p.id !== productId);
-    this.products.next(updatedProducts);
-    this.storageService.setItem('comparativeProducts', updatedProducts);
+    const updated = this.currentProductsValue().filter(
+      (p) => p.id !== productId,
+    );
+    this._products.next(updated);
   }
 
   clearProducts(): void {
-    this.products.next([]);
-    this.storageService.removeItem('comparativeProducts');
-  }
-
-  getProducts() {
-    const storedProducts = this.storageService.getItem('comparativeProducts');
-    if (storedProducts) {
-      this.products.next(storedProducts);
-    }
-    return this.products.asObservable();
+    this._products.next([]);
   }
 }
