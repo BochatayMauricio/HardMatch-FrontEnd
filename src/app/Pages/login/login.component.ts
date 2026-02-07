@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
 import { UserI } from '../../Interfaces/user.interface';
 import { ToastrService } from 'ngx-toastr';
-
+import { NavbarLoginComponent } from '../../Components/navbar-login/navbar-login.component';
 @Component({
   selector: 'app-login',
-  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    NavbarLoginComponent
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

@@ -1,7 +1,16 @@
 <div class="notifications-container">
     <div class="notifications-header">
-        <button class="btn-toggle" (click)="toggleShowRead()">{{titleButton}}</button>
+        <button class="btn-toggle" (click)="toggleShowRead()">
+            {{titleButton}}
+        </button>
+
+        @if (notificationService.hasUnread$ | async) {
+            <button class="btn-toggle" (click)="markAllAsRead()">
+                Marcar todas como leídas
+            </button>
+        }
     </div>
+
     <div class="notifications-list">
         @for (item of notifications; track item.id) {
             @if(item.isRead == false || showRead) {
@@ -12,7 +21,7 @@
                         <span class="notification-date">{{item.createdAt | date:'short'}}</span>
                     </div>
                     @if(!item.isRead) {
-                        <button class="btn-mark-read" (click)="markAsRead(item.id)">
+                        <button class="btn-mark-read" (click)="markAsRead(item.id)" title="Marcar como leída">
                             <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512">
                                 <path fill="currentColor" d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
                             </svg>

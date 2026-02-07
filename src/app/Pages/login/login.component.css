@@ -27,12 +27,50 @@
   margin-bottom: 0.5rem;
 }
 
-.brand-hard {
-  color: var(--primary-color, #7C3AED);
+@font-face {
+  font-family: 'Dimitri-Transparent';
+  src: url('/assets/fonts/Dimitri-transparent.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Dimitri-Bold';
+  src: url('/assets/fonts/Dimitri-bold.TTF') format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
-.brand-match {
-  color: var(--secondary-color, #2563EB);
+/* navbar.component.scss */
+
+.hard-text{
+  font-family: 'Dimitri-Transparent', sans-serif;
+  font-size: clamp(25px, 5vw, 40px);
+  font-weight: normal;
+  line-height: 1.1; 
+  padding-bottom: 5px; 
+  padding-top: 5px;
+  background: linear-gradient(80deg, #7C3AED 0%, #4D59EC 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+.match-text {
+  font-family: 'Dimitri-Bold', sans-serif;
+  margin-left: 2px;
+  font-size: clamp(25px, 5vw, 40px);
+  font-weight: normal;
+  line-height: 1.1; 
+  padding-bottom: 5px; 
+  padding-top: 5px;
+  background: linear-gradient(80deg, #4D59EC 0%, #2563EB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
 }
 
 .login-subtitle {

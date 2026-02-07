@@ -1,5 +1,7 @@
-<app-navbar></app-navbar>
+<app-navbar *ngIf="showMainHeader"></app-navbar> 
+
 <div class="main-content" style="background-color: var(--background-color); min-height: 100vh;">
     <router-outlet />
 </div>
-<app-footer></app-footer>
+
+<app-footer *ngIf="showMainHeader"></app-footer>

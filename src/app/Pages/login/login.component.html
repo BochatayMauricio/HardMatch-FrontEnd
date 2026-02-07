@@ -1,10 +1,12 @@
+<app-navbar-login></app-navbar-login>
+
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
       <h1 class="login-title">
-        <span class="brand-hard">Hard</span><span class="brand-match">match</span>
+        <span class="hard-text">HARD</span><span class="match-text">MATCH</span>
       </h1>
-      <p class="login-subtitle">Ingresa a tu cuenta</p>
+      <p class="login-subtitle">Ingresá a tu cuenta</p>
     </div>
     @if (isLoginMode) {
        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">

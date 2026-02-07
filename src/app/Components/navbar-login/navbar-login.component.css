@@ -22,7 +22,7 @@
   width: 100%; 
   
   &:focus {
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5); /* Resplandor blanco suave */
     border-color: #fff;
   }
   
@@ -166,36 +166,4 @@
     justify-content: center;
     margin-top: 1rem;
   }
-}
-
-.notification-icon {
-  color: white !important;
-  font-size: 24px;
-  cursor: pointer;
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-  transition: all 0.3s ease;
-}
-
-.notification-icon.has-unread {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-}
-
-.user-name-link {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding: 0.4rem 0 !important; 
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-}
-
-.user-icon {
-    font-size: 24px;
-    font-variation-settings: 'FILL' 1z, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    margin: 0;
-}
-
-.dropdown-toggle::after {
-    margin-left: 0.6em;
 }

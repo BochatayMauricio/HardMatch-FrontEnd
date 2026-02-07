@@ -1,0 +1,11 @@
+.custom-carousel-img {
+    height: 300px;
+    object-fit: cover;
+    object-position: top;
+}
+
+@media (max-width: 768px) {
+    .custom-carousel-img {
+        height: 180px;
+    }
+}
