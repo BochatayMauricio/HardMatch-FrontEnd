@@ -7,6 +7,7 @@ import { UserPurchasesComponent } from './Pages/user-purchases/user-purchases.co
 import { AdminDashboardComponent } from './Pages/admin-dashboard/admin-dashboard.component';
 import { UserFavoritesComponent } from './Pages/user-favorites/user-favorites.component';
 import { StoreProfileComponent } from './Pages/store-profile/store-profile.component';
+import { ComparativesComponent } from './Pages/comparatives/comparatives.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboardComponent },
   { path: 'favoritos', component: UserFavoritesComponent },
   { path: 'stores/:name', component: StoreProfileComponent },
+  { path: 'comparativas', component: ComparativesComponent },
   { path: '**', redirectTo: '' },
 ];

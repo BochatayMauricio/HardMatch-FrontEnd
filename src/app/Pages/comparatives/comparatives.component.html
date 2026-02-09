@@ -1,0 +1,472 @@
+<main class="comparatives-container">
+  <!-- Header -->
+  <section class="comparatives-header">
+    <div class="header-content">
+      <h1>Comparativa de Productos</h1>
+      @if (products.length > 0) {
+        <p class="category-badge">{{ categoryLabel }}</p>
+      }
+    </div>
+
+    @if (products.length > 0) {
+      <button class="btn-clear" (click)="clearAll()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path
+            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+          ></path>
+        </svg>
+        Limpiar comparativa
+      </button>
+    }
+  </section>
+
+  <!-- Empty State -->
+  @if (products.length === 0) {
+    <section class="empty-state">
+      <div class="empty-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="80"
+          height="80"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </div>
+      <h2>No hay productos para comparar</h2>
+      <p>
+        Agrega productos desde la página de búsqueda para comenzar a comparar
+        características.
+      </p>
+      <button class="btn-primary" (click)="goToSearch()">
+        Buscar productos
+      </button>
+    </section>
+  }
+
+  @if (products.length === 1) {
+    <section class="warning-state">
+      <div class="warning-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+          ></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <p>Agrega al menos un producto más para realizar la comparación</p>
+      <button class="btn-secondary" (click)="goToSearch()">
+        Agregar más productos
+      </button>
+    </section>
+  }
+
+  @if (products.length > 0) {
+    <!-- Products Overview Cards -->
+    <section class="products-overview">
+      @for (product of products; track product.id; let i = $index) {
+        <div
+          class="product-card"
+          [class.cheapest]="getPriceComparison().cheapest === i"
+        >
+          <button
+            class="btn-remove"
+            (click)="removeProduct(product.id)"
+            title="Remover de comparación"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          @if (getPriceComparison().cheapest === i && products.length > 1) {
+            <span class="badge-cheapest">Mejor precio</span>
+          }
+          @if (getBestSpecsIndex() === i && products.length > 1) {
+            <span class="badge-specs">Mejores specs</span>
+          }
+          @if (getBestValueIndex() === i && products.length > 1) {
+            <span class="badge-value">Mejor valor</span>
+          }
+
+          <div class="product-image">
+            <img [src]="product.image" [alt]="product.name" loading="lazy" />
+          </div>
+
+          <div class="product-info">
+            <span class="brand">{{ product.brand }}</span>
+            <h3 class="name">{{ product.name }}</h3>
+            <p
+              class="price"
+              [class.highlight]="getPriceComparison().cheapest === i"
+            >
+              {{ formatPrice(product.price) }}
+            </p>
+
+            @if (product.offer) {
+              <span class="offer-badge">-{{ product.offer }}%</span>
+            }
+
+            @if (product.ratings) {
+              <div class="rating">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
+                </svg>
+                <span>{{ product.ratings }}</span>
+              </div>
+            }
+
+            @if (product.freeShipping) {
+              <span class="shipping-badge">Envío gratis</span>
+            }
+
+            <!-- Score Display -->
+            @if (getProductScore(i); as score) {
+              <div class="score-display">
+                <div class="score-bar">
+                  <div
+                    class="score-fill"
+                    [style.width.%]="score.specsScore"
+                    [style.background-color]="getScoreColor(score.specsScore)"
+                  ></div>
+                </div>
+                <span
+                  class="score-label"
+                  [style.color]="getScoreColor(score.specsScore)"
+                >
+                  {{ score.specsScore }} pts -
+                  {{ getScoreLabel(score.specsScore) }}
+                </span>
+              </div>
+            }
+          </div>
+
+          <a [href]="product.urlAcces" target="_blank" class="btn-view">
+            Ver producto
+          </a>
+        </div>
+      }
+    </section>
+
+    <!-- Savings Banner -->
+    @if (products.length > 1 && calculateSavings() > 0) {
+      <section class="savings-banner">
+        <div class="savings-content">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span
+            >Podrías ahorrar hasta
+            <strong>{{ formatPrice(calculateSavings()) }}</strong> eligiendo el
+            producto más económico</span
+          >
+        </div>
+      </section>
+    }
+
+    <!-- Charts Section -->
+    @if (products.length > 1) {
+      <section class="charts-section">
+        <h2>Análisis Visual</h2>
+        <div class="charts-grid three-cols">
+          <div class="chart-container">
+            <h3>💰 Comparación de Precios</h3>
+            <p class="chart-description">
+              El producto en verde tiene el mejor precio
+            </p>
+            <div class="chart-wrapper">
+              <canvas #priceChart></canvas>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>📊 Especificaciones</h3>
+            <p class="chart-description">
+              Procesador, RAM, almacenamiento y más
+            </p>
+            <div class="chart-wrapper">
+              <canvas #radarChart></canvas>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h3>🏆 Puntuación General</h3>
+            <p class="chart-description">
+              Score combinado de specs, precio y valor
+            </p>
+            <div class="chart-wrapper">
+              <canvas #overallChart></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid single-col">
+          <div class="chart-container full-width">
+            <h3>⚖️ Análisis Detallado de Valor</h3>
+            <p class="chart-description">
+              Compara especificaciones, precio y relación calidad-precio por
+              separado
+            </p>
+            <div class="chart-wrapper">
+              <canvas #valueChart></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Characteristics Table -->
+    @if (products.length > 1 && getCharacteristicKeys().length > 0) {
+      <section class="characteristics-section">
+        <h2>Comparativa de Características</h2>
+        <div class="table-wrapper">
+          <table class="characteristics-table">
+            <thead>
+              <tr>
+                <th>Característica</th>
+                @for (product of products; track product.id) {
+                  <th>
+                    <div class="product-header">
+                      <img [src]="product.image" [alt]="product.name" />
+                      <span>{{ product.brand }}</span>
+                    </div>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (key of getCharacteristicKeys(); track key) {
+                <tr>
+                  <td class="characteristic-name">
+                    {{ getCharacteristicLabel(key) }}
+                  </td>
+                  @for (product of products; track product.id; let i = $index) {
+                    <td
+                      [class.best]="isCharacteristicBest(i, key)"
+                      [class.worst]="isCharacteristicWorst(i, key)"
+                    >
+                      {{ getCharacteristicValue(product, key) }}
+                      @if (isCharacteristicBest(i, key)) {
+                        <span class="indicator best">★</span>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+
+              <!-- Precio -->
+              <tr class="price-row">
+                <td class="characteristic-name">Precio</td>
+                @for (product of products; track product.id; let i = $index) {
+                  <td [class.best]="getPriceComparison().cheapest === i">
+                    {{ formatPrice(product.price) }}
+                    @if (getPriceComparison().cheapest === i) {
+                      <span class="indicator best">★</span>
+                    }
+                  </td>
+                }
+              </tr>
+
+              <!-- Stock -->
+              <tr>
+                <td class="characteristic-name">Disponibilidad</td>
+                @for (product of products; track product.id) {
+                  <td [class.low-stock]="product.stock && product.stock < 5">
+                    @if (product.stock) {
+                      {{ product.stock }} unidades
+                    } @else {
+                      Consultar
+                    }
+                  </td>
+                }
+              </tr>
+
+              <!-- Envío -->
+              <tr>
+                <td class="characteristic-name">Envío gratis</td>
+                @for (product of products; track product.id) {
+                  <td [class.best]="product.freeShipping">
+                    {{ product.freeShipping ? "Sí" : "No" }}
+                  </td>
+                }
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- Summary -->
+    @if (products.length > 1) {
+      <section class="summary-section">
+        <h2>🏆 Resumen y Recomendación</h2>
+        <div class="summary-cards">
+          <div class="summary-card highlight">
+            <div class="summary-icon value">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                ></path>
+              </svg>
+            </div>
+            <div class="summary-content">
+              <span class="label">Mejor relación calidad-precio</span>
+              <span class="value">{{
+                products[getBestValueIndex()]?.brand
+              }}</span>
+              <span class="detail"
+                >{{ formatPrice(products[getBestValueIndex()]?.price || 0) }} ·
+                {{ getProductScore(getBestValueIndex())?.valueScore }} pts</span
+              >
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon specs">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <line x1="9" y1="1" x2="9" y2="4"></line>
+                <line x1="15" y1="1" x2="15" y2="4"></line>
+                <line x1="9" y1="20" x2="9" y2="23"></line>
+                <line x1="15" y1="20" x2="15" y2="23"></line>
+                <line x1="20" y1="9" x2="23" y2="9"></line>
+                <line x1="20" y1="14" x2="23" y2="14"></line>
+                <line x1="1" y1="9" x2="4" y2="9"></line>
+                <line x1="1" y1="14" x2="4" y2="14"></line>
+              </svg>
+            </div>
+            <div class="summary-content">
+              <span class="label">Mejores especificaciones</span>
+              <span class="value">{{
+                products[getBestSpecsIndex()]?.brand
+              }}</span>
+              <span class="detail"
+                >{{
+                  getProductScore(getBestSpecsIndex())?.specsScore
+                }}
+                puntos</span
+              >
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon price">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path
+                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+            </div>
+            <div class="summary-content">
+              <span class="label">Mejor precio</span>
+              <span class="value">{{
+                products[getPriceComparison().cheapest]?.brand
+              }}</span>
+              <span class="detail">{{
+                formatPrice(products[getPriceComparison().cheapest]?.price || 0)
+              }}</span>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon savings">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+              </svg>
+            </div>
+            <div class="summary-content">
+              <span class="label">Ahorro potencial</span>
+              <span class="value">{{ formatPrice(calculateSavings()) }}</span>
+              <span class="detail">Diferencia de precios</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+  }
+</main>

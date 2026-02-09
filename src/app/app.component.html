@@ -7,18 +7,18 @@
   <router-outlet />
 </div>
 
-<div *ngIf="showMainHeader && (productCount$ | async) as count">
-  <button
-    *ngIf="count >= 2"
-    class="floating-compare-btn"
-    (click)="goToComparison()"
-  >
+<div
+  *ngIf="
+    showMainHeader && showFloatingButton && (productCount$ | async) as count
+  "
+>
+  <a *ngIf="count >= 2" class="floating-compare-btn" routerLink="/comparativas">
     <div class="icon-container">
       <i class="fa-solid fa-scale-balanced"></i>
       <span class="badge-count">{{ count }}</span>
     </div>
     <span class="btn-text">Ver Comparación</span>
-  </button>
+  </a>
 </div>
 
 <app-footer *ngIf="showMainHeader"></app-footer>

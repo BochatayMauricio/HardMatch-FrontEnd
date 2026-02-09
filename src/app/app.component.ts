@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import {
+  RouterOutlet,
+  Router,
+  NavigationEnd,
+  RouterLinkWithHref,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { FooterComponent } from './Components/footer/footer.component';
@@ -8,13 +13,20 @@ import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, FooterComponent, CommonModule],
+  imports: [
+    RouterOutlet,
+    NavbarComponent,
+    FooterComponent,
+    CommonModule,
+    RouterLinkWithHref,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'hardmatch-frontend';
   showMainHeader: boolean = true;
+  showFloatingButton: boolean = true;
   productCount$: Observable<number>;
 
   constructor(
@@ -31,6 +43,7 @@ export class AppComponent {
           currentUrl.includes(route),
         );
         this.showMainHeader = !shouldHide;
+        this.showFloatingButton = !currentUrl.includes('/comparativas');
         if (shouldHide) {
           document.body.classList.add('ocultar-bot');
         } else {
