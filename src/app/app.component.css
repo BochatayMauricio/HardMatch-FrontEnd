@@ -15,6 +15,7 @@
   cursor: pointer;
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transition: transform 0.2s ease, filter 0.2s ease;
+  text-decoration: none;
 }
 
 .floating-compare-btn:hover {
