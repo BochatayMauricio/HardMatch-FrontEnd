@@ -20,7 +20,7 @@ export class ProductsServiceService {
     stock: 10,
     createdAt: new Date("2025-09-10T09:30:00Z"),
     updatedAt: new Date("2025-09-20T14:10:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    storeId: 1,
     freeShipping: true
   },
   {
@@ -35,7 +35,7 @@ export class ProductsServiceService {
     stock: 5,
     createdAt: new Date("2025-08-22T12:00:00Z"),
     updatedAt: new Date("2025-09-02T08:45:00Z"),
-    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s",
+    storeId: 1,
     freeShipping: true
   },
   {
@@ -51,7 +51,7 @@ export class ProductsServiceService {
     offer: "20",
     createdAt: new Date("2025-07-30T07:20:00Z"),
     updatedAt: new Date("2025-09-18T11:00:00Z"),
-    storeLogo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s",
+    storeId: 2,
     freeShipping: true
   },
   {
@@ -66,7 +66,7 @@ export class ProductsServiceService {
     stock: 7,
     createdAt: new Date("2025-09-01T15:00:00Z"),
     updatedAt: new Date("2025-09-21T09:30:00Z"),
-    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png",
+    storeId: 3,
     freeShipping: true
   },
   {
@@ -81,7 +81,7 @@ export class ProductsServiceService {
     stock: 4,
     createdAt: new Date("2025-06-12T10:10:00Z"),
     updatedAt: new Date("2025-09-19T13:25:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    storeId: 1,
     freeShipping: true
   },
   {
@@ -96,7 +96,7 @@ export class ProductsServiceService {
     stock: 15,
     createdAt: new Date("2025-09-15T18:00:00Z"),
     updatedAt: new Date("2025-09-16T08:00:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    storeId: 1,
     freeShipping: false
   },
   {
@@ -111,7 +111,7 @@ export class ProductsServiceService {
     stock: 6,
     createdAt: new Date("2025-05-05T09:00:00Z"),
     updatedAt: new Date("2025-09-12T16:40:00Z"),
-    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp",
+    storeId: 5,
     freeShipping: false
   },
   {
@@ -127,7 +127,7 @@ export class ProductsServiceService {
     offer: "15",
     createdAt: new Date("2025-04-22T11:45:00Z"),
     updatedAt: new Date("2025-09-10T10:00:00Z"),
-    storeLogo: "https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png",
+    storeId: 1,
     freeShipping: true
   },
   {
@@ -142,7 +142,7 @@ export class ProductsServiceService {
     stock: 9,
     createdAt: new Date("2025-08-03T14:30:00Z"),
     updatedAt: new Date("2025-09-15T09:00:00Z"),
-    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png",
+    storeId: 4,
     freeShipping: true
   },
   {
@@ -157,7 +157,7 @@ export class ProductsServiceService {
     stock: 12,
     createdAt: new Date("2025-07-18T08:00:00Z"),
     updatedAt: new Date("2025-09-01T12:00:00Z"),
-    storeLogo:"https://migestion.oncity.com/assets/isotipo_large.png",
+    storeId: 4,
     freeShipping: true
   },
   {
@@ -172,7 +172,7 @@ export class ProductsServiceService {
     stock: 4,
     createdAt: new Date("2025-03-10T10:00:00Z"),
     updatedAt: new Date("2025-09-14T17:20:00Z"),
-    storeLogo:"https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp",
+    storeId: 5,
     freeShipping: true
   },
   {
@@ -181,19 +181,23 @@ export class ProductsServiceService {
     urlAcces: "https://articulo.mercadolibre.com.ar/MLA-EXAMPLE-surface-go-3",
     price: 179990,
     brand: "Microsoft",
-    image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMSEBUQEhMVEhIVEBYVFxYWEhUVFRYSFhUWFhcVFxcYHSggGBolHRYVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGzclHyYtLS0tLystLSstMjIvKy0tLS8tNS0tNystKy0tLS0tLS0tLS0rLS0tLS0rLSstLS0tLf/AABEIAK4BIgMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAAAgMEBQYHAQj/xABNEAACAQICAwsHCAgDCAMAAAABAgADEQQhBRIxBgcTIkFRYXGBkaEyUnKCkqKxFkJTYrLB0dIUM0NUc4OT4SNEwggVY4SUs9PwFySj/8QAGgEBAAMBAQEAAAAAAAAAAAAAAAECBAMFBv/EACcRAQACAgIBAwQCAwAAAAAAAAABAgMREyESBDFBIlGB4bHRBTKR/9oADAMBAAIRAxEAPwDsSbJKRTZJQEREBERAREQEREBERAREQEREBEhUqBQWYhVAuSSAAOck7Jhm3YaPG3G4b/qKZ+BgZyJgDu00d++4f+qpkTu40d++Ufbv8BA2GJrbbvdGj/OU+zXPwWU23w9GD/Nr2U6p+CQNoiam2+Rowf5ruo1/ySmd87Rf7w3/AE9f8kDcImlnfR0Z9M5/5et+WRO+poz6Wof+Xq/eIG7RNGO+vo3z6p/kN98ptvt6O/45/k/i0DfYnPm339H+ZiT/ACk/PKbb8WB+ixJ/l0v/ACQOixObNvy4L6DEn1aX/klNt+jCfu2J/wDx/PA6bE5ed+rDfuuI9ql+aQO/XQ5MJW9unA6nE51oHfcwuIrpQejVoa7BVdijJrHIBiDdbnltadFgIiIEU2SUimySgIiICIiAiIgIiICIiAiIgIiUsViFp02qubIiM7HmVQST3CBx7fg049bFro+mSadMKXUHy675gNzhQVsOdjzCaWNzmK+hPtJ+MyO5lmxePqYuptLPWN+RqhOqvYCbejN7AnbHji0blxvkms6hzT5NYr6E+0n4z0bl8X9F76fjOmhZUCy/DVTms5gNymL+i99PxkhuRxn0Q/qJ+M6gqyoEjhqnls5YNx2M+jH9RPxno3F4zzF/qLOqhJIJI4qnLZyn5E4zzU/qCPkPjPNp/wBQfhOr6kiVk8VTls5V8h8XzU/6n9p58h8X/wAL+ofyzqZWQYRxVRy2cv8AkPiuel7Z/LPPkPiuel7bflnTWEpsJPFVHLZzb5D4nzqXtN+WPkNiPPpe035Z0ciRIjhqctnOvkNiPPpd7fllrpPcnVoUmrPUp6qjYNa5ubADLpnTSJp2+PjNWlToja7lj6Kf3I7pF8dYrtNMlpnTStHIWqKBmdoHTsA7yJ9Z0gQoB26ov12znznvV6M4fSFEEXVX4RvRpDX+3wY7Z9HzM0kRECKbJKRTZJQEREBERAREQEREBERAREQE0bfh0rwOjWpA2bEOKQ9Dyqnurb1pvM4hvwaQOI0jTwiG/BKqfzapBN+oanjA93C4LUw3CHbVYn1RxV+89s2QCQwmHFNFpr5KqFHUBaXCrNtY1GmO07nbxRKirJKsqhYRpFVlRVmX0OoFPWYgaxJFyBcDIDPtl/wqc/vJ+aUm+nWKNdAE9sJsiVKZ+cB1sn3Ge6tP6Re9fxleRPG1DFY5E2kE9ezrMw9fdCPm59SkjvnRuCp+evev4z3gKfnp7v4zRj9Rhr703+f0429PktP+2vx+3M6W6Rb8cZc4FiOzlmZp1VdQykFSLggzc/0an5ydyyz0lq06bEWPFysBtOQjJnxXn6K6/P6WrhtWPqttq7CQIlW2UgwlVVFhImVDIESUIETlW7vG8JjWUbKaimOvym8Wt2TqWJrCmjVGyVFLHqUXPwnEQ5q1dZtr1CzesdY/fOGaetO2GO9uzbxWi7LXxJGwJRXLlP8Ai1PA0e6dZmtb3OjuA0bQBFmqKazX2g1TrgHqUqvqzZZnaCIiBFNklIpskoCIiAiIgIiICIiAiIgIiIFLFYhadNqjmyojOx5lUEk9wnz7uWLYzSNTFv5z1TfkZyQq9gJ9mdN34tLcBo1qQNnxDikPQ8qp2ao1fWmnb32A1MLwhGdVy3qDir957ZfHG7KZJ1VsyrKqrCrKyLNTNoRJUZOQbSbDrOUpYnFJSXWc25hyky23P4lsRi+Tg6Sl8iCNbYt+faT6s6Vw2tSb/EKzkiLRX5bbwRVAqWuAANa9rDqlSmTbjWvy2JI7Ly2xeE16lNyTamSbBrAsbWuts7W2gjl55b6a0d+kKia7ooqBm1GAJA+abqbg9FjlM8RG+3ftkrzyWGmcGa1I0ld6esRdkIDAdvJJ4mieC4JCwumqGUgMuVg3G5ZWdrxHa7InluiW+FpFKIS7FglrsQWJ5zbKR0dh2p07MxdiSxvtueTNjbZz2zlo7gnqdQuQotmADfZt+6a7umxtq2Hwy/PNSo1vMRCBf1mHszKYDDsKlSozOdciysTZRnkBrEc2y2yarTc19I4mv8yiFwqdJXjVT2ObdhnTHEbmffpS0z4+zIESm0ruJRaHJSYSBEqGQIkoavvhY3gsEyjyqrLTHUeM3uqR2zn+5PRhxOKp0R+0qJT7HaznsTXPZM3vp47Wr0qA2U6Zc+k5sO4L70zm8XovXxhrEZUaTVPXqE0090VZlyzuzTjjVXd1UAADIAWA6Bskoic3QiIgRTZJSKbJKAiIgIiICIiAiIgIiICIlHF4laVN6rmyojOx+qoJPwgcR349IHE6Tp4RM+BRaY/jVirN4cH3Gbdg8MKdNaa+SiBR1AWnO9x2tjNJ1MXUzsz1j0PUJCL2XPszpqrO+KOtuOSe9JIsr01kEWYHTmknN6dMHVGRttY83QJqw4bZbahnyZIpG5UdIIzuxvrDWNs8rX2CbBuH0caNGpV1SWq1NlxfUXIbTzljNXwFVhTUMLOctXIm5NgMuydCqUzToaiZME1QdUtZrbSBNnrck1xxj+P6Z/R1m15tKlo/D1Fq1Xd6jCowKq2rq01F+KAGOeYztyT3CUKv6RVqO5NMhQlPVAC22m4Y617X2C15XVmWkLks+qM9U5tbaQBlI4Koy0Q1Q3bO5sdpJsNgPNyTy9vR1Ck9KqcSH12FJUIKauTNnxta+fJ3SeJZzUphbhAx1+K1zlxQLC1rnM9EhomrU4MtXqIza21RZVXkGe09Mq4XElme7Lq5aoBBNhe7G3Js8ZNp1Okz9cdquLZuKFOqS2Z1C3F2ZWyBuRmcspS0pUYUjqEhzYA82eZ2EbLyhRxztiCmqvA6uT3FybLssc73bk+bK9bEsKioqk3sSbEgAk3z5Mge8SJnSI7Qw7ulBSx13CElmsCTYkbABzDYJg9HYQUqQQZ7STys7EszHpLEntnu+BulXA0EJXhGq1dULrauQGsTex6O+a1ozd7SqECpTalf519dR15AjunbHhyXjyiHO9ojptLSk0qawIuCCCLgjMEc8g0qqpNIGVDMPuqx3AYOtVvYimQvptxV8SImdGty49uixv6RjK1QZhqpC+ivEXwAnfN5jRfBYBqts61U2/h0hwY7NYOfWnzzoqkWqqALkZgc52KO0kT620Fo8YfC0cOP2VFE6yALntNz2zFLXC/iIgIiIEU2SUimySgIiICIiAiIgIiICIiAmh782mOA0a1IGz4hxSHoeVU90W9ab5ODb82kTidJ08HTN+BVaY/jViCb9Q4PxgX+9po/g8IapHGrOW9ReKv+o+tNxUS3wOFWlTSkosqIqjqUWl2gmuI1Gmae5VEE1LFgitUGwB2zOQAJvmeTbM1pbTK0RYcZpoel9LO5LM1z4T2P8d6bJ3aeolg9Tet9VhtO5iklXGKNYvwYNQ2HFFshmduZHdN9rYjVNtRzle6rcdW29/xmlb0+CP6PVxTbatXVX+HTuPtFu6bdSStdixW2vxbH5tz0ZZW8Zh9dfyzTET7dNnp8fHSI+64oVta+TLbzlK919srSjS1x5XG6ch4SqZiaQmeWlGq7BlAW6m+s19mywA5byK1anmr7TD/TIFewGeQ6chDIAb2z57Z264vI1agUFmOSgkk8gAuZCXEd+TTOvpBaANxQpAHoqVLM3hqTUMLiTzy60zpHD4ivVruW1qtRmvq7ATkOwWHZLGlRAYap1lOYPR09M9v030artlyanvTpG4DS7EnDObrqlk6CNqjo5ewzdGnONw9InGIfNR2PVq6vxYTo7TN62sRl6Vxz9KmZz/fbx+rRpYcHN3Ln0UFhftbwnQTOKb5GP4XHuAeLSUUhnyjNveJHZMGSdVdscdsNh2KUmcZMzBR2ZnxtPrXQGkBiMJQxA/a0EftZQT43nyTizqqlPmW59Js59D7yGkeF0SiE3ahVqUj1X118HHdMzQ3+IiAiIgRTZJSKbJKAiIgIiICIiAiIgIiIFDG4paVN6zmyU0Z2PMqgsT3CfO+4hWxulKmMqbQz126HqEhF7AT7InT9+zTHAaMNEGz4motIc/Bjj1D1WXV9eapvX6O4PB8KRxqzlvUXir8GPbL443Kt51DclEYpitNmG0IT4SaCVQt8jsmmJ1MSzzG4053pBi12/wDbTVcdUJbVAuSbAcpJyAm3aYomhWag2w8ZDzqf/fAzH7kdG8NpWkCLpTvWb+X5PvlJ9RbNFcE3j2087DjmL+MusaPwaYTB0qDNqhKS0ywyJcixI6SxJlRKFJAELE6oOb3JzuTdiL8vhL4sDkev+88NNeafJzuZ3L14mYjXwp4ZqeYRgTzBr+F5XM8UAbIJgWvBPrOeEyNtUADiWtfkNyemerRflqG/UhH2RIro5AoQDIEkXs2Z5btee/oS9Pw+EpESt18LkCYHd1XK4GqgNmqjgh1Pk3u60zyJYADYBz3+M5Jv16fqJWoYSi5Uimaj2ttc6qjosFb2p3wa84mVL7msxHu55uhwQpWXlOyQ0Xlt2bZUxesyIKrF6l8r5tnyDlN8spu+5HcSzatbFLqIM1pHym5i45B9Xbzz1L3il/O3/GaImaeLM7g9GFKRxDizVQAoO0UhsPrHPqAmzmTIkDPOyZJvabSvEajS1x2JFKm9VvJRGc9Sgk/CfPasa1fWba9Qsx6zrMfjOv75+kOCwDIDZqzrTHo+U3gtu2ci0eLB35ksOtsvheZcs96d8cdbQxNTWqFuc+HJOvf7POkbVcVhSfKRKyjpU6jeDJOPETdN6fSHAaXwxvZajNRbqqKQvvBJydH03ERAREQIpskpFNklAREQEREBESnXrKg1nZUXnYhR3mBUiavpHfC0bROqcUjsPm0/8Q965DtM1bSm/FTUlaGFep9Z6iKvcpYnwgdRicC0tvq6Qqtq0mSip2CnRBbtJZvhNU0jpvE1Tr18VVZr7OEqi33CBte/Pj2xelaeCpm/BKlIfx65Ut4GmOwzquC3PU6VJKSE6qIqDZsUWnzXiruS5YX5S1TWdu/bFLG1RlTqVlI5VqlBYdAMtW2lZjb6a/3TzN7v957/ALsI+cPGfONDdRjUFlxeIv0VajZ9TMR4TIUN32k024yoLH5yoSOsMhl+RHg69ux3LVMTTU09XhUbIliAVO0XtzgHsmJ3OaLxWBepUbCGu1RVW9OvRGqFJJFnI2kjumiYbfU0kMjVpOPrUUB8LS7o77eNBsaeHq7PJSoM+by5or6y0Y+OfZThjy8vl0M49hXNZ8DjtYoE4vAMqgHO2pUvnYbb+MyKafpoCXpYxeXj4aq1urVBnOl34aqnj4Smc+SsynuKmVsHvq0gq62Fr2Qljq1VfMm+sbqOyc4vj+yZizfRuvwfLVZP4lCtT2+kgk6e63AMbDGYe97WNVVN+okTSsLvp4UqiucSCmbMy0izgc+q4HhLrDbv9HPYPULHXu2vhHOVtgtrW54teuuv5TET8t5o6UoP5Fak3o1UPwMuA4Owg9RnOsVpvRrgcfA6xrXPC4cpahc5DWpi7Wt45y/XDaDqHiHBg/UrLTPusJM+GupRXf2bwl7C+R6587aexj47StY0F4WpUrFKfmimnEU9VlueTOddpbmsC/6urUAP0ePrW7hUtL/c5uEwmDLPQRgzgAsW1iF5gSMh/aTTJ4TuCY3DBbmNyVHCKHYCriSONVYXN+ZAfJHJlnM80y7aLHnHwlF9FfX27OL/AHkeW+5V8ZYkyJl42FXIcNTuSALm1ySQAL7SSDI/oDE2DITza3Nt2iT5Qjxlxrfex+tiadAbKdPWPpVD+Cr3zUBxaKjlclj1DIffK26XHfpGNrVRmHqkL6IOqvgBLfGtx9UbFAUdgz8ZltO5271jUIS4wWJNN0qr5VN1cekjBh4iWoMqUTIS+xMJiBUppVXNXRXHUwBHxlaafvTaQ4bRGHPLTVqJ/lMVX3dXvm4QERECKbJKWmkMWaNB6opvWKJrCnTALvbkUHlnINL781fWanRw9Ogykg8KWdwRkQV4tj0QO1S0x+kqNAa1arTpDnd1X4mfO2kt3ePxFw+KqBT82mRSHuWPjNfqOWOsxLMeUkk95zgfQGk99DR1K4Wq1dualTJB9drL4zVdI787bMPhAPrVal/cQf6pyiIG2Y/fM0nV21UpqeSkOD7msW96aticdWqNr1Hqu3nGszt2GoZECTWgeqBSauSfn+tqsfAZzysyWFmZjbjBqAVQeg6xJ8JdDD85kxSA5JIsRUULkyA35GfW/Ce0htIBJ5Dwg/C8viBzSk9BTtUdwgW7qxN2LbPqn75aVVJytYD6g8dUZy+bDrzW6iR8JRaiOc+0fvgWjADIWPTZh8TAQCxNjfkD59uRlVqfSfD8JBgecd0DwIzD52qvSMh2zxh81QTf6gJ8LzwjoHdaeoTyAjqYiB4FAzIBPMQwt8IC63KLAefbsAnpJ22bvBktYWzLXvs1Mu+BEE7FGR6ie+09KAbQSwOwgEfGeKRfao6SIAHQeo2geKtzmQo9A/cJJ3uNXotYu33yZQ8oIyvmTc98ivb3A/CBBKYHIp6OKfiJXw9aohuj1KefzXKj3SJAi5seo3UyQpjIgow9YbOS23ugZAbo8YttTF4lc+SvWt3FyJk8Nu60iqj/AO7UBufKAa49am01zWXbbVseRj355iUjigt87+NuoxsbpR3x9Jr+3pVbEeVSpZDPbqqsqVt83GlHp2ocamU1hTqAjWBBK/4pFxz2mhHF35M+fbI8LncmNo0nhaIVwxIOrc2tzC/xlmWub85mz7mNzFbGFtQFKeqb1St1v5q7NY9Wy3VMvU3rK/zaqnrQj7zIS0INKlJ85t1Teyxw2cG3UzD4rLZ977SK7KGv6Lp95EDpX+z9pP8Aw8VhT82olZfXUo3/AG17510POK70G5fGYXFVK9emaKGgaYBZSXZnRr2UnIBTmfOnXkJgXutEt857Arrs7JY4zQeFrfrcNQqX8+ijfES+TZJQNXxO95ot9uCpL6Aan9giYnEb0OjG8la1P0a7n7d5v0QOWYjeUw5/V4uuvpLTceAExWJ3la4/V42m3Q9Fl8QxnaIgcExG9NpNPIbD1B0VWU9zLMZidwWlqe3Cs/oVKb/6rz6OiB8vYnQ2Op/rMHiF/kOfFRMfVxJTy1ZPSVl+In1jIVKStkyhusA/GB8nrjlPKO+T4cT6axe5nBVf1mFoP10U/CYjE72ui3/yiL6DOn2TA+ey4lNjO5Yned0c3kGvT9GtrfbBmKxG8nS/Z42qvp00f7OrA46wkCs6hiN5bFD9Xi6L+lTdPgWmJxG9PpNdiUKno1rfaUQNE1YmzYncFpNPKwNU+g1N/ssZiMTobE0/1mFxCW56FQDv1bQMfPJ67AGxOqeYixkDWXzge2BKRKjlAmRwGhMTX/V0XYedq6q+01geybRove0xD2NVtXoRS59o5DuMDRAg5B3CV8JgKlU2pI7n6usR37BOx6L3s6aWJomoeepn4HId02nDblGAtZVHNf7hA4to/cViWHGIpDpOs3cv4zYMDuCpL5Zaoek6q9y/eTOsUtzNtrjsEu6egKY2lj3CBzD5F4cixpJ7AlJ97vCNtS3UWHwM67T0TSHzb9ZvLhMMg2KB2QOL/wDxVh22cKPRN/tAzbtzO5EYSjwNOmXUuXLVApYsQBzAAWA5Jv4E9gYCnop+YCXNPQ/Oe6ZaIFgmikHTKq4BByS6iBSWio5JMKJKIHlonsQIpskpFNklAREQEREBERAREQEREBERAREQEXiIFGthkfJ0R/SUN8RLZdCYYG4w9EHnFFAfhL+IFJMMg2Io6lAlSexAREQEREBERAREQEREBERAREQERED/2Q==",
+    image: "https://resources.sanborns.com.mx/imagenes-sanborns-ii/1200/715786132158_3.jpg?scale=500&qlty=75",
     description: "Tablet 10.5\" con Windows, buena para movilidad y aplicaciones de oficina ligeras.",
     category: "tablet",
     stock: 5,
     createdAt: new Date("2025-02-27T09:00:00Z"),
     updatedAt: new Date("2025-09-05T10:30:00Z"),
-    storeLogo:"https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png",
+    storeId: 3,
     freeShipping: true
   }
   ];
 getProducts() {
     return this.products;
   }
+getProductsByStoreId(storeId: number): ProductI[] {
+  return this.products.filter(p => p.storeId === storeId);
+  }
+  
 // Usamos BehaviorSubject para que cualquier componente sepa la lista actual al suscribirse
   private favoritesIds = new BehaviorSubject<number[]>([]);
   favorites$ = this.favoritesIds.asObservable();

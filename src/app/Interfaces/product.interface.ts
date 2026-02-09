@@ -14,6 +14,7 @@ export interface ProductI{
     reviews?:number;
     createdAt:Date;
     updatedAt:Date;
-    storeLogo?:string;
+    storeId?:number;
+    storeName?:string;
     freeShipping?: boolean;
 }

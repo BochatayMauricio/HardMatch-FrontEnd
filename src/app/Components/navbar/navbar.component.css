@@ -136,7 +136,7 @@
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: transparent;
+  color: #2563EB !important;
   border-radius: 50px !important;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 8px 16px;

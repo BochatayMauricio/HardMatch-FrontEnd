@@ -6,6 +6,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { NotificationService } from '../../Services/notification.service';
 import { UserI } from '../../Interfaces/user.interface';
+import { StoreService, StoreI } from '../../Services/stores.service'; 
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +20,8 @@ export class NavbarComponent implements OnInit {
   searchQuery = new FormControl('');
   currentUser: UserI | null = null;
   hasUnreadNotifications: boolean = false;
+  
+  stores: StoreI[] = [];
 
   categories: string[] = [
     "Notebooks",
@@ -36,7 +39,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router, 
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private storeService: StoreService
   ) {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
@@ -47,6 +51,8 @@ export class NavbarComponent implements OnInit {
     this.notificationService.hasUnread$.subscribe(hasUnread => {
       this.hasUnreadNotifications = hasUnread;
     });
+
+    this.stores = this.storeService.getStores();
   }
 
   onSearch(): void {

@@ -1,0 +1,83 @@
+@if (store) {
+  <div class="store-profile-container">
+    
+    <div class="store-banner" [style.background-image]="'url(' + store.banner + ')'">
+      <div class="banner-overlay"></div>
+    </div>
+
+    <div class="container content-wrapper">
+      
+      <div class="store-header">
+        
+        <div class="store-logo-wrapper">
+          <img [src]="store.logo" [alt]="store.name" class="store-logo">
+        </div>
+
+        <div class="store-info">
+          <h1 class="store-name">{{ store.name }} <span class="material-symbols-outlined verified-icon">verified</span></h1>
+          
+          <div class="store-meta">
+            <span class="meta-item">
+              <span class="material-symbols-outlined">location_on</span>
+              <a [href]="store.locationUrl || '#'" target="_blank">{{ store.location }}</a>
+            </span>
+            <span class="meta-item">
+              <span class="material-symbols-outlined">calendar_month</span>
+              Fundada el {{ store.founded }}
+            </span>
+          </div>
+        </div>
+
+        <div class="store-actions">
+          <a [href]="store.websiteUrl" target="_blank" class="btn btn-website">
+            Visitar sitio oficial
+            <span class="material-symbols-outlined icon-right">open_in_new</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="store-body mt-4 mb-5">
+        <div class="row">
+          
+          <div class="col-12">
+            
+            <h3 class="mb-3">Sobre {{ store.name }}</h3>
+            <p class="store-description text-muted">{{ store.description }}</p>
+            
+            <hr class="my-5">
+            
+            <h4 class="mb-4">Productos destacados de {{ store.name }}</h4>
+            
+            @if (storeProducts.length > 0) {
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                
+                @for (product of storeProducts; track product.id) {
+                  <div class="col">
+                    <app-card [product]="product"></app-card>
+                  </div>
+                }
+
+              </div>
+            } @else {
+              <div class="alert alert-info d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">info</span>
+                <div>
+                  Esta tienda aún no tiene productos publicados en HardMatch.
+                </div>
+              </div>
+            }
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+} @else {
+  <div class="container text-center mt-5" style="padding-top: 100px;">
+    <span class="material-symbols-outlined text-muted" style="font-size: 64px;">store_off</span>
+    <h2 class="mt-3">Tienda no encontrada</h2>
+    <p class="text-muted">La tienda que buscas no existe o ha sido eliminada.</p>
+    <button class="btn btn-primary mt-3" routerLink="/">Volver al inicio</button>
+  </div>
+}
