@@ -19,8 +19,8 @@ export class CardComponent implements OnInit {
   @Input() showDeleteButton: boolean = false;
 
   isFav: boolean = false;
-  
-  storeLogoUrl: string = 'assets/default-store.png'; 
+
+  storeLogoUrl: string = 'assets/default-store.png';
   storeName: string = '';
 
   private favService = inject(FavoritesService);
@@ -50,16 +50,28 @@ export class CardComponent implements OnInit {
   }
 
   addToCompare(product: ProductI): void {
-    const added = this.comparativesService.addProduct(product);
-    if (added) {
+    const result = this.comparativesService.addProduct(product);
+    if (result.success) {
       this.isInComparativeList = true;
       return;
     }
+
     this.isInComparativeList = false;
-    this.toastr.warning(
-      'Solo puedes comparar hasta 3 productos a la vez',
-      'Límite alcanzado',
-    );
+
+    // Mostrar mensaje según el tipo de error
+    switch (result.errorType) {
+      case 'category':
+        this.toastr.error(result.message, 'Categoría diferente');
+        break;
+      case 'limit':
+        this.toastr.warning(result.message, 'Límite alcanzado');
+        break;
+      case 'duplicate':
+        this.toastr.info(result.message, 'Ya agregado');
+        break;
+      default:
+        this.toastr.warning(result.message, 'No se pudo agregar');
+    }
   }
 
   seeDetails(product: ProductI): void {
