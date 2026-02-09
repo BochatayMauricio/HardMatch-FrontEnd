@@ -1,63 +1,64 @@
 <div class="card">
+  
   <div class="card-image-wrapper">
+    
     <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
       <span class="material-symbols-outlined">favorite</span>
     </button>
 
     @if (product.freeShipping) {
       <div class="free-shipping-badge">
-        <span class="material-symbols-outlined truck-icon"
-          >delivery_truck_speed</span
-        >
+        <span class="material-symbols-outlined truck-icon">delivery_truck_speed</span>
         <span class="shipping-text">Envío gratis</span>
       </div>
     }
 
     @if (product.offer) {
       <div class="card-offer">
-        <span class="material-symbols-outlined offer-icon"
-          >percent_discount</span
-        >
-        <span class="shipping-text">{{ product.offer }}% off</span>
+        <span class="material-symbols-outlined offer-icon">percent_discount</span>
+        <span class="offer-text">{{ product.offer }}% OFF</span>
       </div>
     }
 
     <img [src]="product.image" class="card-img-top" [alt]="product.name" />
 
-    <div class="store-logo-badge">
-      <img
-        [src]="product.storeLogo || 'assets/default-store.png'"
-        class="store-logo-img"
-        alt="Logo tienda"
-      />
+    <div class="store-logo-badge" 
+         [routerLink]="['/stores', storeName]" 
+         style="cursor: pointer;"
+         title="Ir a la tienda oficial de {{storeName}}">
+      <img [src]="storeLogoUrl" class="store-logo-img" [alt]="storeName">
     </div>
   </div>
 
   <div class="card-body">
     <h5 class="card-title">{{ product.name }}</h5>
     <p class="card-text">{{ product.description }}</p>
+    
     <span class="card-price">${{ product.price }}</span>
-    <button class="btn btn-primary" (click)="seeDetails(product)">
+    
+    <button class="btn" (click)="seeDetails(product)">
       Ver detalles
     </button>
+    
     @if (isInComparativeList) {
-      <button
-        class="btn delete"
-        (click)="deleteProductFromCompare(this.product.id)"
-      >
+      <button class="btn delete" (click)="deleteProductFromCompare(this.product.id)">
         Eliminar
       </button>
-      <p class="text-informative">Añadido para comparar</p>
+      
+      <p class="text-informative">
+        <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span>
+        Añadido para comparar
+      </p>
+      
     } @else {
-      <button
-        class="btn delete"
-        (click)="addToCompare(product)"
-        [disabled]="isInComparativeList"
-      >
+      <button class="btn delete" 
+              (click)="addToCompare(product)"
+              [disabled]="isInComparativeList">
         Comparar
       </button>
     }
 
     <p class="card-stock">{{ product.stock }} Unidades</p>
+    
   </div>
 </div>

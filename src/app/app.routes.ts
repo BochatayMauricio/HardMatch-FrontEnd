@@ -6,6 +6,7 @@ import { UserDashboardComponent } from './Pages/user-dashboard/user-dashboard.co
 import { UserPurchasesComponent } from './Pages/user-purchases/user-purchases.component';
 import { AdminDashboardComponent } from './Pages/admin-dashboard/admin-dashboard.component';
 import { UserFavoritesComponent } from './Pages/user-favorites/user-favorites.component';
+import { StoreProfileComponent } from './Pages/store-profile/store-profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'mis-compras', component: UserPurchasesComponent },
   { path: 'admin', component: AdminDashboardComponent },
   { path: 'favoritos', component: UserFavoritesComponent },
+  { path: 'stores/:name', component: StoreProfileComponent },
   { path: '**', redirectTo: '' },
 ];
