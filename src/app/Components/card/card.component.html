@@ -1,7 +1,6 @@
 <div class="card">
   
   <div class="card-image-wrapper">
-    
     <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
       <span class="material-symbols-outlined">favorite</span>
     </button>
@@ -31,34 +30,47 @@
   </div>
 
   <div class="card-body">
-    <h5 class="card-title">{{ product.name }}</h5>
-    <p class="card-text">{{ product.description }}</p>
-    
-    <span class="card-price">${{ product.price }}</span>
-    
-    <button class="btn" (click)="seeDetails(product)">
-      Ver detalles
-    </button>
-    
-    @if (isInComparativeList) {
-      <button class="btn delete" (click)="deleteProductFromCompare(this.product.id)">
-        Eliminar
-      </button>
-      
-      <p class="text-informative">
-        <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span>
-        Añadido para comparar
-      </p>
-      
+  <h5 class="card-title">{{ product.name }}</h5>
+  <p class="card-text">{{ product.description }}</p>
+  
+  <div class="price-container">
+    @if (product.offer) {
+      <span class="card-price">
+        ${{ (product.price * (1 - (+product.offer / 100))) | number:'1.0-0':'es-AR' }}<span class="price-decimals">{{ (product.price * (1 - (+product.offer / 100)) % 1 * 100) | number:'2.0-0' }}</span>
+      </span>
+      <span class="price-original">${{ product.price | number:'1.0-0':'es-AR' }}</span>
     } @else {
-      <button class="btn delete" 
-              (click)="addToCompare(product)"
-              [disabled]="isInComparativeList">
-        Comparar
-      </button>
+      <span class="card-price">
+        ${{ product.price | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
+      </span>
     }
+  </div>
+  
+  <button class="btn" (click)="seeDetails(product)">
+    Ver detalles
+  </button>
+  
+  @if (isInComparativeList) {
+    <button class="btn delete" (click)="deleteProductFromCompare(this.product.id)">
+      Eliminar
+    </button>
+  } @else {
+    <button class="btn delete" (click)="addToCompare(product)" [disabled]="isInComparativeList">
+      Comparar
+    </button>
+  }
 
-    <p class="card-stock">{{ product.stock }} Unidades</p>
-    
+  <div class="card-footer-info">
+    <div class="footer-left">
+      @if (isInComparativeList) {
+        <p class="text-informative">
+          <span class="material-symbols-outlined">task_alt</span>
+          <span>Comparando</span>
+        </p>
+      }
+    </div>
+    <div class="footer-right">
+      <p class="card-stock">{{ product.stock }} Unidades</p>
+    </div>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common'; // <-- Importar CommonModule o DecimalPipe
 import { ProductI } from '../../Interfaces/product.interface';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +10,8 @@ import { StoreService } from '../../Services/stores.service';
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [RouterLink],
+  // Añadimos CommonModule aquí para habilitar los Pipes (number, date, etc.)
+  imports: [CommonModule, RouterLink], 
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })
@@ -58,7 +60,6 @@ export class CardComponent implements OnInit {
 
     this.isInComparativeList = false;
 
-    // Mostrar mensaje según el tipo de error
     switch (result.errorType) {
       case 'category':
         this.toastr.error(result.message, 'Categoría diferente');

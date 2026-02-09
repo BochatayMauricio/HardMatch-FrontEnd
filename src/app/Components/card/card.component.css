@@ -22,7 +22,24 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding-bottom: 3.5rem; 
+    padding-bottom: 3rem;
+}
+
+.footer-left, .footer-right {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.card-footer-info {
+    position: absolute;
+    bottom: 0.8rem;
+    left: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
 }
 
 .card-title {
@@ -54,13 +71,41 @@
     flex: 1;
 }
 
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: auto;
+}
+
 .card-price {
+    display: flex;
+    align-items: flex-start;
     font-family: var(--font-family);
     color: var(--primary-color);
-    font-weight: bold;
-    font-size: x-large;
-    margin-bottom: 0.5rem;
-    margin-top: auto;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
+
+.price-original {
+    font-family: var(--font-family);
+    color: var(--text-secondary-color);
+    text-decoration: line-through;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.price-decimals {
+    font-size: 0.9rem;
+    margin-top: 4px;
+    font-weight: 600;
+    margin-left: 1px;
+}
+
+/* Modificamos card-price original para que no tenga margin-top: auto 
+   ya que ahora lo tiene el contenedor padre .price-container */
+.card-price {
+    margin-top: 0;
 }
 
 .btn {
@@ -95,31 +140,23 @@
 }
 
 .card-stock {
-    font-family: var(--font-family);
-    color: var(--text-secondary-color);
-    font-size: 0.75rem;
-    width: fit-content;
+    color: #9ca3af;
+    font-size: 0.72rem;
     margin: 0;
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 10;
+    white-space: nowrap;
 }
 
 .text-informative {
-    font-family: var(--font-family);
     color: var(--primary-color);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     margin: 0;
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    z-index: 10;
-    
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-image-wrapper {
@@ -263,4 +300,12 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent !important;
+}
+
+@media (max-width: 300px) {
+    .card-footer-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
 }
