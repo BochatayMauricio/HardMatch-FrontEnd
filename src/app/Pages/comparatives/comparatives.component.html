@@ -112,15 +112,17 @@
             </svg>
           </button>
 
-          @if (getPriceComparison().cheapest === i && products.length > 1) {
-            <span class="badge-cheapest">Mejor precio</span>
-          }
-          @if (getBestSpecsIndex() === i && products.length > 1) {
-            <span class="badge-specs">Mejores specs</span>
-          }
-          @if (getBestValueIndex() === i && products.length > 1) {
-            <span class="badge-value">Mejor valor</span>
-          }
+          <div class="badges-container">
+            @if (getPriceComparison().cheapest === i && products.length > 1) {
+              <span class="badge-cheapest">Mejor precio</span>
+            }
+            @if (getBestSpecsIndex() === i && products.length > 1) {
+              <span class="badge-specs">Mejores specs</span>
+            }
+            @if (getBestValueIndex() === i && products.length > 1) {
+              <span class="badge-value">Mejor valor</span>
+            }
+          </div>
 
           <div class="product-image">
             <img [src]="product.image" [alt]="product.name" loading="lazy" />

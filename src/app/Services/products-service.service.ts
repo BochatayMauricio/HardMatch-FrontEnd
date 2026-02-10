@@ -369,6 +369,11 @@ export class ProductsServiceService {
   getProducts() {
     return this.products;
   }
+
+  getProductById(id: number): ProductI | null {
+    return this.products.find((p) => p.id === id) || null;
+  }
+
   getProductsByStoreId(storeId: number): ProductI[] {
     return this.products.filter((p) => p.storeId === storeId);
   }

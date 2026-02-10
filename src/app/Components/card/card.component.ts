@@ -4,14 +4,14 @@ import { ProductI } from '../../Interfaces/product.interface';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { ToastrService } from 'ngx-toastr';
 import { FavoritesService } from '../../Services/favorites.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../Services/stores.service';
 
 @Component({
   selector: 'app-card',
   standalone: true,
   // Añadimos CommonModule aquí para habilitar los Pipes (number, date, etc.)
-  imports: [CommonModule, RouterLink], 
+  imports: [CommonModule, RouterLink],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })
@@ -27,6 +27,7 @@ export class CardComponent implements OnInit {
 
   private favService = inject(FavoritesService);
   private storeService = inject(StoreService);
+  private router = inject(Router);
 
   constructor(
     private comparativesService: ComparativesService,
@@ -76,10 +77,7 @@ export class CardComponent implements OnInit {
   }
 
   seeDetails(product: ProductI): void {
-    this.toastr.info(
-      `Detalles de ${product.name} (ID: ${product.id})`,
-      'Aca iria una nueva pagina con toda la info del producto',
-    );
+    this.router.navigate(['/producto', product.id]);
   }
 
   deleteProductFromCompare(productId: number): void {

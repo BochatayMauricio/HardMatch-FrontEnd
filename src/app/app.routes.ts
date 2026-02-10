@@ -8,6 +8,7 @@ import { AdminDashboardComponent } from './Pages/admin-dashboard/admin-dashboard
 import { UserFavoritesComponent } from './Pages/user-favorites/user-favorites.component';
 import { StoreProfileComponent } from './Pages/store-profile/store-profile.component';
 import { ComparativesComponent } from './Pages/comparatives/comparatives.component';
+import { ViewProductDetailsComponent } from './Pages/view-product-details/view-product-details.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'favoritos', component: UserFavoritesComponent },
   { path: 'stores/:name', component: StoreProfileComponent },
   { path: 'comparativas', component: ComparativesComponent },
+  { path: 'producto/:id', component: ViewProductDetailsComponent },
   { path: '**', redirectTo: '' },
 ];
