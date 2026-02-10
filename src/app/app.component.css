@@ -1,33 +1,25 @@
 .floating-compare-btn {
   position: fixed;
   bottom: 30px;
-  left: 30px; /* A LA IZQUIERDA, para no tapar el Typebot (derecha) */
-  z-index: 1000; /* Alto para estar sobre el contenido */
-
+  left: 30px;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 12px;
-
-  background-color: var(
-    --primary-color
-  ); /* Un color oscuro/negro para contrastar */
+  background: var(--buttons-primary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   color: white;
   border: none;
   border-radius: 50px;
   padding: 12px 24px;
-
   cursor: pointer;
-
-  /* Animación de entrada */
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  text-decoration: none;
 }
 
 .floating-compare-btn:hover {
-  transform: translateY(-5px); /* Efecto de levitación */
-  background-color: var(--primary-color);
+  transform: translateY(-5px);
 }
 
 .icon-container {
@@ -37,16 +29,16 @@
   justify-content: center;
 }
 
-.floating-compare-btn i {
-  font-size: 1.2rem;
+.balance-icon {
+  font-size: 1.5rem;
+  font-variation-settings: 'FILL' 1;
 }
 
-/* El numerito rojo (Badge) */
 .badge-count {
   position: absolute;
-  top: -8px;
-  right: -10px;
-  background-color: #dc3545; /* Rojo Bootstrap */
+  top: -6px;
+  right: -8px;
+  background-color: #ef4444;
   color: white;
   font-size: 0.75rem;
   font-weight: bold;
@@ -56,16 +48,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #212529; /* Borde del mismo color del botón para separarlo */
+  border: 2px solid #7C3AED; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .btn-text {
   font-weight: 600;
   font-family: "Montserrat", sans-serif;
   font-size: 0.95rem;
+  letter-spacing: 0.3px;
 }
 
-/* Animación */
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -77,17 +70,16 @@
   }
 }
 
-/* Responsividad: En celulares muy chicos, solo mostramos el ícono */
 @media (max-width: 576px) {
   .btn-text {
     display: none;
   }
   .floating-compare-btn {
-    padding: 15px;
+    padding: 16px;
     border-radius: 50%;
   }
   .badge-count {
-    top: -5px;
-    right: -5px;
+    top: -2px;
+    right: -2px;
   }
 }
