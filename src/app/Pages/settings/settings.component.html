@@ -1,0 +1,477 @@
+<div class="settings-container">
+  <!-- Header -->
+  <header class="settings-header">
+    <div class="header-content">
+      <h1>Preferencias de Matching</h1>
+      <p class="header-subtitle">
+        Personaliza cómo encontramos los productos perfectos para ti
+      </p>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          [style.width.%]="getProgressPercentage()"
+        ></div>
+      </div>
+      <span class="progress-text"
+        >{{ getProgressPercentage() }}% completado</span
+      >
+    </div>
+  </header>
+
+  <div class="settings-layout">
+    <!-- Sidebar Navigation -->
+    <nav class="settings-nav">
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'categories'"
+        (click)="setActiveSection('categories')"
+      >
+        <span class="nav-icon">📱</span>
+        <span class="nav-label">Categorías</span>
+      </button>
+
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'budget'"
+        (click)="setActiveSection('budget')"
+      >
+        <span class="nav-icon">💰</span>
+        <span class="nav-label">Presupuesto</span>
+      </button>
+
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'brands'"
+        (click)="setActiveSection('brands')"
+      >
+        <span class="nav-icon">🏷️</span>
+        <span class="nav-label">Marcas</span>
+      </button>
+
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'priorities'"
+        (click)="setActiveSection('priorities')"
+      >
+        <span class="nav-icon">⚡</span>
+        <span class="nav-label">Prioridades</span>
+      </button>
+
+      <button
+        class="nav-item"
+        [class.active]="activeSection === 'alerts'"
+        (click)="setActiveSection('alerts')"
+      >
+        <span class="nav-icon">🔔</span>
+        <span class="nav-label">Alertas</span>
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="settings-content">
+      <!-- =============================================
+           SECCIÓN: CATEGORÍAS DE INTERÉS
+           ============================================= -->
+      <section *ngIf="activeSection === 'categories'" class="settings-section">
+        <div class="section-header">
+          <h2>Categorías de Interés</h2>
+          <p class="section-description">
+            Selecciona los tipos de productos sobre los que quieres recibir
+            recomendaciones
+          </p>
+        </div>
+
+        <div class="categories-grid">
+          <button
+            *ngFor="let cat of categories"
+            class="category-card"
+            [class.selected]="isCategorySelected(cat.value)"
+            (click)="toggleCategory(cat.value)"
+          >
+            <span class="category-icon">
+              <ng-container [ngSwitch]="cat.icon">
+                <span *ngSwitchCase="'laptop'">💻</span>
+                <span *ngSwitchCase="'tablet'">📱</span>
+                <span *ngSwitchCase="'smartphone'">📲</span>
+                <span *ngSwitchCase="'monitor'">🖥️</span>
+                <span *ngSwitchCase="'keyboard'">⌨️</span>
+                <span *ngSwitchCase="'mouse'">🖱️</span>
+                <span *ngSwitchCase="'headphones'">🎧</span>
+                <span *ngSwitchCase="'hard-drive'">💾</span>
+                <span *ngSwitchCase="'cpu'">🔧</span>
+                <span *ngSwitchDefault>📦</span>
+              </ng-container>
+            </span>
+            <span class="category-label">{{ cat.label }}</span>
+            <span class="check-indicator" *ngIf="isCategorySelected(cat.value)"
+              >✓</span
+            >
+          </button>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Tipos de uso -->
+        <div class="section-header">
+          <h3>¿Para qué los usarás?</h3>
+          <p class="section-description">
+            Esto nos ayuda a entender mejor tus necesidades
+          </p>
+        </div>
+
+        <div class="usage-grid">
+          <button
+            *ngFor="let usage of usageTypes"
+            class="usage-card"
+            [class.selected]="isUsageTypeSelected(usage.value)"
+            (click)="toggleUsageType(usage.value)"
+          >
+            <span class="usage-icon">{{ usage.icon }}</span>
+            <div class="usage-info">
+              <span class="usage-label">{{ usage.label }}</span>
+              <span class="usage-description">{{ usage.description }}</span>
+            </div>
+            <span
+              class="check-indicator"
+              *ngIf="isUsageTypeSelected(usage.value)"
+              >✓</span
+            >
+          </button>
+        </div>
+      </section>
+
+      <!-- =============================================
+           SECCIÓN: PRESUPUESTO
+           ============================================= -->
+      <section *ngIf="activeSection === 'budget'" class="settings-section">
+        <div class="section-header">
+          <h2>Rango de Presupuesto</h2>
+          <p class="section-description">
+            Define tu presupuesto para filtrar productos dentro de tu alcance
+          </p>
+        </div>
+
+        <div class="budget-display">
+          <div class="price-range-visual">
+            <div class="price-box">
+              <span class="price-label">Mínimo</span>
+              <span class="price-value">{{
+                formatPrice(preferences.priceRange.minPrice)
+              }}</span>
+            </div>
+            <div class="price-separator">
+              <span class="separator-line"></span>
+              <span class="separator-text">hasta</span>
+              <span class="separator-line"></span>
+            </div>
+            <div class="price-box">
+              <span class="price-label">Máximo</span>
+              <span class="price-value">{{
+                formatPrice(preferences.priceRange.maxPrice)
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="range-sliders">
+          <div class="slider-group">
+            <label for="minPrice">Precio mínimo</label>
+            <input
+              type="range"
+              id="minPrice"
+              [min]="priceSliderMin"
+              [max]="priceSliderMax"
+              [step]="priceStep"
+              [value]="preferences.priceRange.minPrice"
+              (input)="updatePriceRange('min', $event)"
+              class="price-slider"
+            />
+          </div>
+
+          <div class="slider-group">
+            <label for="maxPrice">Precio máximo</label>
+            <input
+              type="range"
+              id="maxPrice"
+              [min]="priceSliderMin"
+              [max]="priceSliderMax"
+              [step]="priceStep"
+              [value]="preferences.priceRange.maxPrice"
+              (input)="updatePriceRange('max', $event)"
+              class="price-slider"
+            />
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="toggle-option">
+          <div class="toggle-info">
+            <span class="toggle-label">Presupuesto flexible</span>
+            <span class="toggle-description">
+              Ocasionalmente mostrar productos ligeramente fuera de tu rango si
+              son relevantes
+            </span>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [(ngModel)]="preferences.flexibleBudget"
+              (change)="markAsChanged()"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- =============================================
+           SECCIÓN: MARCAS PREFERIDAS
+           ============================================= -->
+      <section *ngIf="activeSection === 'brands'" class="settings-section">
+        <div class="section-header">
+          <h2>Preferencias de Marcas</h2>
+          <p class="section-description">
+            Haz clic para marcar como preferida (verde) o excluir (rojo). Clic
+            de nuevo para desmarcar.
+          </p>
+        </div>
+
+        <div class="brand-legend">
+          <span class="legend-item">
+            <span class="legend-dot preferred"></span> Preferida
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot neutral"></span> Neutral
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot excluded"></span> Excluida
+          </span>
+        </div>
+
+        <div class="brands-grid">
+          <button
+            *ngFor="let brand of brands"
+            class="brand-card"
+            [class.preferred]="isBrandPreferred(brand.value)"
+            [class.excluded]="isBrandExcluded(brand.value)"
+            (click)="cycleBrandState(brand.value)"
+          >
+            <span class="brand-name">{{ brand.value }}</span>
+            <span class="brand-status">
+              <ng-container *ngIf="isBrandPreferred(brand.value)"
+                >✓</ng-container
+              >
+              <ng-container *ngIf="isBrandExcluded(brand.value)"
+                >✗</ng-container
+              >
+            </span>
+          </button>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="toggle-option">
+          <div class="toggle-info">
+            <span class="toggle-label">Abierto a nuevas marcas</span>
+            <span class="toggle-description">
+              Recibir recomendaciones de marcas que no conoces pero podrían
+              interesarte
+            </span>
+          </div>
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [(ngModel)]="preferences.openToNewBrands"
+              (change)="markAsChanged()"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- =============================================
+           SECCIÓN: PRIORIDADES
+           ============================================= -->
+      <section *ngIf="activeSection === 'priorities'" class="settings-section">
+        <div class="section-header">
+          <h2>Prioridades de Matching</h2>
+          <p class="section-description">
+            Arrastra para ordenar según tu importancia. El primero es el más
+            importante.
+          </p>
+        </div>
+
+        <div class="priorities-list">
+          <div
+            *ngFor="let priority of preferences.priorities; let i = index"
+            class="priority-item"
+            [class.dragging]="draggedPriority === priority"
+            draggable="true"
+            (dragstart)="onDragStart($event, priority)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event, priority)"
+            (dragend)="onDragEnd()"
+          >
+            <span class="priority-rank">{{ i + 1 }}</span>
+            <span class="priority-icon">{{ getPriorityIcon(priority) }}</span>
+            <span class="priority-label">{{ getPriorityLabel(priority) }}</span>
+            <span class="drag-handle">⋮⋮</span>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="priorities-available">
+          <span class="available-label">Agregar prioridades:</span>
+          <div class="available-chips">
+            <button
+              *ngFor="let p of priorities"
+              class="priority-chip"
+              [class.active]="isPriorityInList(p.value)"
+              (click)="togglePriorityInList(p.value)"
+            >
+              {{ p.icon }} {{ p.label }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================
+           SECCIÓN: ALERTAS
+           ============================================= -->
+      <section *ngIf="activeSection === 'alerts'" class="settings-section">
+        <div class="section-header">
+          <h2>Alertas y Notificaciones</h2>
+          <p class="section-description">
+            Configura cuándo y cómo quieres recibir notificaciones de matches
+          </p>
+        </div>
+
+        <div class="alerts-list">
+          <div class="alert-option">
+            <div class="alert-info">
+              <span class="alert-icon">📉</span>
+              <div class="alert-text">
+                <span class="alert-title">Bajada de precio</span>
+                <span class="alert-description"
+                  >Cuando un producto que seguís baja de precio</span
+                >
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="preferences.alerts.priceDropAlert"
+                (change)="toggleAlert('priceDropAlert')"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-option">
+            <div class="alert-info">
+              <span class="alert-icon">🎯</span>
+              <div class="alert-text">
+                <span class="alert-title">Nuevo match</span>
+                <span class="alert-description"
+                  >Cuando encontramos un producto perfecto para vos</span
+                >
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="preferences.alerts.newMatchAlert"
+                (change)="toggleAlert('newMatchAlert')"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-option">
+            <div class="alert-info">
+              <span class="alert-icon">📦</span>
+              <div class="alert-text">
+                <span class="alert-title">Stock disponible</span>
+                <span class="alert-description"
+                  >Cuando vuelve a haber stock de un producto agotado</span
+                >
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="preferences.alerts.stockAlert"
+                (change)="toggleAlert('stockAlert')"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-option">
+            <div class="alert-info">
+              <span class="alert-icon">🔥</span>
+              <div class="alert-text">
+                <span class="alert-title">Ofertas especiales</span>
+                <span class="alert-description"
+                  >Descuentos exclusivos y promociones</span
+                >
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="preferences.alerts.dealAlert"
+                (change)="toggleAlert('dealAlert')"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="frequency-section">
+          <h3>Frecuencia de alertas</h3>
+          <div class="frequency-options">
+            <button
+              *ngFor="let freq of alertFrequencies"
+              class="frequency-btn"
+              [class.active]="preferences.alerts.alertFrequency === freq.value"
+              (click)="updateAlertFrequency(freq.value)"
+            >
+              <span class="freq-label">{{ freq.label }}</span>
+              <span class="freq-description">{{ freq.description }}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer con acciones -->
+  <footer class="settings-footer">
+    <span class="save-message" *ngIf="saveMessage">{{ saveMessage }}</span>
+    <div class="footer-actions">
+      <button
+        class="btn btn-secondary"
+        (click)="resetPreferences()"
+        [disabled]="isLoading"
+      >
+        Restablecer
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="savePreferences()"
+        [disabled]="!hasChanges || isLoading"
+      >
+        <span *ngIf="!isLoading">Guardar cambios</span>
+        <span *ngIf="isLoading">Guardando...</span>
+      </button>
+    </div>
+  </footer>
+</div>

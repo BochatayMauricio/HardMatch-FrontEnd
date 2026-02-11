@@ -9,6 +9,7 @@ import { UserFavoritesComponent } from './Pages/user-favorites/user-favorites.co
 import { StoreProfileComponent } from './Pages/store-profile/store-profile.component';
 import { ComparativesComponent } from './Pages/comparatives/comparatives.component';
 import { ViewProductDetailsComponent } from './Pages/view-product-details/view-product-details.component';
+import { SettingsComponent } from './Pages/settings/settings.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'stores/:name', component: StoreProfileComponent },
   { path: 'comparativas', component: ComparativesComponent },
   { path: 'producto/:id', component: ViewProductDetailsComponent },
+  { path: 'configuracion', component: SettingsComponent },
   { path: '**', redirectTo: '' },
 ];

@@ -38,7 +38,7 @@ export class AppComponent {
         const currentUrl = event.urlAfterRedirects;
 
         // Rutas donde NO queremos el bot ni el header
-        const hiddenRoutes = ['/login', '/admin', '/perfil'];
+        const hiddenRoutes = ['/login'];
         const shouldHide = hiddenRoutes.some((route) =>
           currentUrl.includes(route),
         );
