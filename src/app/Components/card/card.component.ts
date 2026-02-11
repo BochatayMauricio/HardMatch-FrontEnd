@@ -1,16 +1,17 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common'; // <-- Importar CommonModule o DecimalPipe
+import { CommonModule } from '@angular/common'; 
 import { ProductI } from '../../Interfaces/product.interface';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { ToastrService } from 'ngx-toastr';
 import { FavoritesService } from '../../Services/favorites.service';
 import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../Services/stores.service';
+import { AuthService } from '../../Services/auth.service'; // <--- 1. Importar AuthService
+import { UserI } from '../../Interfaces/user.interface';   // <--- 1. Importar UserI
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  // Añadimos CommonModule aquí para habilitar los Pipes (number, date, etc.)
   imports: [CommonModule, RouterLink],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
@@ -21,12 +22,16 @@ export class CardComponent implements OnInit {
   @Input() showDeleteButton: boolean = false;
 
   isFav: boolean = false;
+  
+  // Variable para controlar el usuario
+  currentUser: UserI | null = null; // <--- 2. Variable de estado
 
   storeLogoUrl: string = 'assets/default-store.png';
   storeName: string = '';
 
   private favService = inject(FavoritesService);
   private storeService = inject(StoreService);
+  private authService = inject(AuthService); // <--- 3. Inyectar AuthService
   private router = inject(Router);
 
   constructor(
@@ -35,6 +40,11 @@ export class CardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // <--- 4. Suscribirse al usuario actual
+    this.authService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    });
+
     this.comparativesService.getProducts().subscribe((products) => {
       this.isInComparativeList = products.some((p) => p.id === this.product.id);
     });
@@ -86,6 +96,17 @@ export class CardComponent implements OnInit {
   }
 
   toggleFavorite() {
+    // <--- 5. Verificación de seguridad
+    if (!this.currentUser) {
+      this.toastr.info('Debes iniciar sesión para agregar favoritos', '¡Atención!');
+      return;
+    }
+
     this.favService.toggleFavorite(this.product);
+    
+    // Feedback visual (Opcional, igual que en el detalle)
+    if (!this.isFav) { // Como el toggle es rápido, aquí chequeamos la inversión
+       this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
+    }
   }
 }
