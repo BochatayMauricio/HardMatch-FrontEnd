@@ -36,29 +36,19 @@
       <section class="product-gallery">
         <div class="main-image-container">
           @if (product.offer) {
-            <div class="discount-badge">
-              <span class="discount-value">-{{ product.offer }}%</span>
+            <div class="card-offer">
+              <span class="material-symbols-outlined offer-icon">percent_discount</span>
+              <span class="offer-text">{{ product.offer }}% OFF</span>
             </div>
           }
+
           @if (product.freeShipping) {
-            <div class="shipping-badge">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect x="1" y="3" width="15" height="13"></rect>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-              </svg>
-              <span>Envío gratis</span>
+            <div class="free-shipping-badge">
+              <span class="material-symbols-outlined truck-icon">delivery_truck_speed</span>
+              <span class="shipping-text">Envío gratis</span>
             </div>
           }
+
           <img [src]="product.image" [alt]="product.name" class="main-image" />
         </div>
 
@@ -88,21 +78,20 @@
         <div class="info-header">
           <span class="brand">{{ product.brand }}</span>
           @if (product.ratings) {
-            <div class="rating">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-                ></polygon>
-              </svg>
+            <div class="rating-container">
+              
               <span class="rating-value">{{ product.ratings }}</span>
+
+              <div class="stars-wrapper">
+                @for (star of getStars(); track $index) {
+                  <span class="material-symbols-outlined star-icon" [ngClass]="star.class">
+                    {{ star.icon }}
+                  </span>
+                }
+              </div>
+              
               @if (product.reviews) {
-                <span class="reviews">({{ product.reviews }} reseñas)</span>
+                <span class="reviews-count">({{ product.reviews }} reseñas)</span>
               }
             </div>
           }
@@ -116,54 +105,29 @@
         <div class="price-section">
           @if (product.offer) {
             <div class="price-with-discount">
-              <span class="original-price"
-                >${{ product.price | number: "1.0-0" : "es-AR" }}</span
-              >
-              <span class="current-price"
-                >${{ getDiscountedPrice() | number: "1.0-0" : "es-AR" }}</span
-              >
-            </div>
-            <div class="savings-badge">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-                ></path>
-              </svg>
-              <span
-                >Ahorrás ${{ getSavings() | number: "1.0-0" : "es-AR" }}</span
-              >
+              <div class="original-price-row">
+                <span class="original-price">${{ product.price | number: "1.0-0" : "es-AR" }}</span>
+                
+                <div class="savings-badge-premium">
+                  <span class="material-symbols-outlined money-icon">paid</span>
+                  <span class="savings-text">Ahorrás ${{ getSavings() | number: "1.0-0" : "es-AR" }}</span>
+                </div>
+              </div>
+
+              <span class="current-price">
+                ${{ getDiscountedPrice() | number: "1.0-0" : "es-AR" }}<span class="decimal-small">00</span>
+              </span>
             </div>
           } @else {
-            <span class="current-price"
-              >${{ product.price | number: "1.0-0" : "es-AR" }}</span
-            >
+            <span class="current-price">
+              ${{ product.price | number: "1.0-0" : "es-AR" }}<span class="decimal-small">00</span>
+            </span>
           }
         </div>
 
         <!-- Stock Info -->
         @if (product.stock) {
           <div class="stock-info" [class.low-stock]="product.stock < 5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-              ></path>
-            </svg>
             @if (product.stock < 5) {
               <span>¡Solo quedan {{ product.stock }} unidades!</span>
             } @else {
@@ -175,87 +139,28 @@
         <!-- Action Buttons -->
         <div class="action-buttons">
           <button class="btn-primary btn-buy" (click)="visitProductUrl()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path
-                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-              ></path>
-            </svg>
+            <span class="material-symbols-outlined">shopping_cart</span>
             Ver en tienda oficial
           </button>
 
           <div class="secondary-actions">
-            <button
-              class="btn-icon"
-              [class.active]="isFavorite"
-              (click)="toggleFavorite()"
-              [title]="
-                isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                [attr.fill]="isFavorite ? 'currentColor' : 'none'"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                ></path>
-              </svg>
+            
+            <button 
+              class="btn-round" 
+              [class.is-active]="isFavorite" 
+              (click)="toggleFavorite()" 
+              title="Agregar a favoritos">
+              <span class="material-symbols-outlined">favorite</span>
             </button>
 
-            @if (!isInComparison) {
-              <button
-                class="btn-icon"
-                (click)="addToComparison()"
-                title="Agregar a comparación"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <line x1="18" y1="20" x2="18" y2="10"></line>
-                  <line x1="12" y1="20" x2="12" y2="4"></line>
-                  <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
-              </button>
-            } @else {
-              <button
-                class="btn-icon active"
-                (click)="removeFromComparison()"
-                title="Quitar de comparación"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </button>
-            }
+            <button 
+              class="btn-round" 
+              [class.is-active]="isInComparison" 
+              (click)="isInComparison ? removeFromComparison() : addToComparison()" 
+              title="Comparar producto">
+              <span class="material-symbols-outlined">balance</span>
+            </button>
+
           </div>
         </div>
 
@@ -281,67 +186,22 @@
         <!-- Quick Info Cards (inside product-info) -->
         <div class="quick-info-grid">
           <div class="quick-info-item">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
-            </svg>
-            <span>{{
-              product.freeShipping ? "Envío gratis" : "Envío a todo el país"
-            }}</span>
+            <span class="material-symbols-outlined quick-icon">delivery_truck_speed</span>
+            <span>{{ product.freeShipping ? "Envío gratis" : "Envío a todo el país" }}</span>
           </div>
+
           <div class="quick-info-item">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
+            <span class="material-symbols-outlined quick-icon">verified_user</span>
             <span>12 meses de garantía</span>
           </div>
+
           <div class="quick-info-item">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
+            <span class="material-symbols-outlined quick-icon">lock</span>
             <span>Compra protegida</span>
           </div>
+
           <div class="quick-info-item">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-              ></path>
-            </svg>
+            <span class="material-symbols-outlined quick-icon">box</span>
             <span>Devolución gratis</span>
           </div>
         </div>
@@ -442,19 +302,11 @@
         <div class="specs-grid">
           @for (spec of getCharacteristics(); track spec.key) {
             <div class="spec-card">
+              
               <div class="spec-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <span class="material-symbols-outlined">{{ spec.icon }}</span>
               </div>
+              
               <div class="spec-content">
                 <span class="spec-label">{{ spec.key }}</span>
                 <span class="spec-value">{{ spec.value }}</span>

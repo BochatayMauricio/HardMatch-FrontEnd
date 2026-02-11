@@ -63,12 +63,33 @@ export class ViewProductDetailsComponent implements OnInit {
     }
   }
 
-  getCharacteristics(): { key: string; value: string | number | boolean }[] {
+  getCharacteristics(): { key: string; value: string | number | boolean; icon: string }[] {
     if (!this.product?.caracteristics) return [];
+
+    // Diccionario de iconos según la especificación
+    const iconMap: Record<string, string> = {
+      processor: 'memory',
+      ram: 'developer_board',
+      storage: 'hard_drive',
+      screen: 'aspect_ratio',
+      graphics: 'videogame_asset',
+      battery: 'battery_charging_full',
+      weight: 'scale',
+      os: 'layers',
+      camera: 'photo_camera',
+      connectivity: 'wifi',
+      dpi: 'mouse',
+      buttons: 'ads_click',
+      rgb: 'palette',
+      sensor: 'sensors',
+      polling: 'speed',
+    };
 
     return Object.entries(this.product.caracteristics).map(([key, value]) => ({
       key: this.formatCharacteristicKey(key),
       value: typeof value === 'boolean' ? (value ? 'Sí' : 'No') : value,
+      // Si no encuentra icono específico, usa 'settings' por defecto
+      icon: iconMap[key] || 'settings' 
     }));
   }
 
@@ -105,6 +126,22 @@ export class ViewProductDetailsComponent implements OnInit {
   getSavings(): number {
     if (!this.product?.offer) return 0;
     return this.product.price - this.getDiscountedPrice();
+  }
+
+  getStars(): { icon: string; class: string }[] {
+    const rawRating = this.product?.ratings || 0;
+    const stars = [];
+    const rating = (rawRating % 1 !== 0) ? Math.floor(rawRating) + 0.5 : rawRating;
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) {
+        stars.push({ icon: 'star', class: 'star-filled' });
+      } else if (rating >= i - 0.5) {
+        stars.push({ icon: 'star_half', class: 'star-filled' });
+      } else {
+        stars.push({ icon: 'star', class: 'star-empty' });
+      }
+    }
+    return stars;
   }
 
   toggleFavorite(): void {
