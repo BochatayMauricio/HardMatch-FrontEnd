@@ -12,11 +12,11 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
     provideToastr({
-      positionClass: 'toast-bottom-right',
+      positionClass: 'toast-bottom-center',
       preventDuplicates: true,
       timeOut: 3000,
       progressBar: true,
       progressAnimation: 'increasing',
     })
-    ]
+  ]
 };
