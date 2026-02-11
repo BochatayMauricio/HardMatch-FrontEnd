@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductI } from '../../Interfaces/product.interface';
@@ -7,7 +7,7 @@ import { ComparativesService } from '../../Services/comparatives.service';
 import { FavoritesService } from '../../Services/favorites.service';
 import { StoreService } from '../../Services/stores.service';
 import { AuthService } from '../../Services/auth.service'; // Importamos AuthService
-import { UserI } from '../../Interfaces/user.interface';   // Importamos la interfaz de usuario
+import { UserI } from '../../Interfaces/user.interface'; // Importamos la interfaz de usuario
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -23,18 +23,20 @@ export class ViewProductDetailsComponent implements OnInit {
   isInComparison = false;
   storeLogoUrl = 'assets/default-store.png';
   storeName = '';
-  
+
   // Variable para controlar el estado del usuario
   currentUser: UserI | null = null;
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private productsService = inject(ProductsServiceService);
-  private comparativesService = inject(ComparativesService);
-  private favoritesService = inject(FavoritesService);
-  private storeService = inject(StoreService);
-  private authService = inject(AuthService); // Inyectamos AuthService
-  private toastr = inject(ToastrService);
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productsService: ProductsServiceService,
+    private comparativesService: ComparativesService,
+    private favoritesService: FavoritesService,
+    private storeService: StoreService,
+    private authService: AuthService,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
@@ -49,7 +51,7 @@ export class ViewProductDetailsComponent implements OnInit {
       }
 
       // Suscribirse al usuario actual para validaciones de seguridad
-      this.authService.getCurrentUser().subscribe(user => {
+      this.authService.getCurrentUser().subscribe((user) => {
         this.currentUser = user;
       });
 
@@ -74,7 +76,11 @@ export class ViewProductDetailsComponent implements OnInit {
     }
   }
 
-  getCharacteristics(): { key: string; value: string | number | boolean; icon: string }[] {
+  getCharacteristics(): {
+    key: string;
+    value: string | number | boolean;
+    icon: string;
+  }[] {
     if (!this.product?.caracteristics) return [];
 
     // Diccionario de iconos según la especificación
@@ -100,7 +106,7 @@ export class ViewProductDetailsComponent implements OnInit {
       key: this.formatCharacteristicKey(key),
       value: typeof value === 'boolean' ? (value ? 'Sí' : 'No') : value,
       // Si no encuentra icono específico, usa 'settings' por defecto
-      icon: iconMap[key] || 'settings' 
+      icon: iconMap[key] || 'settings',
     }));
   }
 
@@ -142,10 +148,11 @@ export class ViewProductDetailsComponent implements OnInit {
   getStars(): { icon: string; class: string }[] {
     const rawRating = this.product?.ratings || 0;
     const stars = [];
-    
+
     // Lógica estricta: si tiene decimales, fuerza la media estrella
-    const rating = (rawRating % 1 !== 0) ? Math.floor(rawRating) + 0.5 : rawRating;
-    
+    const rating =
+      rawRating % 1 !== 0 ? Math.floor(rawRating) + 0.5 : rawRating;
+
     for (let i = 1; i <= 5; i++) {
       if (rating >= i) {
         stars.push({ icon: 'star', class: 'star-filled' });
@@ -162,19 +169,22 @@ export class ViewProductDetailsComponent implements OnInit {
   toggleFavorite(): void {
     // 1. Verificación de seguridad: Usuario logueado
     if (!this.currentUser) {
-      this.toastr.info('Debes iniciar sesión para agregar favoritos', '¡Atención!');
-      return; 
+      this.toastr.info(
+        'Debes iniciar sesión para agregar favoritos',
+        '¡Atención!',
+      );
+      return;
     }
 
     // 2. Lógica normal
     if (this.product) {
       this.favoritesService.toggleFavorite(this.product);
-      
+
       // Feedback visual opcional
       if (!this.isFavorite) {
-         this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
+        this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
       } else {
-         this.toastr.info('Producto eliminado de favoritos');
+        this.toastr.info('Producto eliminado de favoritos');
       }
     }
   }

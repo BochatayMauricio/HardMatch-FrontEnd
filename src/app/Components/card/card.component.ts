@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { ProductI } from '../../Interfaces/product.interface';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +7,7 @@ import { FavoritesService } from '../../Services/favorites.service';
 import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../Services/stores.service';
 import { AuthService } from '../../Services/auth.service'; // <--- 1. Importar AuthService
-import { UserI } from '../../Interfaces/user.interface';   // <--- 1. Importar UserI
+import { UserI } from '../../Interfaces/user.interface'; // <--- 1. Importar UserI
 
 @Component({
   selector: 'app-card',
@@ -22,26 +22,25 @@ export class CardComponent implements OnInit {
   @Input() showDeleteButton: boolean = false;
 
   isFav: boolean = false;
-  
+
   // Variable para controlar el usuario
   currentUser: UserI | null = null; // <--- 2. Variable de estado
 
   storeLogoUrl: string = 'assets/default-store.png';
   storeName: string = '';
 
-  private favService = inject(FavoritesService);
-  private storeService = inject(StoreService);
-  private authService = inject(AuthService); // <--- 3. Inyectar AuthService
-  private router = inject(Router);
-
   constructor(
     private comparativesService: ComparativesService,
     private toastr: ToastrService,
+    private favService: FavoritesService,
+    private storeService: StoreService,
+    private authService: AuthService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     // <--- 4. Suscribirse al usuario actual
-    this.authService.getCurrentUser().subscribe(user => {
+    this.authService.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
     });
 
@@ -98,15 +97,19 @@ export class CardComponent implements OnInit {
   toggleFavorite() {
     // <--- 5. Verificación de seguridad
     if (!this.currentUser) {
-      this.toastr.info('Debes iniciar sesión para agregar favoritos', '¡Atención!');
+      this.toastr.info(
+        'Debes iniciar sesión para agregar favoritos',
+        '¡Atención!',
+      );
       return;
     }
 
     this.favService.toggleFavorite(this.product);
-    
+
     // Feedback visual (Opcional, igual que en el detalle)
-    if (!this.isFav) { // Como el toggle es rápido, aquí chequeamos la inversión
-       this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
+    if (!this.isFav) {
+      // Como el toggle es rápido, aquí chequeamos la inversión
+      this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
     }
   }
 }

@@ -5,7 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  inject,
+  Inject,
   PLATFORM_ID,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -41,10 +41,6 @@ interface ProductScore {
   styleUrl: './comparatives.component.css',
 })
 export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
-  private comparativesService = inject(ComparativesService);
-  private router = inject(Router);
-  private platformId = inject(PLATFORM_ID);
-
   products: ProductI[] = [];
   productScores: ProductScore[] = [];
   private subscription!: Subscription;
@@ -115,6 +111,12 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       polling: 'Tasa de Sondeo',
     },
   };
+
+  constructor(
+    private comparativesService: ComparativesService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.comparativesService
