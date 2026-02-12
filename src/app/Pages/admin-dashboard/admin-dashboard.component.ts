@@ -1,200 +1,198 @@
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import Chart from 'chart.js/auto';
-
+import { Component, AfterViewInit } from '@angular/core';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import Chart from 'chart.js/auto'; // Importamos Chart.js
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [CommonModule, CurrencyPipe],
+  standalone: true,
+  imports: [CommonModule, DatePipe, DecimalPipe],
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit, AfterViewInit {
- // Referencias a los elementos <canvas> en el HTML
-  @ViewChild('salesChart') salesChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('categoryChart') categoryChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('stockChart') stockChartRef!: ElementRef<HTMLCanvasElement>;
+export class AdminDashboardComponent implements AfterViewInit {
+  // Tus variables y datos
+  totalSources = 5;
+  activeSources = 3;
+  failedSources = 2;
+  totalScrapedProducts = 45280;
+  newProductsToday = 145;
+  totalClicks = 1240;
 
-  // INSTANCIAS DE LOS GRÁFICOS
-  salesChart: Chart | null = null;
-  categoryChart: Chart | null = null;
-  stockChart: Chart | null = null;
-
-  // KPIs Globales
-  totalRevenue = 1450890.50;
-  activeOrders = 24;
-  totalCustomers = 156;
-  conversionRate = 3.8;
-
-  // Datos para el gráfico de Ventas Mensuales (ficticios)
-  monthlySalesData = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    datasets: [{
-      label: 'Ventas Mensuales (ARS)',
-      data: [350000, 420000, 380000, 500000, 450000, 550000, 600000, 580000, 700000, 750000, 800000, 950000],
-      backgroundColor: 'rgba(124, 58, 237, 0.6)', // var(--primary-color)
-      borderColor: 'rgba(124, 58, 237, 1)',
-      borderWidth: 1,
-      tension: 0.3, // Curva suave para líneas
-      fill: false
-    }]
-  };
-
-  // Datos para el gráfico de Ventas por Categoría (ficticios)
-  categorySalesData = {
-    labels: ['Notebooks', 'Monitores', 'Periféricos', 'Almacenamiento', 'Accesorios'],
-    datasets: [{
-      label: 'Ventas por Categoría',
-      data: [4500000, 2500000, 1800000, 1200000, 800000],
-      backgroundColor: [
-        'rgba(124, 58, 237, 0.7)', // Primary Color
-        'rgba(99, 102, 241, 0.7)', // Complementary
-        'rgba(167, 139, 250, 0.7)', // Lighter Primary
-        'rgba(129, 140, 248, 0.7)', // Another light blue-purple
-        'rgba(196, 181, 253, 0.7)' // Even lighter
-      ],
-      hoverOffset: 4
-    }]
-  };
-
-  // Datos para el gráfico de Estado de Stock (ficticios)
-  stockStatusData = {
-    labels: ['En Stock', 'Bajo Stock', 'Agotado'],
-    datasets: [{
-      label: 'Estado de Stock',
-      data: [70, 20, 10], // Porcentaje o número de productos
-      backgroundColor: [
-        'rgba(16, 185, 129, 0.7)', // Verde (In Stock)
-        'rgba(251, 191, 36, 0.7)', // Amarillo (Low Stock)
-        'rgba(239, 68, 68, 0.7)'   // Rojo (Out of Stock)
-      ],
-      hoverOffset: 4
-    }]
-  };
-
-  // Rendimiento de Productos (Tabla, se mantiene igual)
-  productsPerformance: any[] = [
-    { id: 1, name: 'Lenovo IdeaPad 3', category: 'Notebook', unitsSold: 45, revenue: 13049955, stock: 10 },
-    { id: 2, name: 'Monitor Samsung 27"', category: 'Monitores', unitsSold: 12, revenue: 1800000, stock: 5 },
-    { id: 3, name: 'Teclado HyperX', category: 'Periféricos', unitsSold: 88, revenue: 2200000, stock: 20 }
+  marketplaceStatus = [
+    { 
+      id: 1, 
+      name: 'Frávega', 
+      logo: 'https://www.producteca.com/wp-content/uploads/2019/10/logo-fravega.png', 
+      lastUpdate: new Date(), 
+      productCount: 12500, 
+      totalClicks: 850, 
+      avgVariation: 2.1, 
+      priceDrop: true, 
+      status: 'OK' 
+    },
+    { 
+      id: 2, 
+      name: 'Megatone', 
+      logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s', 
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 15), // Hace 15 minutos
+      productCount: 8400, 
+      totalClicks: 420, 
+      avgVariation: 1.5, 
+      priceDrop: false, 
+      status: 'OK' 
+    },
+    { 
+      id: 3, 
+      name: 'Naldo', 
+      logo: 'https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png', 
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 5), // Hace 5 minutos
+      productCount: 6200, 
+      totalClicks: 315, 
+      avgVariation: 0.8, 
+      priceDrop: true, 
+      status: 'OK' 
+    },
+    { 
+      id: 4, 
+      name: 'On City', 
+      logo: 'https://migestion.oncity.com/assets/isotipo_large.png', 
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 2), // Hace 2 horas
+      productCount: 9100, 
+      totalClicks: 150, 
+      avgVariation: 3.2, 
+      priceDrop: false, 
+      status: 'WARNING' 
+    },
+    { 
+      id: 5, 
+      name: 'Pardo', 
+      logo: 'https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp', 
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24), // Hace 24 horas (Simulando fallo)
+      productCount: 4300, 
+      totalClicks: 80, 
+      avgVariation: 0.0, 
+      priceDrop: false, 
+      status: 'ERROR' 
+    }
   ];
 
-  constructor() { }
+  constructor(
+    private toastr: ToastrService
+  ) {}
 
-  ngOnInit(): void { }
+  // --- MÉTODOS DE LA TABLA ---
+  syncAllSources() {
+    this.toastr.warning(
+    'Sincronizando el catálogo de todas las tiendas...',
+    'Sincronización Iniciada'
+    );
+  }
 
-  // Renderiza los gráficos después de que la vista se ha inicializado
+  retestSource(id: number) { 
+    // Buscamos el nombre real para dar un mejor feedback
+    const site = this.marketplaceStatus.find(s => s.id === id);
+    this.toastr.warning(
+        'Verificando conexión y selectores HTML para: ' + site?.name
+      );
+  }
+
+  getStatusClass(status: string) {
+    if(status === 'OK') return 'badge-ok';
+    if(status === 'ERROR') return 'badge-error';
+    return 'badge-warn';
+  }
+
+  // --- LÓGICA DE GRÁFICAS ---
   ngAfterViewInit(): void {
-    this.createSalesChart();
-    this.createCategorySalesChart();
-    this.createStockStatusChart();
+    // Es buena práctica darle un pequeño delay para asegurar que el canvas ya se renderizó en el DOM
+    setTimeout(() => {
+      this.initProductsChart();
+      this.initTrafficChart();
+    }, 100);
   }
 
-  createSalesChart(): void {
-    const ctx = this.salesChartRef.nativeElement.getContext('2d');
-    if (ctx) {
-      this.salesChart = new Chart(ctx, {
-        type: 'line', // Gráfico de línea
-        data: this.monthlySalesData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false, // Permite controlar el tamaño del gráfico
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (value:any) => `$${this.formatNumber(value as number)}`
-              }
+  initProductsChart() {
+    const ctx = document.getElementById('productsChart') as HTMLCanvasElement;
+    
+    // Mapeamos los datos dinámicamente desde nuestro arreglo
+    const chartLabels = this.marketplaceStatus.map(site => site.name);
+    const chartData = this.marketplaceStatus.map(site => site.productCount);
+
+    new Chart(ctx, {
+      type: 'doughnut', 
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          data: chartData,
+          backgroundColor: [
+            '#7c3aed', // Frávega (Morado - primary color)
+            '#ef4444', // Megatone (Rojo)
+            '#3b82f6', // Naldo (Azul)
+            '#10b981', // On City (Verde)
+            '#1e293b'  // Pardo (Gris oscuro)
+          ], 
+          borderWidth: 0,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { 
+            position: 'right',
+            labels: {
+              usePointStyle: true,
+              padding: 20
+            }
+          } 
+        }
+      }
+    });
+  }
+
+  initTrafficChart() {
+    const ctx = document.getElementById('trafficChart') as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'line', 
+      data: {
+        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+        datasets: [{
+          label: 'Redirecciones a Tiendas',
+          data: [150, 230, 180, 290, 200, 350, 410],
+          borderColor: '#7c3aed', // Color primario
+          backgroundColor: 'rgba(124, 58, 237, 0.1)', // Fondo semi-transparente
+          fill: true,
+          tension: 0.4, // Curva suave
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor: '#7c3aed',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: true,
+              color: 'rgba(0,0,0,0.05)'
             }
           },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Ventas Mensuales (Últimos 12 Meses)',
-              font: {
-                size: 16
-              }
+          x: {
+            grid: {
+              display: false
             }
           }
+        },
+        plugins: {
+          legend: { display: false } // Ocultamos la leyenda para que se vea más limpio
         }
-      });
-    }
-  }
-
-  createCategorySalesChart(): void {
-    const ctx = this.categoryChartRef.nativeElement.getContext('2d');
-    if (ctx) {
-      this.categoryChart = new Chart(ctx, {
-        type: 'doughnut', // Gráfico de dona
-        data: this.categorySalesData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Ingresos por Categoría',
-              font: {
-                size: 16
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-
-  createStockStatusChart(): void {
-    const ctx = this.stockChartRef.nativeElement.getContext('2d');
-    if (ctx) {
-      this.stockChart = new Chart(ctx, {
-        type: 'bar', // Gráfico de barras
-        data: this.stockStatusData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (value:any) => `${value}%` // Si los datos son porcentajes
-              }
-            }
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Distribución de Productos por Estado de Stock',
-              font: {
-                size: 16
-              }
-            },
-            legend: {
-              display: false // No necesitamos leyenda para una sola barra o para estos datos
-            }
-          }
-        }
-      });
-    }
-  }
-
-  // Helper para formato de números grandes en los ticks
-  formatNumber(value: number): string {
-    if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-    if (value >= 1000) return (value / 1000).toFixed(0) + 'K';
-    return value.toString();
-  }
-
-  // Clase para el estado de stock en la tabla (se mantiene igual)
-  getStockClass(stock: number): string {
-    if (stock <= 5 && stock > 0) return 'badge-stock-low';
-    if (stock === 0) return 'badge-stock-out';
-    return 'badge-stock-ok';
-  }
-
-  getStockStatusText(stock: number): string {
-    if (stock <= 5 && stock > 0) return 'Crítico';
-    if (stock === 0) return 'Agotado';
-    return 'Saludable';
+      }
+    });
   }
 }
