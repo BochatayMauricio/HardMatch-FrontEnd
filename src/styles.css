@@ -264,3 +264,30 @@ body.ocultar-bot typebot-bubble {
 .toast-bottom-center {
     bottom: 20px !important;
 }
+
+@keyframes slideInBottom {
+  0% {
+    transform: translateY(150%);
+    opacity: 0;
+  }
+  80% {
+    transform: translateY(-10%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+#toast-container > div.ngx-toastr {
+    opacity: 1 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 12px !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    width: 320px !important;
+    padding: 16px 20px 16px 50px !important;
+    margin: 0 auto 12px auto !important;
+    animation: slideInBottom 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
