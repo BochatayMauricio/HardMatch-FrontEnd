@@ -1,81 +1,105 @@
 <div class="admin-container">
   <header class="admin-header">
-    <h1>Panel de Control Administrativo</h1>
-    <p>Métricas de rendimiento y ventas para la toma de decisiones estratégicas.</p>
+    <div class="title-section">
+      <h1>Panel de Intermediación</h1>
+      <p>Monitoreo de Scraping y Conversión de Clicks</p>
+    </div>
+    <div class="action-section">
+      <button class="btn-sync" (click)="syncAllSources()">
+        Sincronizar Scrapers
+      </button>
+    </div>
   </header>
 
-  <section class="kpi-grid">
+  <div class="kpi-container">
     <div class="kpi-card">
-      <div class="kpi-icon sales">💰</div>
-      <div class="kpi-info">
-        <h3>Ingresos Totales</h3>
-        <p class="kpi-value">{{ totalRevenue | currency:'ARS':'symbol':'1.2-2' }}</p>
-        <span class="kpi-trend positive">↑ 12% vs mes anterior</span>
+      <div class="kpi-header">
+        <span class="kpi-title">Salud de Fuentes</span>
+      </div>
+      <div class="kpi-value">{{ activeSources }}/{{ totalSources }}</div>
+      <div class="kpi-subtext" [ngClass]="{'text-danger': failedSources > 0}">
+        {{ failedSources }} sitios requieren atención
       </div>
     </div>
 
     <div class="kpi-card">
-      <div class="kpi-icon orders">📦</div>
-      <div class="kpi-info">
-        <h3>Órdenes Activas</h3>
-        <p class="kpi-value">{{ activeOrders }}</p>
-        <span class="kpi-trend">8 pendientes de envío</span>
+      <div class="kpi-header">
+        <span class="kpi-title">Productos Indexados</span>
       </div>
+      <div class="kpi-value">{{ totalScrapedProducts | number }}</div>
+      <div class="kpi-subtext text-success">↑ {{ newProductsToday }} nuevos hoy</div>
     </div>
 
     <div class="kpi-card">
-      <div class="kpi-icon users">👤</div>
-      <div class="kpi-info">
-        <h3>Clientes Totales</h3>
-        <p class="kpi-value">{{ totalCustomers }}</p>
-        <span class="kpi-trend positive">↑ 5 nuevos hoy</span>
+      <div class="kpi-header">
+        <span class="kpi-title">Redirecciones (Clicks)</span>
+      </div>
+      <div class="kpi-value">{{ totalClicks | number }}</div>
+      <div class="kpi-subtext text-primary">Conversión promedio: 8.4%</div>
+    </div>
+  </div>
+
+  <section class="charts-section">
+    <div class="charts-grid">
+      <div class="chart-container">
+        <h3>Productos por Marketplace</h3>
+        <div class="chart-wrapper">
+          <canvas id="productsChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h3>Tráfico Generado (Últimos 7 días)</h3>
+        <div class="chart-wrapper">
+          <canvas id="trafficChart"></canvas>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="charts-grid">
-    <div class="chart-card">
-      <canvas #salesChart></canvas>
+  <section class="table-section shadow-sm">
+    <div class="table-header">
+      <h2>Estado de Sitios Scrapeados</h2>
     </div>
-    <div class="chart-card">
-      <canvas #categoryChart></canvas>
-    </div>
-    <div class="chart-card large">
-        <canvas #stockChart></canvas>
-    </div>
-  </section>
-
-  <section class="performance-section">
-    <div class="section-header">
-      <h2>Rendimiento por Producto</h2>
-      <button class="btn primary-button">Exportar Reporte</button>
-    </div>
-
-    <div class="table-container">
-      <table class="admin-table">
+    <div class="table-responsive">
+      <table class="custom-table">
         <thead>
           <tr>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Vendidos</th>
-            <th>Ingresos Generados</th>
-            <th>Stock Actual</th>
+            <th>Marketplace</th>
+            <th>Última Sincro</th>
+            <th>Productos</th>
+            <th>Clicks</th>
+            <th>Variación</th>
             <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let prod of productsPerformance">
-            <td><strong>{{ prod.name }}</strong></td>
-            <td>{{ prod.category }}</td>
-            <td>{{ prod.unitsSold }} unidades</td>
-            <td>{{ prod.revenue | currency:'ARS':'symbol':'1.0-0' }}</td>
-            <td>{{ prod.stock }}</td>
-            <td>
-              <span class="badge" [ngClass]="getStockClass(prod.stock)">
-                {{ getStockStatusText(prod.stock) }}
-              </span>
-            </td>
-          </tr>
+          @for (site of marketplaceStatus; track site.id) {
+            <tr>
+              <td>
+                <div class="source-cell">
+                  <img [src]="site.logo" class="mini-logo" alt="">
+                  <strong>{{ site.name }}</strong>
+                </div>
+              </td>
+              <td>{{ site.lastUpdate | date:'HH:mm' }} hs</td>
+              <td>{{ site.productCount | number }}</td>
+              <td>{{ site.totalClicks }}</td>
+              <td>
+                <span [class]="site.priceDrop ? 'price-down' : 'price-up'">
+                  {{ site.priceDrop ? '↓' : '↑' }} {{ site.avgVariation }}%
+                </span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(site.status)">
+                  {{ site.status }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-action" (click)="retestSource(site.id)" title="Refrescar">⚙️</button>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
