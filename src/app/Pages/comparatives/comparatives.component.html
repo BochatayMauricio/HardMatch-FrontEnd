@@ -1,5 +1,5 @@
-<main class="comparatives-container">
-  <!-- Header -->
+﻿<main class="comparatives-container">
+  
   <section class="comparatives-header">
     <div class="header-content">
       <h1>Comparativa de Productos</h1>
@@ -29,7 +29,7 @@
     }
   </section>
 
-  <!-- Empty State -->
+  
   @if (products.length === 0) {
     <section class="empty-state">
       <div class="empty-icon">
@@ -86,7 +86,7 @@
   }
 
   @if (products.length > 0) {
-    <!-- Products Overview Cards -->
+    
     <section class="products-overview">
       @for (product of products; track product.id; let i = $index) {
         <div
@@ -163,7 +163,7 @@
               <span class="shipping-badge">Envío gratis</span>
             }
 
-            <!-- Score Display -->
+            
             @if (getProductScore(i); as score) {
               <div class="score-display">
                 <div class="score-bar">
@@ -191,7 +191,7 @@
       }
     </section>
 
-    <!-- Savings Banner -->
+    
     @if (products.length > 1 && calculateSavings() > 0) {
       <section class="savings-banner">
         <div class="savings-content">
@@ -216,13 +216,13 @@
       </section>
     }
 
-    <!-- Charts Section -->
+    
     @if (products.length > 1) {
       <section class="charts-section">
         <h2>Análisis Visual</h2>
         <div class="charts-grid three-cols">
           <div class="chart-container">
-            <h3>💰 Comparación de Precios</h3>
+            <h3>Comparación de Precios</h3>
             <p class="chart-description">
               El producto en verde tiene el mejor precio
             </p>
@@ -232,7 +232,7 @@
           </div>
 
           <div class="chart-container">
-            <h3>📊 Especificaciones</h3>
+            <h3>Especificaciones</h3>
             <p class="chart-description">
               Procesador, RAM, almacenamiento y más
             </p>
@@ -242,7 +242,7 @@
           </div>
 
           <div class="chart-container">
-            <h3>🏆 Puntuación General</h3>
+            <h3>Puntuación General</h3>
             <p class="chart-description">
               Score combinado de specs, precio y valor
             </p>
@@ -254,7 +254,7 @@
 
         <div class="charts-grid single-col">
           <div class="chart-container full-width">
-            <h3>⚖️ Análisis Detallado de Valor</h3>
+            <h3>Análisis Detallado de Valor</h3>
             <p class="chart-description">
               Compara especificaciones, precio y relación calidad-precio por
               separado
@@ -267,7 +267,7 @@
       </section>
     }
 
-    <!-- Characteristics Table -->
+    
     @if (products.length > 1 && getCharacteristicKeys().length > 0) {
       <section class="characteristics-section">
         <h2>Comparativa de Características</h2>
@@ -299,27 +299,27 @@
                     >
                       {{ getCharacteristicValue(product, key) }}
                       @if (isCharacteristicBest(i, key)) {
-                        <span class="indicator best">★</span>
+                        <span class="indicator best">✓</span>
                       }
                     </td>
                   }
                 </tr>
               }
 
-              <!-- Precio -->
+              
               <tr class="price-row">
                 <td class="characteristic-name">Precio</td>
                 @for (product of products; track product.id; let i = $index) {
                   <td [class.best]="getPriceComparison().cheapest === i">
                     {{ formatPrice(product.price) }}
                     @if (getPriceComparison().cheapest === i) {
-                      <span class="indicator best">★</span>
+                      <span class="indicator best">✓</span>
                     }
                   </td>
                 }
               </tr>
 
-              <!-- Stock -->
+              
               <tr>
                 <td class="characteristic-name">Disponibilidad</td>
                 @for (product of products; track product.id) {
@@ -333,7 +333,7 @@
                 }
               </tr>
 
-              <!-- Envío -->
+              
               <tr>
                 <td class="characteristic-name">Envío gratis</td>
                 @for (product of products; track product.id) {
@@ -348,10 +348,10 @@
       </section>
     }
 
-    <!-- Summary -->
+    
     @if (products.length > 1) {
       <section class="summary-section">
-        <h2>🏆 Resumen y Recomendación</h2>
+        <h2>Resumen y Recomendación</h2>
         <div class="summary-cards">
           <div class="summary-card highlight">
             <div class="summary-icon value">
@@ -472,3 +472,5 @@
     }
   }
 </main>
+
+

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+﻿import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductI } from '../../Interfaces/product.interface';
 import { ComparativesService } from '../../Services/comparatives.service';
@@ -24,7 +24,7 @@ export class CardComponent implements OnInit {
   isFav: boolean = false;
   currentUser: UserI | null = null; 
 
-  storeLogoUrl: string = 'assets/default-store.png';
+  storeLogoUrl: string = 'assets/default-store.svg';
   storeName: string = '';
 
   constructor(
@@ -37,32 +37,26 @@ export class CardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1. Suscribirse al usuario actual
     this.authService.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
     });
 
-    // 2. Comprobar Comparativas
     this.comparativesService.getProducts().subscribe((products) => {
       this.isInComparativeList = products.some((p) => p.id === this.product.id);
     });
 
-    // 3. Comprobar Favoritos (Ajustado para array de IDs)
     this.favService.favorites$.subscribe((favIds) => {
       this.isFav = favIds.includes(this.product.id);
     });
 
-    // 4. Lógica eficiente para cargar la tienda sin saturar el Backend
     this.storeName = this.product.storeName || 'Tienda Oficial';
     
-    // Buscamos el logo directamente en la oferta que mapeamos en el servicio
     if (this.product.listings && this.product.listings.length > 0) {
       const mainListing = this.product.listings.find(l => l.storeId === this.product.storeId);
       if (mainListing && mainListing.storeLogo) {
         this.storeLogoUrl = mainListing.storeLogo;
       }
     } else if (this.product.storeId) {
-      // Fallback: Si por alguna razón no hay listings, le pedimos asíncronamente al servicio
       this.storeService.getStoreById(this.product.storeId).subscribe({
         next: (store) => {
           if (store) {
@@ -74,7 +68,6 @@ export class CardComponent implements OnInit {
     }
   }
 
-  // 5. Getter para evitar errores matemáticos en el HTML
   get finalPrice(): number {
     if (!this.product.offer) {
       return this.product.price;
@@ -125,11 +118,18 @@ export class CardComponent implements OnInit {
       return;
     }
 
-    // 6. Pasamos solo el ID al servicio
-    this.favService.toggleFavorite(this.product.id);
-
-    if (!this.isFav) {
-      this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
-    }
+    this.favService.toggleFavorite(this.product.id).subscribe({
+      next: (wasAdded) => {
+        if (wasAdded) {
+          this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
+        } else {
+          this.toastr.info('Producto eliminado de favoritos');
+        }
+      },
+      error: () => {
+        this.toastr.error('No se pudo actualizar favoritos', 'Error');
+      },
+    });
   }
 }
+

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductI } from '../Interfaces/product.interface';
 
@@ -27,21 +27,14 @@ export class ComparativesService {
     return this.products$;
   }
 
-  /**
-   * Obtiene la categoría actual de la comparación (si hay productos)
-   */
   getCurrentCategory(): string | null {
     const current = this.currentProductsValue();
     return current.length > 0 ? current[0].category : null;
   }
 
-  /**
-   * Valida si un producto puede ser agregado a la comparación
-   */
   canAddProduct(product: ProductI): AddProductResult {
     const current = this.currentProductsValue();
 
-    // Validación de límite
     if (current.length >= this.MAX_PRODUCTS) {
       return {
         success: false,
@@ -50,7 +43,6 @@ export class ComparativesService {
       };
     }
 
-    // Validación de duplicados
     const exists = current.some((p) => p.id === product.id);
     if (exists) {
       return {
@@ -60,7 +52,6 @@ export class ComparativesService {
       };
     }
 
-    // Validación de categoría
     const currentCategory = this.getCurrentCategory();
     if (currentCategory && product.category !== currentCategory) {
       return {
@@ -76,9 +67,6 @@ export class ComparativesService {
     };
   }
 
-  /**
-   * Agrega un producto a la comparación con validación completa
-   */
   addProduct(product: ProductI): AddProductResult {
     const validation = this.canAddProduct(product);
 
@@ -93,9 +81,6 @@ export class ComparativesService {
     return validation;
   }
 
-  /**
-   * Remueve un producto de la comparación
-   */
   removeProduct(productId: number): void {
     const updated = this.currentProductsValue().filter(
       (p) => p.id !== productId,
@@ -103,37 +88,22 @@ export class ComparativesService {
     this._products.next(updated);
   }
 
-  /**
-   * Limpia todos los productos de la comparación
-   */
   clearProducts(): void {
     this._products.next([]);
   }
 
-  /**
-   * Verifica si un producto está en la comparación
-   */
   isProductInComparison(productId: number): boolean {
     return this.currentProductsValue().some((p) => p.id === productId);
   }
 
-  /**
-   * Obtiene el número de productos en la comparación
-   */
   getProductCount(): number {
     return this.currentProductsValue().length;
   }
 
-  /**
-   * Obtiene el límite máximo de productos
-   */
   getMaxProducts(): number {
     return this.MAX_PRODUCTS;
   }
 
-  /**
-   * Obtiene una etiqueta legible para la categoría
-   */
   private getCategoryLabel(category: string): string {
     const labels: { [key: string]: string } = {
       notebook: 'Notebooks',
@@ -143,3 +113,4 @@ export class ComparativesService {
     return labels[category] || category;
   }
 }
+

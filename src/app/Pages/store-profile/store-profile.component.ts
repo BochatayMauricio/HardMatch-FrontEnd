@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StoreService } from '../../Services/stores.service';
-import { ProductsServiceService } from '../../Services/products-service.service';
+import { ProductsService } from '../../Services/products.service';
 import { ProductI } from '../../Interfaces/product.interface';
 import { CardComponent } from '../../Components/card/card.component';
 import { StoreI } from '../../Interfaces/store.intefrace';
-
 
 @Component({
   selector: 'app-store-profile',
@@ -25,7 +24,7 @@ export class StoreProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private storeService: StoreService,
-    private productService: ProductsServiceService
+    private productService: ProductsService
   ) {}
 
   ngOnInit(): void {
@@ -34,14 +33,12 @@ export class StoreProfileComponent implements OnInit {
       
       if (storeName) {
         this.isLoadingStore = true;
-        // 1. Obtenemos la tienda de la BD por su nombre
         this.storeService.getStoreByName(storeName).subscribe({
           next: (storeData) => {
             this.store = storeData;
             this.isLoadingStore = false;
 
             if (this.store) {
-              // 2. Si la tienda existe, cargamos sus productos usando su ID real
               this.loadStoreProducts(this.store.id);
             } else {
               this.isLoadingProducts = false;
@@ -59,12 +56,9 @@ export class StoreProfileComponent implements OnInit {
 
   private loadStoreProducts(storeId: number): void {
     this.isLoadingProducts = true;
-    
-    // Filtramos los productos que pertenezcan a esta tienda
+
     this.productService.getProducts().subscribe({
       next: (allProducts) => {
-        // IMPORTANTE: Un producto ahora puede estar en varias tiendas (listings).
-        // Filtramos si el "best listing" o cualquiera de sus listings es de esta tienda.
         this.storeProducts = allProducts.filter(product => 
           product.storeId === storeId || 
           product.listings?.some(l => l.storeId === storeId)

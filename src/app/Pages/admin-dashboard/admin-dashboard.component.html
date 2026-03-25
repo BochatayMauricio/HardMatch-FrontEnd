@@ -1,4 +1,4 @@
-<div class="admin-container">
+﻿<div class="admin-container">
   <header class="admin-header">
     <div class="title-section">
       <h1>Panel de Intermediación</h1>
@@ -27,7 +27,7 @@
         <span class="kpi-title">Productos Indexados</span>
       </div>
       <div class="kpi-value">{{ totalScrapedProducts | number }}</div>
-      <div class="kpi-subtext text-success">↑ {{ newProductsToday }} nuevos hoy</div>
+      <div class="kpi-subtext text-success">+ {{ newProductsToday }} nuevos hoy</div>
     </div>
 
     <div class="kpi-card">
@@ -96,7 +96,7 @@
                 </span>
               </td>
               <td>
-                <button class="btn-action" (click)="retestSource(site.id)" title="Refrescar">⚙️</button>
+                <button class="btn-action" (click)="retestSource(site.id)" title="Refrescar">↻</button>
               </td>
             </tr>
           }
@@ -105,3 +105,4 @@
     </div>
   </section>
 </div>
+

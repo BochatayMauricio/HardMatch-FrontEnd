@@ -1,4 +1,4 @@
-export interface NotificationI {
+﻿export interface NotificationI {
     id:number;
     title:string;
     explanation:string;

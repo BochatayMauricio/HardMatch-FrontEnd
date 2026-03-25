@@ -1,45 +1,103 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { BACKEND_API_URL } from '../../utils/constants';
+import {
+  ResponseFavoriteDelete,
+  ResponseFavoriteList,
+  ResponseFavoriteOne,
+} from '../Interfaces/response-favorite.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavoritesService {
-  // Inicializamos el BehaviorSubject leyendo lo que haya en el LocalStorage
-  private favoritesSubject = new BehaviorSubject<number[]>(this.loadFavorites());
+  private readonly apiUrl = `${BACKEND_API_URL}/favorites`;
+  private favoritesSubject = new BehaviorSubject<number[]>([]);
   favorites$ = this.favoritesSubject.asObservable();
 
-  constructor() {}
-
-  // Lee de LocalStorage (Si no hay nada, devuelve un array vacío [])
-  private loadFavorites(): number[] {
-    const stored = localStorage.getItem('user_favorites');
-    return stored ? JSON.parse(stored) : [];
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {
+    this.authService.getCurrentUser().subscribe((user) => {
+      if (user) {
+        this.refreshFavorites().subscribe();
+      } else {
+        this.favoritesSubject.next([]);
+      }
+    });
   }
 
-  // Agrega o quita un ID del array
-  toggleFavorite(productId: number): void {
-    const currentFavorites = this.favoritesSubject.getValue();
-    
-    if (currentFavorites.includes(productId)) {
-      // Si el ID ya está, lo quitamos (Filtramos todos menos ese)
-      const updated = currentFavorites.filter(id => id !== productId);
-      this.updateAndSave(updated);
-    } else {
-      // LA SOLUCIÓN AL BUG: Agregamos el nuevo ID manteniendo los que ya estaban
-      const updated = [...currentFavorites, productId];
-      this.updateAndSave(updated);
+  refreshFavorites(): Observable<number[]> {
+    if (!this.authService.isAuthenticated()) {
+      this.favoritesSubject.next([]);
+      return of([]);
     }
+
+    return this.http
+      .get<ResponseFavoriteList>(this.apiUrl)
+      .pipe(
+        map((response) => (response.data ?? []).map((fav) => fav.idProduct)),
+        map((ids) => {
+          this.favoritesSubject.next(ids);
+          return ids;
+        }),
+        catchError(() => {
+          this.favoritesSubject.next([]);
+          return of([]);
+        })
+      );
   }
 
-  // Vacía la lista por completo
-  clearAll(): void {
-    this.updateAndSave([]);
+  toggleFavorite(productId: number): Observable<boolean> {
+    const currentFavorites = this.favoritesSubject.getValue();
+
+    if (currentFavorites.includes(productId)) {
+      return this.removeFavorite(productId).pipe(map(() => false));
+    }
+
+    return this.addFavorite(productId).pipe(map(() => true));
   }
 
-  // Actualiza el observable y guarda en LocalStorage para no perderlos al recargar la página
-  private updateAndSave(favorites: number[]): void {
-    this.favoritesSubject.next(favorites);
-    localStorage.setItem('user_favorites', JSON.stringify(favorites));
+  private addFavorite(productId: number): Observable<ResponseFavoriteOne> {
+    return this.http
+      .post<ResponseFavoriteOne>(
+        this.apiUrl,
+        { idProduct: productId }
+      )
+      .pipe(
+        map((response) => {
+          const currentIds = this.favoritesSubject.value;
+          if (!currentIds.includes(productId)) {
+            this.favoritesSubject.next([...currentIds, productId]);
+          }
+          return response;
+        })
+      );
+  }
+
+  removeFavorite(productId: number): Observable<ResponseFavoriteDelete> {
+    return this.http
+      .delete<ResponseFavoriteDelete>(`${this.apiUrl}/${productId}`)
+      .pipe(
+        map((response) => {
+          const updated = this.favoritesSubject.value.filter((id) => id !== productId);
+          this.favoritesSubject.next(updated);
+          return response;
+        })
+      );
+  }
+
+  clearAll(): Observable<void> {
+    const currentFavorites = this.favoritesSubject.value;
+    if (currentFavorites.length === 0) {
+      return of(void 0);
+    }
+
+    return forkJoin(currentFavorites.map((id) => this.removeFavorite(id))).pipe(
+      map(() => void 0)
+    );
   }
 }

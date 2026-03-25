@@ -1,6 +1,6 @@
-import { UserI } from '../Interfaces/user.interface';
+﻿import { UserI } from '../Interfaces/user.interface';
 
-export interface AuthBackendResponse {
+export interface ResponseAuth {
   success: boolean;
   data: {
     user: UserI;

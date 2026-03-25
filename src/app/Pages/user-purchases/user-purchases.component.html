@@ -1,4 +1,4 @@
-<div class="page-content">
+﻿<div class="page-content">
   <h2>Mis Compras</h2>
   <p class="section-subtitle">Consulta el historial completo de tus pedidos.</p>
 
@@ -26,7 +26,7 @@
             Resumen: {{ getOrderProductNames(purchase.items) }}
           </p>
           <div class="purchase-footer">
-            <span class="purchase-total">Total: **$ {{ purchase.totalAmount | number:'1.2-2' }} ARS**</span>
+            <span class="purchase-total">Total: $ {{ purchase.totalAmount | number:'1.2-2' }} ARS</span>
             <button class="btn secondary-button-link" (click)="viewDetails(purchase)">
               Ver Detalles
             </button>
@@ -58,7 +58,7 @@
     <hr class="separator">
     <h4>Productos ({{ selectedPurchase.detailedItems.length }})</h4>
     <div class="detail-items-list">
-      @for (item of selectedPurchase.detailedItems; track trackByPurchaseId($index, item)) {
+      @for (item of selectedPurchase.detailedItems; track trackByDetailItem($index, item)) {
         <div class="detail-item-full">
           <div class="product-visuals">
             <img [src]="item.image" [alt]="item.name" class="product-image">
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div class="product-pricing-details">
-            <p class="item-meta">Unidades: **{{ item.quantity }}**</p>
+            <p class="item-meta">Unidades: {{ item.quantity }}</p>
             <p class="item-meta-price">Precio base: $ {{ item.price | number:'1.2-2' }}</p>
             <div class="price-summary">
               @if (item.offerUsed > 0) {
@@ -90,3 +90,4 @@
   </div>
 </div>
 }
+

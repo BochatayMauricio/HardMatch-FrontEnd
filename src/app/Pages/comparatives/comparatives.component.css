@@ -1,4 +1,4 @@
-/* Contenedor Principal */
+﻿
 .comparatives-container {
   min-height: 100vh;
   background-color: var(--background-color);
@@ -7,7 +7,7 @@
   margin: 0 auto;
 }
 
-/* Header */
+
 .comparatives-header {
   display: flex;
   justify-content: space-between;
@@ -62,7 +62,7 @@
   opacity: 0.7;
 }
 
-/* Empty State */
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -108,7 +108,7 @@
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-/* Warning State */
+
 .warning-state {
   display: flex;
   flex-direction: column;
@@ -146,7 +146,7 @@
   background: #b45309;
 }
 
-/* Products Overview */
+
 .products-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -197,7 +197,7 @@
   color: white;
 }
 
-/* Badges Container */
+
 .badges-container {
   position: absolute;
   top: 0.75rem;
@@ -230,7 +230,7 @@
   background: #f59e0b;
 }
 
-/* Score Display */
+
 .score-display {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -360,7 +360,7 @@
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-/* Savings Banner */
+
 .savings-banner {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border-radius: 12px;
@@ -383,7 +383,7 @@
   font-weight: 700;
 }
 
-/* Charts Section */
+
 .charts-section {
   background: white;
   border-radius: 16px;
@@ -446,7 +446,7 @@
   height: 250px;
 }
 
-/* Characteristics Table */
+
 .characteristics-section {
   background: white;
   border-radius: 16px;
@@ -556,7 +556,7 @@
   font-size: 1rem;
 }
 
-/* Summary Section */
+
 .summary-section {
   margin-bottom: 2rem;
 }
@@ -647,7 +647,7 @@
   color: var(--text-secondary-color);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .comparatives-container {
     padding: 1rem;
@@ -680,7 +680,7 @@
     grid-template-columns: 1fr;
   }
 
-  /* Badges responsive */
+  
   .badges-container {
     right: 2.5rem;
     gap: 0.3rem;
@@ -719,3 +719,4 @@
     grid-column: 1 / -1;
   }
 }
+

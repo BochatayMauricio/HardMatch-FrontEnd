@@ -1,4 +1,4 @@
-.search-container {
+﻿.search-container {
   padding: 2rem;
   background-color: var(--background-color);
   min-height: 100vh;
@@ -145,3 +145,4 @@
     font-size: 1.5rem;
   }
 }
+

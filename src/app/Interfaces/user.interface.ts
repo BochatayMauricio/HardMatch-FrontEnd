@@ -1,4 +1,4 @@
-export interface UserI{
+﻿export interface UserI{
     id?: number;
     name: string;
     surname: string;
@@ -10,4 +10,13 @@ export interface UserI{
     isActive?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface UserRegisterI {
+    name: string;
+    surname: string;
+    username: string;
+    email: string;
+    password: string;
+    phone: string;
 }

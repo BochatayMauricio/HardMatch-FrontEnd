@@ -1,4 +1,4 @@
-.card {
+﻿.card {
     background-color: white;
     border: 1px solid #E5E7EB;
     border-radius: 1rem;
@@ -102,8 +102,7 @@
     margin-left: 1px;
 }
 
-/* Modificamos card-price original para que no tenga margin-top: auto 
-   ya que ahora lo tiene el contenedor padre .price-container */
+
 .card-price {
     margin-top: 0;
 }

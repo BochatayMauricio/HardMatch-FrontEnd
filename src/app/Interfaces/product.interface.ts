@@ -1,5 +1,4 @@
-// Características por tipo de producto
-export interface NotebookCharacteristics {
+﻿export interface NotebookCharacteristics {
   processor: string;
   ram: string;
   storage: string;
@@ -37,7 +36,6 @@ export type ProductCharacteristics =
   | TabletCharacteristics
   | MouseCharacteristics
   | Record<string, string | number | boolean>;
-
 
 export interface ListingI {
   id?: number;

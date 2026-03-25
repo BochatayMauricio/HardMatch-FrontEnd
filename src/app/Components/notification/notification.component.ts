@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { NotificationI } from '../../Interfaces/notification.interface';
-import { DatePipe, UpperCasePipe, CommonModule } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { NotificationService } from '../../Services/notification.service';
 
 @Component({
@@ -58,7 +58,9 @@ export class NotificationComponent implements OnInit {
       }
     ];
 
-    this.notificationService.setNotifications(initialData);
+    setTimeout(() => {
+      this.notificationService.setNotifications(initialData);
+    }, 0);
 
     this.notificationService.notifications$.subscribe(data => {
       this.notifications = data;
@@ -78,3 +80,4 @@ export class NotificationComponent implements OnInit {
     this.notificationService.markAllAsRead();
   }
 }
+

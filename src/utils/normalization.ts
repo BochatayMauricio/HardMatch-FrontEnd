@@ -1,5 +1,4 @@
-// Define esto fuera de la clase o como una constante privada
-export const CATEGORY_MAP: { [key: string]: string[] } = {
+﻿export const CATEGORY_MAP: { [key: string]: string[] } = {
   'notebooks': ['notebook', 'laptop'],
   'componentes': ['mouse', 'teclado', 'monitor', 'componente'],
   'celulares': ['celular', 'smartphone', 'iphone'],
@@ -7,3 +6,4 @@ export const CATEGORY_MAP: { [key: string]: string[] } = {
   'accesorios': ['accesorio', 'cargador', 'funda', 'audífonos'],
   'perifericos': ['periférico', 'mouse', 'teclado', 'monitor']
 };
+

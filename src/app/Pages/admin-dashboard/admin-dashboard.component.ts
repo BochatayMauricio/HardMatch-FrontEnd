@@ -1,6 +1,6 @@
-import { Component, AfterViewInit } from '@angular/core';
+﻿import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import Chart from 'chart.js/auto'; // Importamos Chart.js
+import Chart from 'chart.js/auto';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements AfterViewInit {
-  // Tus variables y datos
   totalSources = 5;
   activeSources = 3;
   failedSources = 2;
@@ -35,7 +34,7 @@ export class AdminDashboardComponent implements AfterViewInit {
       id: 2, 
       name: 'Megatone', 
       logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSizIafuBFg-anhaMGLK9X7NQ8Wt4OGZy5eZg&s', 
-      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 15), // Hace 15 minutos
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 15),
       productCount: 8400, 
       totalClicks: 420, 
       avgVariation: 1.5, 
@@ -46,7 +45,7 @@ export class AdminDashboardComponent implements AfterViewInit {
       id: 3, 
       name: 'Naldo', 
       logo: 'https://cuponesargentina.com.ar/wp-content/uploads/2025/05/logo-naldo.png', 
-      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 5), // Hace 5 minutos
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 5),
       productCount: 6200, 
       totalClicks: 315, 
       avgVariation: 0.8, 
@@ -57,7 +56,7 @@ export class AdminDashboardComponent implements AfterViewInit {
       id: 4, 
       name: 'On City', 
       logo: 'https://migestion.oncity.com/assets/isotipo_large.png', 
-      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 2), // Hace 2 horas
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 2),
       productCount: 9100, 
       totalClicks: 150, 
       avgVariation: 3.2, 
@@ -68,7 +67,7 @@ export class AdminDashboardComponent implements AfterViewInit {
       id: 5, 
       name: 'Pardo', 
       logo: 'https://http2.mlstatic.com/D_NQ_NP_950425-MLA74959095381_032024-O.webp', 
-      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24), // Hace 24 horas (Simulando fallo)
+      lastUpdate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
       productCount: 4300, 
       totalClicks: 80, 
       avgVariation: 0.0, 
@@ -81,7 +80,6 @@ export class AdminDashboardComponent implements AfterViewInit {
     private toastr: ToastrService
   ) {}
 
-  // --- MÉTODOS DE LA TABLA ---
   syncAllSources() {
     this.toastr.warning(
     'Sincronizando el catálogo de todas las tiendas...',
@@ -90,7 +88,6 @@ export class AdminDashboardComponent implements AfterViewInit {
   }
 
   retestSource(id: number) { 
-    // Buscamos el nombre real para dar un mejor feedback
     const site = this.marketplaceStatus.find(s => s.id === id);
     this.toastr.warning(
         'Verificando conexión y selectores HTML para: ' + site?.name
@@ -103,9 +100,7 @@ export class AdminDashboardComponent implements AfterViewInit {
     return 'badge-warn';
   }
 
-  // --- LÓGICA DE GRÁFICAS ---
   ngAfterViewInit(): void {
-    // Es buena práctica darle un pequeño delay para asegurar que el canvas ya se renderizó en el DOM
     setTimeout(() => {
       this.initProductsChart();
       this.initTrafficChart();
@@ -115,7 +110,6 @@ export class AdminDashboardComponent implements AfterViewInit {
   initProductsChart() {
     const ctx = document.getElementById('productsChart') as HTMLCanvasElement;
     
-    // Mapeamos los datos dinámicamente desde nuestro arreglo
     const chartLabels = this.marketplaceStatus.map(site => site.name);
     const chartData = this.marketplaceStatus.map(site => site.productCount);
 
@@ -126,11 +120,11 @@ export class AdminDashboardComponent implements AfterViewInit {
         datasets: [{
           data: chartData,
           backgroundColor: [
-            '#7c3aed', // Frávega (Morado - primary color)
-            '#ef4444', // Megatone (Rojo)
-            '#3b82f6', // Naldo (Azul)
-            '#10b981', // On City (Verde)
-            '#1e293b'  // Pardo (Gris oscuro)
+            '#7c3aed',
+            '#ef4444',
+            '#3b82f6',
+            '#10b981',
+            '#1e293b'
           ], 
           borderWidth: 0,
           hoverOffset: 4
@@ -161,10 +155,10 @@ export class AdminDashboardComponent implements AfterViewInit {
         datasets: [{
           label: 'Redirecciones a Tiendas',
           data: [150, 230, 180, 290, 200, 350, 410],
-          borderColor: '#7c3aed', // Color primario
-          backgroundColor: 'rgba(124, 58, 237, 0.1)', // Fondo semi-transparente
+          borderColor: '#7c3aed',
+          backgroundColor: 'rgba(124, 58, 237, 0.1)',
           fill: true,
-          tension: 0.4, // Curva suave
+          tension: 0.4,
           pointBackgroundColor: '#ffffff',
           pointBorderColor: '#7c3aed',
           pointBorderWidth: 2,
@@ -190,9 +184,10 @@ export class AdminDashboardComponent implements AfterViewInit {
           }
         },
         plugins: {
-          legend: { display: false } // Ocultamos la leyenda para que se vea más limpio
+          legend: { display: false }
         }
       }
     });
   }
 }
+

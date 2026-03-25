@@ -1,4 +1,4 @@
-/* Container */
+﻿
 .product-details-container {
   min-height: 100vh;
   background: var(--background-color);
@@ -7,7 +7,7 @@
   margin: 0 auto;
 }
 
-/* Breadcrumb Navigation */
+
 .breadcrumb-nav {
   display: flex;
   align-items: baseline;
@@ -75,7 +75,7 @@
   white-space: nowrap;
 }
 
-/* Main Content Grid */
+
 .product-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -84,7 +84,7 @@
   align-items: start;
 }
 
-/* Gallery Section */
+
 .product-gallery {
   display: flex;
   flex-direction: column;
@@ -171,7 +171,7 @@
     letter-spacing: 0.5px;
 }
 
-/* Store Card */
+
 .store-card {
   display: flex;
   align-items: center;
@@ -229,7 +229,7 @@
   color: var(--primary-color);
 }
 
-/* Product Info Section */
+
 .product-info {
   display: flex;
   flex-direction: column;
@@ -311,7 +311,7 @@
   font-size: 0.9rem;
 }
 
-/* Price Section */
+
 .price-section {
   background: white;
   padding: 1.25rem;
@@ -395,7 +395,7 @@
   border: 1px solid #d1fae5;
 }
 
-/* Stock Info */
+
 .stock-info {
   display: flex;
   align-items: center;
@@ -413,7 +413,7 @@
   color: #d97706;
 }
 
-/* Action Buttons */
+
 .action-buttons {
   display: flex;
   gap: 0.75rem;
@@ -509,7 +509,7 @@
   gap: 0.75rem;
 }
 
-/* Quick Info Grid */
+
 .quick-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -551,7 +551,7 @@
   flex-shrink: 0;
 }
 
-/* Payment Compact */
+
 .payment-compact {
   margin-top: 1rem;
   padding: 1rem;
@@ -603,7 +603,7 @@
   color: #047857;
 }
 
-/* Specifications Section */
+
 .specifications-section {
   background: white;
   border-radius: 16px;
@@ -686,7 +686,7 @@
   font-size: 0.85rem;
 }
 
-/* Loading State */
+
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -715,7 +715,7 @@
   color: var(--text-secondary-color);
 }
 
-/* Responsive */
+
 @media (max-width: 1024px) {
   .product-content {
     grid-template-columns: 1fr;
@@ -858,3 +858,4 @@
     align-items: center;
   }
 }
+

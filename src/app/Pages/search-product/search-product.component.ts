@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CardComponent } from '../../Components/card/card.component';
 import { ProductI } from '../../Interfaces/product.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductsServiceService } from '../../Services/products-service.service';
+import { ProductsService } from '../../Services/products.service';
 import { CATEGORY_MAP } from '../../../utils/normalization';
 
 @Component({
@@ -29,36 +29,32 @@ export class SearchProductComponent implements OnInit {
   priceRange: number = 1000000;
 
   sortBy: string = '';
-  isLoading: boolean = true; // Control de estado de carga
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductsServiceService,
+    private productService: ProductsService,
   ) {}
 
   ngOnInit(): void {
-    // 1. Primero nos suscribimos para obtener los productos de la BD
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.allProducts = products;
         
-        // 2. Extraemos las marcas dinámicamente
         this.extractBrands();
 
-        // 3. Ajustamos el precio máximo dinámicamente según el producto más caro
         if (this.allProducts.length > 0) {
           const maxProductPrice = Math.max(...this.allProducts.map(p => p.price));
           this.maxPrice = Math.ceil(maxProductPrice);
-          this.priceRange = this.maxPrice; // Seteamos el slider al tope inicial
+          this.priceRange = this.maxPrice;
         }
 
-        // 4. Una vez que tenemos los datos, escuchamos los parámetros de la URL
         this.route.params.subscribe((params) => {
           this.categoryParam = params['category'] || '';
           this.searchTerm = params['search'] || '';
           
           this.applyFilters();
-          this.isLoading = false; // Apagamos el loader
+          this.isLoading = false;
         });
       },
       error: (err) => {
@@ -120,7 +116,7 @@ export class SearchProductComponent implements OnInit {
   resetFilters(): void {
     this.selectedBrand = '';
     this.minPrice = 0;
-    this.priceRange = this.maxPrice; // Volvemos al máximo dinámico real
+    this.priceRange = this.maxPrice;
     this.sortBy = '';
     this.applyFilters();
   }

@@ -1,14 +1,4 @@
-/**
- * Interfaz de Preferencias de Matching del Usuario
- *
- * Esta interfaz define las preferencias que el usuario configura para
- * recibir recomendaciones personalizadas de productos de hardware.
- *
- * Backend: Estas preferencias serán almacenadas en la tabla `user_preferences`
- * relacionada con el usuario mediante `userId`.
- */
-
-// Categorías de productos disponibles en la plataforma
+﻿
 export type ProductCategory =
   | 'notebooks'
   | 'tablets'
@@ -20,7 +10,6 @@ export type ProductCategory =
   | 'almacenamiento'
   | 'componentes';
 
-// Marcas de hardware disponibles
 export type HardwareBrand =
   | 'Apple'
   | 'Samsung'
@@ -38,7 +27,6 @@ export type HardwareBrand =
   | 'AMD'
   | 'NVIDIA';
 
-// Prioridades al elegir un producto
 export type MatchingPriority =
   | 'precio'
   | 'rendimiento'
@@ -47,10 +35,8 @@ export type MatchingPriority =
   | 'garantia'
   | 'disponibilidad';
 
-// Frecuencia de alertas de ofertas/matches
 export type AlertFrequency = 'inmediato' | 'diario' | 'semanal' | 'nunca';
 
-// Tipo de uso principal del hardware
 export type UsageType =
   | 'gaming'
   | 'trabajo'
@@ -59,67 +45,41 @@ export type UsageType =
   | 'diseño'
   | 'programacion';
 
-/**
- * Configuración de rango de precios
- * @minPrice: Precio mínimo en la moneda local
- * @maxPrice: Precio máximo en la moneda local
- */
 export interface PriceRange {
   minPrice: number;
   maxPrice: number;
 }
 
-/**
- * Configuración de alertas y notificaciones de matching
- */
 export interface MatchingAlerts {
-  priceDropAlert: boolean; // Alerta cuando baja el precio de un producto seguido
-  newMatchAlert: boolean; // Alerta cuando hay un nuevo producto que hace match
-  stockAlert: boolean; // Alerta cuando vuelve a haber stock
-  dealAlert: boolean; // Alerta de ofertas especiales
-  alertFrequency: AlertFrequency; // Con qué frecuencia recibir alertas
+  priceDropAlert: boolean;
+  newMatchAlert: boolean;
+  stockAlert: boolean;
+  dealAlert: boolean;
+  alertFrequency: AlertFrequency;
 }
 
-/**
- * Preferencias principales de matching del usuario
- *
- * IMPORTANTE PARA BACKEND:
- * - Cada campo tiene implicaciones en el algoritmo de recomendación
- * - Las prioridades deben estar ordenadas de mayor a menor importancia (posición en array)
- * - El rango de precios debe validarse (min < max)
- */
 export interface UserMatchingPreferences {
-  id?: number; // ID de la preferencia (auto-generado)
-  userId: number; // Relación con el usuario
+  id?: number;
+  userId: number;
 
-  // === CATEGORÍAS E INTERESES ===
-  selectedCategories: ProductCategory[]; // Categorías de productos de interés
-  usageTypes: UsageType[]; // Tipos de uso principal del hardware
+  selectedCategories: ProductCategory[];
+  usageTypes: UsageType[];
 
-  // === PRESUPUESTO ===
-  priceRange: PriceRange; // Rango de precios aceptable
-  flexibleBudget: boolean; // Si acepta ver productos fuera de rango ocasionalmente
+  priceRange: PriceRange;
+  flexibleBudget: boolean;
 
-  // === MARCAS ===
-  preferredBrands: HardwareBrand[]; // Marcas preferidas
-  excludedBrands: HardwareBrand[]; // Marcas a excluir de recomendaciones
-  openToNewBrands: boolean; // Abierto a descubrir nuevas marcas
+  preferredBrands: HardwareBrand[];
+  excludedBrands: HardwareBrand[];
+  openToNewBrands: boolean;
 
-  // === PRIORIDADES DE MATCHING ===
-  priorities: MatchingPriority[]; // Prioridades ordenadas (posición = importancia)
+  priorities: MatchingPriority[];
 
-  // === ALERTAS Y NOTIFICACIONES ===
   alerts: MatchingAlerts;
 
-  // === METADATOS ===
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-/**
- * Valores por defecto para nuevas preferencias
- * Útil para inicializar el formulario cuando el usuario no tiene preferencias guardadas
- */
 export const DEFAULT_MATCHING_PREFERENCES: Omit<
   UserMatchingPreferences,
   'id' | 'userId' | 'createdAt' | 'updatedAt'
@@ -144,10 +104,6 @@ export const DEFAULT_MATCHING_PREFERENCES: Omit<
   },
 };
 
-/**
- * Opciones disponibles para mostrar en el formulario
- * Centralizado aquí para fácil mantenimiento y sincronización con backend
- */
 export const MATCHING_OPTIONS = {
   categories: [
     { value: 'notebooks', label: 'Notebooks', icon: 'laptop' },
@@ -272,3 +228,4 @@ export const MATCHING_OPTIONS = {
     { value: 'nunca', label: 'Nunca', description: 'No recibir alertas' },
   ] as const,
 };
+

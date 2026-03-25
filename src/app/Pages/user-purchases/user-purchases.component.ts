@@ -1,11 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from '../home/home.component';
 
-// import { PurchaseI } from '../core/models/purchase.interface'; 
-// import { UserService } from '../core/services/user.service';
+interface StaticProduct {
+  id: number;
+  name: string;
+  urlAcces: string;
+  price: number;
+  brand: string;
+  image: string;
+  description: string;
+  category: string;
+  offer?: string;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const STATIC_PRODUCTS = [
+interface PurchaseItem {
+  productId: number;
+  quantity: number;
+}
+
+type PurchaseStatus = 'Completada' | 'Pendiente' | 'Cancelada';
+
+interface Purchase {
+  id: number;
+  date: Date;
+  totalAmount: number;
+  status: PurchaseStatus;
+  items: PurchaseItem[];
+}
+
+interface PurchaseDetailItem extends StaticProduct {
+  quantity: number;
+  priceAtPurchase: number;
+  lineTotal: number;
+  offerUsed: number;
+}
+
+interface PurchaseWithDetails extends Purchase {
+  detailedItems: PurchaseDetailItem[];
+}
+
+const STATIC_PRODUCTS: StaticProduct[] = [
     {
     id: 1,
     name: "Lenovo IdeaPad 3 15\" Ryzen 5 - 8GB RAM - 512GB SSD",
@@ -75,8 +112,7 @@ const STATIC_PRODUCTS = [
   }
 ];
 
-// --- MOCK DE COMPRAS VINCULADAS (Con precios ajustados a oferta) ---
-const STATIC_PURCHASES = [
+const STATIC_PURCHASES: Purchase[] = [
     {
         id: 201, date: new Date('2025-11-25T14:30:00'), totalAmount: 260999.10, status: 'Completada',
         items: [{ productId: 1, quantity: 1 }]
@@ -95,7 +131,6 @@ const STATIC_PURCHASES = [
     },
 ];
 
-
 @Component({
   selector: 'app-user-purchases',
   standalone: true,
@@ -104,89 +139,100 @@ const STATIC_PURCHASES = [
   styleUrls: ['./user-purchases.component.css']
 })
 export class UserPurchasesComponent implements OnInit {
-
- purchases: any[] = []; // Almacena las compras con el campo 'totalAmount' calculado
-  private products: any[] = STATIC_PRODUCTS;
-  
-  selectedPurchase: any | null = null; // Controla la visibilidad del desplegable/modal de detalle
+  purchases: Purchase[] = [];
+  private products: StaticProduct[] = STATIC_PRODUCTS;
+  selectedPurchase: PurchaseWithDetails | null = null;
 
   constructor() { }
 
   ngOnInit(): void {
-    // 1. Al iniciar, procesamos las compras para calcular el total
-    this.purchases = STATIC_PURCHASES.map(purchase => {
+    this.purchases = STATIC_PURCHASES.map((purchase) => {
       const calculatedTotal = this.calculateTotalAmount(purchase.items);
       return {
         ...purchase,
-        totalAmount: calculatedTotal // Agregamos el total calculado
+        totalAmount: calculatedTotal,
       };
     });
   }
 
-  // MÉTODO CLAVE: Calcula el monto total de la orden
-  private calculateTotalAmount(items: any[]): number {
+  private calculateTotalAmount(items: PurchaseItem[]): number {
     let total = 0;
-    
+
     for (const item of items) {
-      const product = this.products.find(p => p.id === item.productId);
-      
+      const product = this.products.find((p) => p.id === item.productId);
+
       if (product) {
-        // Aplicamos la oferta sobre el precio base
-        const offerPct = parseFloat(product.offer || '0') / 100;
+        const offerPct = Number(product.offer || 0) / 100;
         const finalPriceUnit = product.price * (1 - offerPct);
         total += finalPriceUnit * item.quantity;
       }
     }
-    // Usamos toFixed(2) para manejar la precisión de moneda
+
     return parseFloat(total.toFixed(2));
   }
-  
-  // Busca el nombre del producto por su ID
+
   getProductName(productId: number): string {
-    const product = this.products.find(p => p.id === productId);
+    const product = this.products.find((p) => p.id === productId);
     return product ? product.name : 'Producto Desconocido';
   }
 
-  // Prepara el resumen de productos para la lista principal
-  getOrderProductNames(purchaseItems: any[]): string {
-    const names = purchaseItems.map(item => this.getProductName(item.productId));
+  getOrderProductNames(purchaseItems: PurchaseItem[]): string {
+    const names = purchaseItems.map((item) => this.getProductName(item.productId));
     if (names.length > 2) {
       return `${names.slice(0, 2).join(', ')} y ${names.length - 2} más.`;
     }
     return names.join(', ');
   }
 
-  // Muestra el detalle de una compra específica (y abre el desplegable)
-  viewDetails(purchase: any): void {
-    const detailedItems = purchase.items.map((item: any) => {
-      const productData = this.products.find(p => p.id === item.productId);
-      
+  viewDetails(purchase: Purchase): void {
+    const detailedItems: PurchaseDetailItem[] = purchase.items.map((item) => {
+      const productData = this.products.find((p) => p.id === item.productId);
+
       if (!productData) {
-        return { name: 'Producto Desconocido', quantity: item.quantity, lineTotal: 0 };
+        return {
+          id: 0,
+          name: 'Producto Desconocido',
+          urlAcces: '#',
+          price: 0,
+          brand: 'N/A',
+          image: 'assets/default-product.png',
+          description: 'Sin detalle',
+          category: 'general',
+          stock: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          quantity: item.quantity,
+          priceAtPurchase: 0,
+          lineTotal: 0,
+          offerUsed: 0,
+        };
       }
 
-      // Cálculo del precio final unitario de la línea
-      const offerUsed = parseFloat(productData.offer || '0');
+      const offerUsed = Number(productData.offer || 0);
       const finalPriceUnit = productData.price * (1 - (offerUsed / 100));
-      
+
       return {
-        ...productData, // Trae id, name, image, price, brand, offer, etc.
+        ...productData,
         quantity: item.quantity,
         priceAtPurchase: finalPriceUnit,
         lineTotal: finalPriceUnit * item.quantity,
-        offerUsed: offerUsed
+        offerUsed,
       };
     });
 
     this.selectedPurchase = { ...purchase, detailedItems };
   }
 
-  // Cierra el desplegable
   closeDetails(): void {
     this.selectedPurchase = null;
   }
 
-  trackByPurchaseId(index: number, purchase: any): number {
+  trackByPurchaseId(index: number, purchase: Purchase): number {
     return purchase.id;
   }
+
+  trackByDetailItem(index: number, item: PurchaseDetailItem): number {
+    return item.id;
+  }
 }
+

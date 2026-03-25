@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CardComponent } from '../../Components/card/card.component';
 import { FavoritesService } from '../../Services/favorites.service';
-import { ProductsServiceService } from '../../Services/products-service.service';
+import { ProductsService } from '../../Services/products.service';
 import { ProductI } from '../../Interfaces/product.interface';
 import { RouterLink } from '@angular/router';
 
@@ -22,15 +22,16 @@ export class UserFavoritesComponent implements OnInit {
 
   constructor(
     private favoritesService: FavoritesService,
-    private productsService: ProductsServiceService
+    private productsService: ProductsService
   ) {}
 
   ngOnInit(): void {
-    // 1. Pedimos el catálogo de productos al backend
+    this.favoritesService.refreshFavorites().subscribe();
+
     this.productsService.getProducts().subscribe({
       next: (products) => {
         this.allProducts = products;
-        this.updateFavoriteList(); // Actualizamos la lista con los datos que llegaron
+        this.updateFavoriteList();
         this.isLoading = false;
       },
       error: (err) => {
@@ -39,19 +40,16 @@ export class UserFavoritesComponent implements OnInit {
       }
     });
 
-    // 2. Nos suscribimos a los cambios de los IDs de favoritos
-    // (Así, si borrás uno desde la tarjeta, desaparece instantáneamente)
     this.favoritesService.favorites$.subscribe(ids => {
       this.favoriteIds = ids;
       this.updateFavoriteList();
     });
   }
 
-  // Función auxiliar para cruzar los IDs con el catálogo de productos
   private updateFavoriteList(): void {
     if (this.allProducts.length > 0) {
       this.favoriteProducts = this.allProducts.filter(product => 
-        this.favoriteIds.includes(product.id!) // Cruzamos el ID del producto con el array de Favoritos
+        this.favoriteIds.includes(product.id!)
       );
     } else {
       this.favoriteProducts = [];
@@ -60,9 +58,12 @@ export class UserFavoritesComponent implements OnInit {
 
   clearAll() {
     if(confirm('¿Estás seguro de que quieres eliminar todos tus favoritos?')) {
-      // Asumo que tu servicio sigue teniendo el método clearAll()
-      // Si no lo tiene, podés hacer que setee el BehaviorSubject a un array vacío []
-      this.favoritesService.clearAll(); 
+      this.favoritesService.clearAll().subscribe({
+        error: () => {
+          console.error('No se pudo vaciar la lista de favoritos');
+        }
+      });
     }
   }
 }
+

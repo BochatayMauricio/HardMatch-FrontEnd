@@ -1,4 +1,4 @@
-.store-banner {
+﻿.store-banner {
   height: 250px;
   background-size: cover;
   background-position: center;
@@ -138,4 +138,5 @@
     justify-content: center;
   }
 }
+
 

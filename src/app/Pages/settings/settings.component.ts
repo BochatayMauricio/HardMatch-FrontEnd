@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,6 +12,14 @@ import {
   MATCHING_OPTIONS,
 } from '../../Interfaces/user-preferences.interface';
 import { AuthService } from '../../Services/auth.service';
+import { CategoryI } from '../../Interfaces/category.interface';
+import { CategoriesService } from '../../Services/categories.service';
+
+type CategoryOption = {
+  value: ProductCategory;
+  label: string;
+  icon: string;
+};
 
 @Component({
   selector: 'app-settings',
@@ -21,54 +29,144 @@ import { AuthService } from '../../Services/auth.service';
   styleUrl: './settings.component.css',
 })
 export class SettingsComponent implements OnInit {
-  // Opciones disponibles para el formulario
-  readonly categories = MATCHING_OPTIONS.categories;
+  categories: CategoryOption[] = [...MATCHING_OPTIONS.categories];
   readonly usageTypes = MATCHING_OPTIONS.usageTypes;
   readonly brands = MATCHING_OPTIONS.brands;
   readonly priorities = MATCHING_OPTIONS.priorities;
   readonly alertFrequencies = MATCHING_OPTIONS.alertFrequencies;
 
-  // Estado del formulario
   preferences: UserMatchingPreferences = {
     ...DEFAULT_MATCHING_PREFERENCES,
     userId: 0,
   };
 
-  // Control de UI
   activeSection: 'categories' | 'budget' | 'brands' | 'priorities' | 'alerts' =
     'categories';
   isLoading: boolean = false;
   hasChanges: boolean = false;
   saveMessage: string = '';
 
-  // Slider de precio
   priceSliderMin: number = 0;
   priceSliderMax: number = 1000000;
   priceStep: number = 10000;
 
-  // Drag and drop de prioridades
   draggedPriority: MatchingPriority | null = null;
 
   private readonly STORAGE_KEY = 'user_matching_preferences';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private categoriesService: CategoriesService,
+  ) {}
 
   ngOnInit(): void {
+    this.syncCategoriesFromBackend();
     this.loadPreferences();
   }
 
-  /**
-   * Carga las preferencias desde localStorage (temporal hasta tener backend)
-   */
+  private syncCategoriesFromBackend(): void {
+    this.categoriesService.getCategoriesState().subscribe((backendCategories) => {
+      const mapped = this.mapBackendCategoriesToOptions(backendCategories);
+      if (mapped.length > 0) {
+        this.categories = mapped;
+      }
+    });
+
+    this.categoriesService.loadCategoriesIfNeeded().subscribe({
+      error: (error) => {
+        console.error('No se pudieron cargar categorias en configuracion:', error);
+      },
+    });
+  }
+
+  private mapBackendCategoriesToOptions(categories: CategoryI[]): CategoryOption[] {
+    const iconByCategory: Record<string, string> = {
+      notebooks: 'laptop',
+      notebook: 'laptop',
+      tablets: 'tablet',
+      tablet: 'tablet',
+      smartphones: 'smartphone',
+      smartphone: 'smartphone',
+      monitores: 'monitor',
+      monitor: 'monitor',
+      teclados: 'keyboard',
+      teclado: 'keyboard',
+      mouses: 'mouse',
+      mouse: 'mouse',
+      auriculares: 'headphones',
+      almacenamiento: 'hard-drive',
+      componentes: 'cpu',
+    };
+
+    const allowedValues: ProductCategory[] = [
+      'notebooks',
+      'tablets',
+      'smartphones',
+      'monitores',
+      'teclados',
+      'mouses',
+      'auriculares',
+      'almacenamiento',
+      'componentes',
+    ];
+
+    const dedup = new Set<ProductCategory>();
+    const result: CategoryOption[] = [];
+
+    categories.forEach((category) => {
+      const normalized = this.normalizeCategoryValue(category.name);
+      if (!normalized || !allowedValues.includes(normalized) || dedup.has(normalized)) {
+        return;
+      }
+
+      dedup.add(normalized);
+      result.push({
+        value: normalized,
+        label: category.name,
+        icon: iconByCategory[normalized] || 'cpu',
+      });
+    });
+
+    return result;
+  }
+
+  private normalizeCategoryValue(name: string): ProductCategory | null {
+    const key = name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+
+    const map: Record<string, ProductCategory> = {
+      notebook: 'notebooks',
+      notebooks: 'notebooks',
+      tablet: 'tablets',
+      tablets: 'tablets',
+      smartphone: 'smartphones',
+      smartphones: 'smartphones',
+      monitor: 'monitores',
+      monitores: 'monitores',
+      teclado: 'teclados',
+      teclados: 'teclados',
+      mouse: 'mouses',
+      mouses: 'mouses',
+      auricular: 'auriculares',
+      auriculares: 'auriculares',
+      almacenamiento: 'almacenamiento',
+      componente: 'componentes',
+      componentes: 'componentes',
+    };
+
+    return map[key] || null;
+  }
+
   loadPreferences(): void {
     this.isLoading = true;
 
-    // Obtener el usuario actual
     this.authService.getCurrentUser().subscribe((user) => {
       if (user?.id) {
         this.preferences.userId = user.id;
 
-        // Cargar preferencias guardadas
         const savedPrefs = localStorage.getItem(
           `${this.STORAGE_KEY}_${user.id}`,
         );
@@ -85,14 +183,10 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  /**
-   * Guarda las preferencias en localStorage (temporal hasta tener backend)
-   */
   savePreferences(): void {
     this.isLoading = true;
     this.saveMessage = '';
 
-    // Simular llamada al backend
     setTimeout(() => {
       const prefsToSave = {
         ...this.preferences,
@@ -108,23 +202,15 @@ export class SettingsComponent implements OnInit {
       this.isLoading = false;
       this.saveMessage = '¡Preferencias guardadas correctamente!';
 
-      // Ocultar el mensaje después de 3 segundos
       setTimeout(() => {
         this.saveMessage = '';
       }, 3000);
     }, 500);
   }
 
-  /**
-   * Marca que hubo cambios para habilitar el botón de guardar
-   */
   markAsChanged(): void {
     this.hasChanges = true;
   }
-
-  // =============================================
-  // CATEGORÍAS
-  // =============================================
 
   isCategorySelected(category: ProductCategory): boolean {
     return this.preferences.selectedCategories.includes(category);
@@ -140,10 +226,6 @@ export class SettingsComponent implements OnInit {
     this.markAsChanged();
   }
 
-  // =============================================
-  // TIPOS DE USO
-  // =============================================
-
   isUsageTypeSelected(usage: UsageType): boolean {
     return this.preferences.usageTypes.includes(usage);
   }
@@ -157,10 +239,6 @@ export class SettingsComponent implements OnInit {
     }
     this.markAsChanged();
   }
-
-  // =============================================
-  // RANGO DE PRECIOS
-  // =============================================
 
   formatPrice(value: number): string {
     return new Intl.NumberFormat('es-AR', {
@@ -187,10 +265,6 @@ export class SettingsComponent implements OnInit {
     this.markAsChanged();
   }
 
-  // =============================================
-  // MARCAS
-  // =============================================
-
   isBrandPreferred(brand: HardwareBrand): boolean {
     return this.preferences.preferredBrands.includes(brand);
   }
@@ -208,7 +282,6 @@ export class SettingsComponent implements OnInit {
   cycleBrandState(brand: HardwareBrand): void {
     const currentState = this.getBrandState(brand);
 
-    // Remover de ambas listas primero
     this.preferences.preferredBrands = this.preferences.preferredBrands.filter(
       (b) => b !== brand,
     );
@@ -216,20 +289,14 @@ export class SettingsComponent implements OnInit {
       (b) => b !== brand,
     );
 
-    // Ciclar: neutral -> preferred -> excluded -> neutral
     if (currentState === 'neutral') {
       this.preferences.preferredBrands.push(brand);
     } else if (currentState === 'preferred') {
       this.preferences.excludedBrands.push(brand);
     }
-    // Si era 'excluded', queda en neutral
 
     this.markAsChanged();
   }
-
-  // =============================================
-  // PRIORIDADES (Drag & Drop)
-  // =============================================
 
   onDragStart(event: DragEvent, priority: MatchingPriority): void {
     this.draggedPriority = priority;
@@ -256,7 +323,6 @@ export class SettingsComponent implements OnInit {
     const fromIndex = this.preferences.priorities.indexOf(this.draggedPriority);
     const toIndex = this.preferences.priorities.indexOf(targetPriority);
 
-    // Reordenar
     this.preferences.priorities.splice(fromIndex, 1);
     this.preferences.priorities.splice(toIndex, 0, this.draggedPriority);
 
@@ -277,7 +343,6 @@ export class SettingsComponent implements OnInit {
     if (index === -1) {
       this.preferences.priorities.push(priority);
     } else if (this.preferences.priorities.length > 1) {
-      // Mantener al menos una prioridad
       this.preferences.priorities.splice(index, 1);
     }
     this.markAsChanged();
@@ -291,10 +356,6 @@ export class SettingsComponent implements OnInit {
     return this.priorities.find((p) => p.value === priority)?.icon || '';
   }
 
-  // =============================================
-  // ALERTAS
-  // =============================================
-
   updateAlertFrequency(frequency: AlertFrequency): void {
     this.preferences.alerts.alertFrequency = frequency;
     this.markAsChanged();
@@ -306,10 +367,6 @@ export class SettingsComponent implements OnInit {
     this.preferences.alerts[alertType] = !this.preferences.alerts[alertType];
     this.markAsChanged();
   }
-
-  // =============================================
-  // NAVEGACIÓN
-  // =============================================
 
   setActiveSection(section: typeof this.activeSection): void {
     this.activeSection = section;
@@ -336,9 +393,6 @@ export class SettingsComponent implements OnInit {
     return Math.round((completed / total) * 100);
   }
 
-  /**
-   * Resetear todas las preferencias a valores por defecto
-   */
   resetPreferences(): void {
     this.preferences = {
       ...DEFAULT_MATCHING_PREFERENCES,
@@ -347,3 +401,4 @@ export class SettingsComponent implements OnInit {
     this.markAsChanged();
   }
 }
+

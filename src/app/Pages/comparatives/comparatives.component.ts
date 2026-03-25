@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   OnInit,
   OnDestroy,
@@ -15,15 +15,12 @@ import { Chart, registerables } from 'chart.js';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { ProductI } from '../../Interfaces/product.interface';
 
-// Registrar todos los componentes de Chart.js
 Chart.register(...registerables);
 
-// Interfaz para características de productos
 interface ProductCharacteristics {
   [key: string]: string | number | boolean | undefined;
 }
 
-// Interfaz para puntuación de producto
 interface ProductScore {
   productIndex: number;
   totalScore: number;
@@ -55,7 +52,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
   private valueChart: Chart | null = null;
   private overallChart: Chart | null = null;
 
-  // Scoring tiers para procesadores
   private processorTiers: { [key: string]: number } = {
     i3: 30,
     i5: 60,
@@ -78,7 +74,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     exynos: 60,
   };
 
-  // Mapeo de características por categoría (Soporta las nuevas de la BD)
   characteristicsLabels: { [key: string]: { [key: string]: string } } = {
     notebooks: {
       processor: 'Procesador',
@@ -206,8 +201,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     return String(value);
   }
 
-  // ============= SISTEMA DE PUNTUACIÓN =============
-
   private calculateProductScores(): void {
     if (this.products.length === 0) {
       this.productScores = [];
@@ -245,7 +238,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const cat = this.normalizedCategory;
 
-    // Soportamos plurales y singulares
     if (cat === 'notebooks' || cat === 'tablets' || cat === 'notebook' || cat === 'tablet') {
       breakdown['processor'] = this.scoreProcessor(
         characteristics['processor'] as string,
@@ -283,7 +275,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     return breakdown;
   }
 
-  // Nuevas validaciones para Hardware
   private scoreVRAM(vram: string | undefined): number {
     if (!vram) return 30;
     const match = vram.match(/(\d+)\s*GB/i);
@@ -498,8 +489,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     return 'Regular';
   }
 
-  // ============= COMPARACIÓN DE CARACTERÍSTICAS =============
-
   compareCharacteristics(key: string): { best: number[]; worst: number[] } {
     const result = { best: [] as number[], worst: [] as number[] };
     if (this.products.length < 2) return result;
@@ -649,7 +638,7 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
               label: (context) => ` ${this.formatPrice(context.raw as number)}`,
               afterLabel: (context) => {
                 if (context.dataIndex === cheapestIdx)
-                  return '  ✓ Mejor precio';
+                  return '  Mejor precio';
                 return '';
               },
             },
@@ -812,7 +801,7 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
               title: (items) => this.products[items[0].dataIndex].name,
               afterBody: (items) => {
                 if (items[0].dataIndex === bestValueIdx)
-                  return '\n🏆 Mejor calidad-precio';
+                  return '\nMejor calidad-precio';
                 return '';
               },
             },
@@ -847,7 +836,6 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     const labels = this.products.map((p) => this.truncateLabel(p.brand, 12));
     const bestOverallIdx = this.getOverallBestIndex();
 
-    // Colores degradados para cada producto
     const backgroundColors = this.products.map((_, i) => {
       if (i === bestOverallIdx) return 'rgba(16, 185, 129, 0.8)';
       const colors = [
@@ -900,7 +888,7 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
                     const score = this.productScores[i]?.totalScore || 0;
                     const isBest = i === bestOverallIdx;
                     return {
-                      text: `${label}: ${score} pts${isBest ? ' 🏆' : ''}`,
+                      text: `${label}: ${score} pts${isBest ? ' (TOP)' : ''}`,
                       fillStyle: backgroundColors[i],
                       strokeStyle: borderColors[i],
                       lineWidth: 2,
@@ -926,11 +914,11 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
               afterLabel: (context) => {
                 const idx = context.dataIndex;
                 const score = this.productScores[idx];
-                let details = `\n  • Specs: ${score.specsScore} pts`;
-                details += `\n  • Precio: ${score.priceScore} pts`;
-                details += `\n  • Valor: ${score.valueScore} pts`;
+                let details = `\n  - Specs: ${score.specsScore} pts`;
+                details += `\n  - Precio: ${score.priceScore} pts`;
+                details += `\n  - Valor: ${score.valueScore} pts`;
                 if (idx === bestOverallIdx)
-                  details += '\n\n🏆 Mejor opción global';
+                  details += '\n\nMejor opción global';
                 return details;
               },
             },
@@ -997,3 +985,4 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       : text;
   }
 }
+

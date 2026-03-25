@@ -1,4 +1,4 @@
-<div class="card">
+﻿<div class="card">
   
   <div class="card-image-wrapper">
     <button class="btn-fav" (click)="toggleFavorite()" [class.is-fav]="isFav">
@@ -25,7 +25,7 @@
          [routerLink]="['/stores', storeName]" 
          style="cursor: pointer;"
          title="Ir a la tienda oficial de {{storeName}}">
-      <img [src]="storeLogoUrl" class="store-logo-img" [alt]="storeName">
+      <img [src]="storeLogoUrl" class="store-logo-img" [alt]="storeName" onerror="this.onerror=null;this.src='assets/default-store.svg'">
     </div>
   </div>
 
@@ -74,3 +74,4 @@
     </div>
   </div>
 </div>
+

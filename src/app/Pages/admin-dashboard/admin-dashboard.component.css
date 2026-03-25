@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --background-color: #f9fafb;
   --text-principal-color: #111827;
   --text-secondary-color: #6b7280;
@@ -15,7 +15,7 @@
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-/* --- Header --- */
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -53,7 +53,7 @@
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-/* --- KPIs (Summary Cards style) --- */
+
 .kpi-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -95,7 +95,7 @@
   color: var(--text-secondary-color);
 }
 
-/* --- Gráficas --- */
+
 .charts-section {
   margin-bottom: 2rem;
 }
@@ -125,7 +125,7 @@
   width: 100%;
 }
 
-/* --- Tabla de Rendimiento --- */
+
 .table-section {
   background: white;
   border-radius: 16px;
@@ -179,7 +179,7 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* --- Badges y Utilidades --- */
+
 .status-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 20px;

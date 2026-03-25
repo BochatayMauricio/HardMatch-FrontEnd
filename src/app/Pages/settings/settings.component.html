@@ -1,5 +1,5 @@
-<div class="settings-container">
-  <!-- Header -->
+﻿<div class="settings-container">
+  
   <header class="settings-header">
     <div class="header-content">
       <h1>Preferencias de Matching</h1>
@@ -8,7 +8,7 @@
       </p>
     </div>
 
-    <!-- Progress indicator -->
+    
     <div class="progress-section">
       <div class="progress-bar">
         <div
@@ -23,7 +23,7 @@
   </header>
 
   <div class="settings-layout">
-    <!-- Sidebar Navigation -->
+    
     <nav class="settings-nav">
       <button
         class="nav-item"
@@ -71,11 +71,9 @@
       </button>
     </nav>
 
-    <!-- Main Content -->
+    
     <main class="settings-content">
-      <!-- =============================================
-           SECCIÓN: CATEGORÍAS DE INTERÉS
-           ============================================= -->
+      
       <section *ngIf="activeSection === 'categories'" class="settings-section">
         <div class="section-header">
           <h2>Categorías de Interés</h2>
@@ -115,7 +113,7 @@
 
         <div class="section-divider"></div>
 
-        <!-- Tipos de uso -->
+        
         <div class="section-header">
           <h3>¿Para qué los usarás?</h3>
           <p class="section-description">
@@ -144,9 +142,7 @@
         </div>
       </section>
 
-      <!-- =============================================
-           SECCIÓN: PRESUPUESTO
-           ============================================= -->
+      
       <section *ngIf="activeSection === 'budget'" class="settings-section">
         <div class="section-header">
           <h2>Rango de Presupuesto</h2>
@@ -228,9 +224,7 @@
         </div>
       </section>
 
-      <!-- =============================================
-           SECCIÓN: MARCAS PREFERIDAS
-           ============================================= -->
+      
       <section *ngIf="activeSection === 'brands'" class="settings-section">
         <div class="section-header">
           <h2>Preferencias de Marcas</h2>
@@ -293,9 +287,7 @@
         </div>
       </section>
 
-      <!-- =============================================
-           SECCIÓN: PRIORIDADES
-           ============================================= -->
+      
       <section *ngIf="activeSection === 'priorities'" class="settings-section">
         <div class="section-header">
           <h2>Prioridades de Matching</h2>
@@ -340,9 +332,7 @@
         </div>
       </section>
 
-      <!-- =============================================
-           SECCIÓN: ALERTAS
-           ============================================= -->
+      
       <section *ngIf="activeSection === 'alerts'" class="settings-section">
         <div class="section-header">
           <h2>Alertas y Notificaciones</h2>
@@ -453,7 +443,7 @@
     </main>
   </div>
 
-  <!-- Footer con acciones -->
+  
   <footer class="settings-footer">
     <span class="save-message" *ngIf="saveMessage">{{ saveMessage }}</span>
     <div class="footer-actions">
@@ -475,3 +465,5 @@
     </div>
   </footer>
 </div>
+
+

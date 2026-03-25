@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductI } from '../../Interfaces/product.interface';
-import { ProductsServiceService } from '../../Services/products-service.service';
+import { ProductsService } from '../../Services/products.service';
 import { ComparativesService } from '../../Services/comparatives.service';
 import { FavoritesService } from '../../Services/favorites.service';
 import { StoreService } from '../../Services/stores.service';
@@ -21,16 +21,15 @@ export class ViewProductDetailsComponent implements OnInit {
   product: ProductI | null = null;
   isFavorite = false;
   isInComparison = false;
-  storeLogoUrl = 'assets/default-store.png';
+  storeLogoUrl = 'assets/default-store.svg';
   storeName = '';
 
-  // Variable para controlar el estado del usuario
   currentUser: UserI | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productsService: ProductsServiceService,
+    private productsService: ProductsService,
     private comparativesService: ComparativesService,
     private favoritesService: FavoritesService,
     private storeService: StoreService,
@@ -42,12 +41,10 @@ export class ViewProductDetailsComponent implements OnInit {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (productId) {
-      // 1. Obtenemos el usuario (independiente del producto)
       this.authService.getCurrentUser().subscribe((user) => {
         this.currentUser = user;
       });
 
-      // 2. Buscamos el producto en el backend
       this.productsService.getProductById(productId).subscribe({
         next: (producto) => {
           if (!producto) {
@@ -56,32 +53,27 @@ export class ViewProductDetailsComponent implements OnInit {
             return;
           }
 
-          // Asignamos el producto
           this.product = producto;
 
-          // Cargar info de la tienda (síncrono o mock local)
           if (this.product.storeId) {
             this.storeService.getStoreById(this.product.storeId).subscribe({
               next: (store) => {
                 if (store) {
-                  this.storeLogoUrl = store.logo || 'assets/default-store.png';
+                  this.storeLogoUrl = store.logo || 'assets/default-store.svg';
                   this.storeName = store.name || 'Tienda Oficial';
                 }
               },
               error: (err) => {
                 console.error('Error al cargar tienda real:', err);
-                // Fallback por si la tienda no existe
                 this.storeName = producto.storeName || 'Tienda Oficial';
               }
             });
           }
 
-          // Verificar si es favorito (ahora tu servicio usa un array de IDs)
           this.favoritesService.favorites$.subscribe((favIds) => {
             this.isFavorite = favIds.includes(this.product!.id);
           });
 
-          // Verificar si está en comparación
           this.comparativesService.getProducts().subscribe((products) => {
             this.isInComparison = products.some((p) => p.id === this.product!.id);
           });
@@ -191,14 +183,18 @@ export class ViewProductDetailsComponent implements OnInit {
     }
 
     if (this.product) {
-      // Pasamos únicamente el ID, tal como definimos en el servicio
-      this.favoritesService.toggleFavorite(this.product.id);
-
-      if (!this.isFavorite) {
-        this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
-      } else {
-        this.toastr.info('Producto eliminado de favoritos');
-      }
+      this.favoritesService.toggleFavorite(this.product.id).subscribe({
+        next: (wasAdded) => {
+          if (wasAdded) {
+            this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
+          } else {
+            this.toastr.info('Producto eliminado de favoritos');
+          }
+        },
+        error: () => {
+          this.toastr.error('No se pudo actualizar favoritos', 'Error');
+        },
+      });
     }
   }
 
@@ -250,3 +246,4 @@ export class ViewProductDetailsComponent implements OnInit {
     }
   }
 }
+

@@ -1,4 +1,4 @@
-/* Lista de Compras */
+﻿
 .purchases-list {
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
     border: 1px solid #e5e7eb;
     transition: box-shadow 0.2s, transform 0.2s;
     display: grid;
-    grid-template-columns: 1fr auto; /* Para alinear el botón y el total */
+    grid-template-columns: 1fr auto; 
 }
 
 .purchase-item:hover {
@@ -46,20 +46,20 @@
     font-weight: 700;
 }
 
-/* Colores de Estado - Usando tus variables como base */
+
 
 .purchase-status.completed {
-    background-color: #d1fae5; /* Verde pálido */
+    background-color: #d1fae5; 
     color: #065f46;
 }
 
 .purchase-status.pending {
-    background-color: #ffedd5; /* Amarillo/Naranja pálido */
+    background-color: #ffedd5; 
     color: #b45309;
 }
 
 .purchase-status.canceled {
-    background-color: #fee2e2; /* Rojo pálido */
+    background-color: #fee2e2; 
     color: #b91c1c;
 }
 
@@ -94,9 +94,9 @@
     border: 1px solid #e5e7eb;
 }
 
-/* ... Estilos anteriores ... */
 
-/* --- Estilos para la Vista de Detalle con Imagen --- */
+
+
 
 .detail-item-full {
     display: flex;
@@ -135,7 +135,7 @@
 }
 
 .product-pricing-details {
-    width: 250px; /* Ancho fijo para las columnas de precio */
+    width: 250px; 
     text-align: right;
 }
 
@@ -153,7 +153,7 @@
 
 .item-offer {
     display: inline-block;
-    color: #10b981; /* Verde de oferta */
+    color: #10b981; 
     background-color: #d1fae5;
     padding: 2px 6px;
     border-radius: 4px;
@@ -176,7 +176,7 @@
 }
 
 .detail-overlay {
-    /* Estilos del fondo que oscurece la pantalla */
+    
     position: fixed;
     top: 0;
     left: 0;
@@ -184,20 +184,20 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
-    justify-content: flex-end; /* Coloca el drawer a la derecha */
-    z-index: 2000; /* Asegura que esté por encima de todo */
+    justify-content: flex-end; 
+    z-index: 2000; 
 }
 
 .purchase-detail-drawer {
-    /* Estilos del contenedor del detalle (Drawer) */
-    width: 450px; /* Ancho fijo para el detalle */
+    
+    width: 450px; 
     max-width: 90%;
     height: 100%;
     background-color: white;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     padding: 25px;
     overflow-y: auto;
-    /* Animación simple (opcional) */
+    
     transform: translateX(0); 
     transition: transform 0.3s ease-out;
 }
@@ -225,7 +225,7 @@
     line-height: 1;
 }
 
-/* Footer del Drawer */
+
 .drawer-footer {
     display: flex;
     justify-content: space-between;

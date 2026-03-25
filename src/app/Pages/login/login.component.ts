@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
-import { UserI } from '../../Interfaces/user.interface';
+import { ResponseLoginErrorPayload } from '../../Interfaces/response-login.interface';
+import { UserRegisterI } from '../../Interfaces/user.interface';
 import { ToastrService } from 'ngx-toastr';
 import { NavbarLoginComponent } from '../../Components/navbar-login/navbar-login.component';
+
 @Component({
   selector: 'app-login',
   imports: [
@@ -42,6 +45,13 @@ export class LoginComponent {
     private toastr: ToastrService
   ) {}
 
+  private getBackendErrorPayload(error: unknown): ResponseLoginErrorPayload {
+    if (error instanceof HttpErrorResponse && error.error) {
+      return error.error as ResponseLoginErrorPayload;
+    }
+    return {};
+  }
+
   async onSubmit(): Promise<void> {
     if(this.isLoginMode){
       if (this.loginForm.valid) {
@@ -57,15 +67,15 @@ export class LoginComponent {
             } else {
               this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');
             }
-          } catch (error:any) {
-            const errorMsg = error.error?.error?.message || 'Credenciales inválidas';
+          } catch (error: unknown) {
+            const payload = this.getBackendErrorPayload(error);
+            const errorMsg = payload.error?.message || 'Credenciales inválidas';
             this.toastr.error(errorMsg, 'Error');
           }
         }
       } else {
         this.toastr.warning('Formulario de inicio de sesión no válido', 'Datos incorrectos');
       }
-      // this.loginForm.reset();
     }else{
       if (this.registerForm.valid) {
         const name = this.registerForm.get('name')?.value;
@@ -74,7 +84,6 @@ export class LoginComponent {
         const email = this.registerForm.get('email')?.value;
         const password = this.registerForm.get('password')?.value;
         const confirmPassword = this.registerForm.get('confirmPassword')?.value;
-        const role = this.registerForm.get('role')?.value;
         const phone = this.registerForm.get('phone')?.value;
 
         if (password !== confirmPassword) {
@@ -83,30 +92,38 @@ export class LoginComponent {
         }
 
         if (name && surname && username && email && password && phone) {
-          const newUser: any = {
+          const newUser: UserRegisterI = {
             name,
             surname,
             username,
             email,
             password,
-            phone
+            phone,
           };
           try {
             const registeredUser = await this.authService.register(newUser);
             if (registeredUser) {
               this.toastr.success('Usuario registrado correctamente', 'Registro exitoso');
-              this.isLoginMode = true; // Lo pasamos al login
-              this.registerForm.reset(); // Limpiamos el form
+              this.isLoginMode = true;
+              this.registerForm.reset();
             }
-          } catch (error: any) {
-            // Manejo de errores hiper específico
-            if (error.error?.error?.validationErrors) {
-              // Si fue error de Zod (400)
-              const mensajes = error.error.error.validationErrors.map((e: any) => e.message).join('<br>');
+          } catch (error: unknown) {
+            if (error instanceof HttpErrorResponse && error.status === 409) {
+              this.toastr.warning(
+                'Ya existe un usuario con ese email o nombre de usuario',
+                'Registro duplicado'
+              );
+              return;
+            }
+
+            const payload = this.getBackendErrorPayload(error);
+            const validationErrors = payload.error?.validationErrors;
+
+            if (validationErrors?.length) {
+              const mensajes = validationErrors.map((e) => e.message).join('<br>');
               this.toastr.error(mensajes, 'Revisa los datos', { enableHtml: true });
             } else {
-              // Si fue error de Duplicado (409) u otro
-              const errorMsg = error.error?.error?.message || 'No se pudo registrar el usuario';
+              const errorMsg = payload.error?.message || 'No se pudo registrar el usuario';
               this.toastr.error(errorMsg, 'Error de registro');
             }
           }
@@ -117,3 +134,4 @@ export class LoginComponent {
     }
   }
 }
+

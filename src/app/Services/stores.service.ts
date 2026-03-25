@@ -1,44 +1,46 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { ResponseStore } from '../Interfaces/response-store.interface';
 import { StoreI } from '../Interfaces/store.intefrace';
+import { BACKEND_API_URL } from '../../utils/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreService {
-  private apiUrl = 'http://localhost:3000/api/stores'; // Ajusta a tu ruta de backend
+  private readonly apiUrl = `${BACKEND_API_URL}/stores`;
 
   constructor(private http: HttpClient) {}
 
-  // Ahora devuelve un Observable con los datos reales
   getStoreById(id: number): Observable<StoreI> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map(res => {
-        // Si el backend devuelve un objeto con 'data', lo extraemos
-        return res.data ? res.data : res;
-      })
+    return this.http.get<ResponseStore<StoreI> | StoreI>(`${this.apiUrl}/${id}`).pipe(
+      map((res) => this.extractData(res))
     );
   }
 
-  // Opcional: Para la página de marcas/tiendas
   getAllStores(): Observable<StoreI[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map(res => res.data || res)
+    return this.http.get<ResponseStore<StoreI[]> | StoreI[]>(this.apiUrl).pipe(
+      map((res) => this.extractData(res))
     );
   }
 
   getStoreByName(name: string): Observable<StoreI | undefined> {
     return this.getAllStores().pipe(
-      map(stores => {
-        // Buscamos la tienda ignorando mayúsculas, minúsculas y espacios
-        // para que las URLs como /stores/Tienda%20Oficial no fallen
+      map((stores) => {
         const storeNameParam = decodeURIComponent(name).toLowerCase().trim();
-        
+
         return stores.find(
-          store => store.name.toLowerCase().trim() === storeNameParam
+          (store) => store.name.toLowerCase().trim() === storeNameParam
         );
       })
     );
+  }
+
+  private extractData<T>(response: ResponseStore<T> | T): T {
+    if (response && typeof response === 'object' && 'data' in response) {
+      return (response as ResponseStore<T>).data;
+    }
+    return response as T;
   }
 }

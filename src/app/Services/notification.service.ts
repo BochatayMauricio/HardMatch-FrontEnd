@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationI } from '../Interfaces/notification.interface';
 
@@ -6,11 +6,9 @@ import { NotificationI } from '../Interfaces/notification.interface';
   providedIn: 'root'
 })
 export class NotificationService {
-  // Guardamos las notificaciones aquí
   private notificationsSubject = new BehaviorSubject<NotificationI[]>([]);
   notifications$ = this.notificationsSubject.asObservable();
 
-  // Observable que dice si hay alguna sin leer
   hasUnread$ = new BehaviorSubject<boolean>(false);
 
   setNotifications(notifications: NotificationI[]) {

@@ -1,4 +1,4 @@
-export interface StoreI {
+﻿export interface StoreI {
   id: number;
   name: string;
   logo: string;

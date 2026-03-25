@@ -1,6 +1,6 @@
-<main class="product-details-container">
+﻿<main class="product-details-container">
   @if (product) {
-    <!-- Breadcrumb & Back -->
+    
     <nav class="breadcrumb-nav">
       <button class="btn-back" (click)="goBack()">
         <svg
@@ -30,9 +30,9 @@
       </div>
     </nav>
 
-    <!-- Main Content -->
+    
     <div class="product-content">
-      <!-- Left Side - Image -->
+      
       <section class="product-gallery">
         <div class="main-image-container">
           @if (product.offer) {
@@ -52,9 +52,9 @@
           <img [src]="product.image" [alt]="product.name" class="main-image" />
         </div>
 
-        <!-- Store Badge -->
+        
         <div class="store-card" (click)="goToStore()">
-          <img [src]="storeLogoUrl" [alt]="storeName" class="store-logo" />
+          <img [src]="storeLogoUrl" [alt]="storeName" class="store-logo" onerror="this.onerror=null;this.src='assets/default-store.svg'" />
           <div class="store-info">
             <span class="store-label">Vendido por</span>
             <span class="store-name">{{ storeName || "Tienda Oficial" }}</span>
@@ -73,7 +73,7 @@
         </div>
       </section>
 
-      <!-- Right Side - Info -->
+      
       <section class="product-info">
         <div class="info-header">
           <span class="brand">{{ product.brand }}</span>
@@ -101,7 +101,7 @@
 
         <p class="product-description">{{ product.description }}</p>
 
-        <!-- Price Section -->
+        
         <div class="price-section">
           @if (product.offer) {
             <div class="price-with-discount">
@@ -125,7 +125,7 @@
           }
         </div>
 
-        <!-- Stock Info -->
+        
         @if (product.stock) {
           <div class="stock-info" [class.low-stock]="product.stock < 5">
             @if (product.stock < 5) {
@@ -136,7 +136,7 @@
           </div>
         }
 
-        <!-- Action Buttons -->
+        
         <div class="action-buttons">
           <button class="btn-primary btn-buy" (click)="visitProductUrl()">
             <span class="material-symbols-outlined">shopping_cart</span>
@@ -183,7 +183,7 @@
           </a>
         }
 
-        <!-- Quick Info Cards (inside product-info) -->
+        
         <div class="quick-info-grid">
           <div class="quick-info-item">
             <span class="material-symbols-outlined quick-icon">delivery_truck_speed</span>
@@ -206,7 +206,7 @@
           </div>
         </div>
 
-        <!-- Payment Methods (compact, inside product-info) -->
+        
         <div class="payment-compact">
           <h4>Medios de pago</h4>
           <div class="payment-icons">
@@ -291,7 +291,7 @@
       </section>
     </div>
 
-    <!-- Specifications Section -->
+    
     @if (product.caracteristics) {
       <section class="specifications-section">
         <div class="section-header">
@@ -329,7 +329,7 @@
           @for (listing of product.listings; track listing.id) {
             <div class="listing-card">
               <div class="listing-store" style="cursor: pointer;" [routerLink]="['/stores', listing.storeName]">
-                <img [src]="listing.storeLogo" [alt]="listing.storeName" class="listing-store-logo">
+                <img [src]="listing.storeLogo" [alt]="listing.storeName" class="listing-store-logo" onerror="this.onerror=null;this.src='assets/default-store.svg'">
                 <span class="fw-bold">{{ listing.storeName }}</span>
               </div>
               
@@ -356,10 +356,12 @@
       </section>
     }
   } @else {
-    <!-- Loading State -->
+    
     <div class="loading-state">
       <div class="spinner"></div>
       <p>Cargando producto...</p>
     </div>
   }
 </main>
+
+

@@ -1,4 +1,4 @@
-footer{
+﻿footer{
     background: var(--buttons-primary-color);
 }
 .footer-content{
@@ -21,12 +21,12 @@ footer{
 }
 
 .social-icons a {
-    color: var(--text-color); /* Color blanco por defecto */
-    font-size: 20px; /* Tamaño del icono */
+    color: var(--text-color); 
+    font-size: 20px; 
     transition: color 0.3s ease;
     text-decoration: none;
 }
 
 .social-icons a:hover {
-    color: var(--buttons-secondary-color); /* Color al hacer hover */
+    color: var(--buttons-secondary-color); 
 }

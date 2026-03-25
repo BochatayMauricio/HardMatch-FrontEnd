@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import {
   RouterOutlet,
   Router,
@@ -37,7 +37,6 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         const currentUrl = event.urlAfterRedirects;
 
-        // Rutas donde NO queremos el bot ni el header
         const hiddenRoutes = ['/login'];
         const shouldHide = hiddenRoutes.some((route) =>
           currentUrl.includes(route),
@@ -57,6 +56,6 @@ export class AppComponent {
   }
 
   goToComparison(): void {
-    this.router.navigate(['/comparar']); // Asegurate de tener esta ruta creada
+    this.router.navigate(['/comparar']);
   }
 }
