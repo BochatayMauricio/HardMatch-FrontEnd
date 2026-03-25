@@ -6,13 +6,14 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { NotificationService } from '../../Services/notification.service';
 import { UserI } from '../../Interfaces/user.interface';
-import { StoreService, StoreI } from '../../Services/stores.service'; 
-import { Toast, ToastrService } from 'ngx-toastr';
+import { StoreService } from '../../Services/stores.service'; 
+import { StoreI } from '../../Interfaces/store.intefrace'; // (Mantuve el nombre de tu archivo exacto)
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NotificationComponent, RouterLink, ReactiveFormsModule],
+  imports: [NotificationComponent, UpperCasePipe, RouterLink, ReactiveFormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -41,20 +42,31 @@ export class NavbarComponent implements OnInit {
     private router: Router, 
     private authService: AuthService,
     private notificationService: NotificationService,
-    private storeService: StoreService,
+    private storeService: StoreService, 
     private toastr: ToastrService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    // 1. Suscripción al usuario
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-  }
 
-  ngOnInit(): void {
+    // 2. Suscripción a notificaciones
     this.notificationService.hasUnread$.subscribe(hasUnread => {
       this.hasUnreadNotifications = hasUnread;
     });
 
-    this.stores = this.storeService.getStores();
+    // 3. Suscripción asíncrona a la base de datos de Tiendas
+    this.storeService.getAllStores().subscribe({
+      next: (storesData) => {
+        this.stores = storesData;
+        console.log(this.stores); // Verificar que las tiendas se cargaron correctamente
+      },
+      error: (err) => {
+        console.error('Error al cargar tiendas en la Navbar:', err);
+      }
+    });
   }
 
   onSearch(): void {

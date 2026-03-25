@@ -6,8 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FavoritesService } from '../../Services/favorites.service';
 import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../Services/stores.service';
-import { AuthService } from '../../Services/auth.service'; // <--- 1. Importar AuthService
-import { UserI } from '../../Interfaces/user.interface'; // <--- 1. Importar UserI
+import { AuthService } from '../../Services/auth.service'; 
+import { UserI } from '../../Interfaces/user.interface'; 
 
 @Component({
   selector: 'app-card',
@@ -22,9 +22,7 @@ export class CardComponent implements OnInit {
   @Input() showDeleteButton: boolean = false;
 
   isFav: boolean = false;
-
-  // Variable para controlar el usuario
-  currentUser: UserI | null = null; // <--- 2. Variable de estado
+  currentUser: UserI | null = null; 
 
   storeLogoUrl: string = 'assets/default-store.png';
   storeName: string = '';
@@ -39,26 +37,50 @@ export class CardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // <--- 4. Suscribirse al usuario actual
+    // 1. Suscribirse al usuario actual
     this.authService.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
     });
 
+    // 2. Comprobar Comparativas
     this.comparativesService.getProducts().subscribe((products) => {
       this.isInComparativeList = products.some((p) => p.id === this.product.id);
     });
 
-    this.favService.favorites$.subscribe((favs) => {
-      this.isFav = favs.some((p) => p.id === this.product.id);
+    // 3. Comprobar Favoritos (Ajustado para array de IDs)
+    this.favService.favorites$.subscribe((favIds) => {
+      this.isFav = favIds.includes(this.product.id);
     });
 
-    if (this.product.storeId) {
-      const store = this.storeService.getStoreById(this.product.storeId);
-      if (store) {
-        this.storeLogoUrl = store.logo;
-        this.storeName = store.name;
+    // 4. Lógica eficiente para cargar la tienda sin saturar el Backend
+    this.storeName = this.product.storeName || 'Tienda Oficial';
+    
+    // Buscamos el logo directamente en la oferta que mapeamos en el servicio
+    if (this.product.listings && this.product.listings.length > 0) {
+      const mainListing = this.product.listings.find(l => l.storeId === this.product.storeId);
+      if (mainListing && mainListing.storeLogo) {
+        this.storeLogoUrl = mainListing.storeLogo;
       }
+    } else if (this.product.storeId) {
+      // Fallback: Si por alguna razón no hay listings, le pedimos asíncronamente al servicio
+      this.storeService.getStoreById(this.product.storeId).subscribe({
+        next: (store) => {
+          if (store) {
+            this.storeLogoUrl = store.logo || this.storeLogoUrl;
+            this.storeName = store.name || this.storeName;
+          }
+        }
+      });
     }
+  }
+
+  // 5. Getter para evitar errores matemáticos en el HTML
+  get finalPrice(): number {
+    if (!this.product.offer) {
+      return this.product.price;
+    }
+    const discount = parseFloat(this.product.offer);
+    return this.product.price * (1 - (discount / 100));
   }
 
   addToCompare(product: ProductI): void {
@@ -95,7 +117,6 @@ export class CardComponent implements OnInit {
   }
 
   toggleFavorite() {
-    // <--- 5. Verificación de seguridad
     if (!this.currentUser) {
       this.toastr.info(
         'Debes iniciar sesión para agregar favoritos',
@@ -104,11 +125,10 @@ export class CardComponent implements OnInit {
       return;
     }
 
-    this.favService.toggleFavorite(this.product);
+    // 6. Pasamos solo el ID al servicio
+    this.favService.toggleFavorite(this.product.id);
 
-    // Feedback visual (Opcional, igual que en el detalle)
     if (!this.isFav) {
-      // Como el toggle es rápido, aquí chequeamos la inversión
       this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
     }
   }
