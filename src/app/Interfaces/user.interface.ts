@@ -6,6 +6,8 @@ export interface UserI{
     username: string;
     password?: string;
     role: string;
+    phone: string;
+    isActive?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -7,11 +7,12 @@ import { AuthService } from '../../Services/auth.service';
 import { NotificationService } from '../../Services/notification.service';
 import { UserI } from '../../Interfaces/user.interface';
 import { StoreService, StoreI } from '../../Services/stores.service'; 
+import { Toast, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [NotificationComponent, UpperCasePipe, RouterLink, ReactiveFormsModule],
+  imports: [NotificationComponent, RouterLink, ReactiveFormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -40,7 +41,8 @@ export class NavbarComponent implements OnInit {
     private router: Router, 
     private authService: AuthService,
     private notificationService: NotificationService,
-    private storeService: StoreService
+    private storeService: StoreService,
+    private toastr: ToastrService
   ) {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
@@ -64,6 +66,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
+    this.toastr.warning('Sesión cerrada correctamente', 'Logout');
     this.authService.logout();
     this.currentUser = null;
     this.router.navigate(['/']);
