@@ -62,22 +62,31 @@
             Tiendas
           </a>
           <ul class="dropdown-menu">
-            @for (store of stores; track $index) {
+            @if (stores.length === 0) {
               <li>
-                <a
-                  class="dropdown-item d-flex align-items-center gap-2"
-                  [routerLink]="['/stores', store.name]"
-                >
-                  <img
-                    [src]="store.logo"
-                    width="20"
-                    height="20"
-                    style="object-fit: contain"
-                    alt="logo"
-                  />
-                  {{ store.name }}
-                </a>
+                <span class="dropdown-item text-muted d-flex align-items-center gap-2">
+                  <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                  Cargando...
+                </span>
               </li>
+            } @else {
+              @for (store of stores; track store.id) {
+                <li>
+                  <a
+                    class="dropdown-item d-flex align-items-center gap-2"
+                    [routerLink]="['/stores', store.name]"
+                  >
+                    <img
+                      [src]="store.logo"
+                      width="20"
+                      height="20"
+                      style="object-fit: contain"
+                      alt="logo"
+                    />
+                    {{ store.name }}
+                  </a>
+                </li>
+              }
             }
           </ul>
         </li>

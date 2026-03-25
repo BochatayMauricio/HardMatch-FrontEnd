@@ -6,7 +6,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { NotificationService } from '../../Services/notification.service';
 import { UserI } from '../../Interfaces/user.interface';
-import { StoreService, StoreI } from '../../Services/stores.service'; 
+import { StoreService } from '../../Services/stores.service'; 
+import { StoreI } from '../../Interfaces/store.intefrace'; // (Mantuve el nombre de tu archivo exacto)
 
 @Component({
   selector: 'app-navbar',
@@ -41,18 +42,28 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private notificationService: NotificationService,
     private storeService: StoreService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    // 1. Suscripción al usuario
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-  }
 
-  ngOnInit(): void {
+    // 2. Suscripción a notificaciones
     this.notificationService.hasUnread$.subscribe(hasUnread => {
       this.hasUnreadNotifications = hasUnread;
     });
 
-    this.stores = this.storeService.getStores();
+    // 3. Suscripción asíncrona a la base de datos de Tiendas
+    this.storeService.getAllStores().subscribe({
+      next: (storesData) => {
+        this.stores = storesData;
+      },
+      error: (err) => {
+        console.error('Error al cargar tiendas en la Navbar:', err);
+      }
+    });
   }
 
   onSearch(): void {
