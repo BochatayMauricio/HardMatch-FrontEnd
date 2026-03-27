@@ -38,6 +38,17 @@ export type ProductCharacteristics =
   | MouseCharacteristics
   | Record<string, string | number | boolean>;
 
+
+export interface ListingI {
+  id?: number;
+  storeId: number;
+  storeName: string;
+  storeLogo?: string;
+  urlAccess: string;
+  price: number;
+  percentOff: number;
+}
+
 export interface ProductI {
   id: number;
   name: string;
@@ -57,4 +68,5 @@ export interface ProductI {
   storeId?: number;
   storeName?: string;
   freeShipping?: boolean;
+  listings?: ListingI[];
 }

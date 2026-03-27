@@ -1,38 +1,45 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class FavoritesService {
-  private storageKey = 'my_favorites';
-  private favoritesSubject = new BehaviorSubject<any[]>(this.getStoredFavorites());
-  
+  // Inicializamos el BehaviorSubject leyendo lo que haya en el LocalStorage
+  private favoritesSubject = new BehaviorSubject<number[]>(this.loadFavorites());
   favorites$ = this.favoritesSubject.asObservable();
 
-  private getStoredFavorites(): any[] {
-    const data = localStorage.getItem(this.storageKey);
-    return data ? JSON.parse(data) : [];
+  constructor() {}
+
+  // Lee de LocalStorage (Si no hay nada, devuelve un array vacío [])
+  private loadFavorites(): number[] {
+    const stored = localStorage.getItem('user_favorites');
+    return stored ? JSON.parse(stored) : [];
   }
 
-  toggleFavorite(product: any) {
-    let current = this.getStoredFavorites();
-    const index = current.findIndex((p: any) => p.id === product.id);
-
-    if (index > -1) {
-      current.splice(index, 1);
+  // Agrega o quita un ID del array
+  toggleFavorite(productId: number): void {
+    const currentFavorites = this.favoritesSubject.getValue();
+    
+    if (currentFavorites.includes(productId)) {
+      // Si el ID ya está, lo quitamos (Filtramos todos menos ese)
+      const updated = currentFavorites.filter(id => id !== productId);
+      this.updateAndSave(updated);
     } else {
-      current.push(product);
+      // LA SOLUCIÓN AL BUG: Agregamos el nuevo ID manteniendo los que ya estaban
+      const updated = [...currentFavorites, productId];
+      this.updateAndSave(updated);
     }
-
-    this.updateStorage(current);
   }
 
-  // Método para vaciar toda la lista
-  clearAll() {
-    this.updateStorage([]);
+  // Vacía la lista por completo
+  clearAll(): void {
+    this.updateAndSave([]);
   }
 
-  private updateStorage(favorites: any[]) {
-    localStorage.setItem(this.storageKey, JSON.stringify(favorites));
+  // Actualiza el observable y guarda en LocalStorage para no perderlos al recargar la página
+  private updateAndSave(favorites: number[]): void {
     this.favoritesSubject.next(favorites);
+    localStorage.setItem('user_favorites', JSON.stringify(favorites));
   }
 }

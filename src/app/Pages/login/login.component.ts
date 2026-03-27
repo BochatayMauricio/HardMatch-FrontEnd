@@ -31,7 +31,9 @@ export class LoginComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', Validators.required),
-    role: new FormControl('Usuario', Validators.required)
+    role: new FormControl('Usuario', Validators.required),
+    phone: new FormControl('', Validators.required),
+    isActive: new FormControl(true)
   });
 
   constructor(
@@ -46,19 +48,24 @@ export class LoginComponent {
         const email = this.loginForm.get('email')?.value;
         const password = this.loginForm.get('password')?.value;
         if (email && password) {
-          const user = await this.authService.login(email, password);
-          if (user) {
-            this.toastr.success('Inicio de sesión exitoso', 'Éxito');
-            localStorage.setItem('email', JSON.stringify(email));
-            this.router.navigate(['/']);
-          } else {
-            this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');
+          try {
+            const user = await this.authService.login(email, password);
+            if (user) {
+              this.toastr.success('Inicio de sesión exitoso', 'Éxito');
+              localStorage.setItem('email', JSON.stringify(email));
+              this.router.navigate(['/']);
+            } else {
+              this.toastr.error('Credenciales inválidas', 'Error de inicio de sesión');
+            }
+          } catch (error:any) {
+            const errorMsg = error.error?.error?.message || 'Credenciales inválidas';
+            this.toastr.error(errorMsg, 'Error');
           }
         }
       } else {
         this.toastr.warning('Formulario de inicio de sesión no válido', 'Datos incorrectos');
       }
-      this.loginForm.reset();
+      // this.loginForm.reset();
     }else{
       if (this.registerForm.valid) {
         const name = this.registerForm.get('name')?.value;
@@ -68,39 +75,45 @@ export class LoginComponent {
         const password = this.registerForm.get('password')?.value;
         const confirmPassword = this.registerForm.get('confirmPassword')?.value;
         const role = this.registerForm.get('role')?.value;
+        const phone = this.registerForm.get('phone')?.value;
 
         if (password !== confirmPassword) {
           this.toastr.warning('Las contraseñas ingresadas no coinciden', 'Contraseñas no coinciden');
           return;
         }
 
-        if (name && surname && username && email && password && role) {
-          const newUser: UserI = {
+        if (name && surname && username && email && password && phone) {
+          const newUser: any = {
             name,
             surname,
             username,
             email,
             password,
-            role
+            phone
           };
-
-          const registeredUser = await this.authService.register(newUser);
-          if (registeredUser) {
-            this.toastr.success('Usuario registrado correctamente', 'Registro exitoso');
-            this.isLoginMode = true;
-            this.router.navigate(['/']);
-          } else {
-            this.toastr.error('No se pudo registrar el usuario', 'Error de registro');
+          try {
+            const registeredUser = await this.authService.register(newUser);
+            if (registeredUser) {
+              this.toastr.success('Usuario registrado correctamente', 'Registro exitoso');
+              this.isLoginMode = true; // Lo pasamos al login
+              this.registerForm.reset(); // Limpiamos el form
+            }
+          } catch (error: any) {
+            // Manejo de errores hiper específico
+            if (error.error?.error?.validationErrors) {
+              // Si fue error de Zod (400)
+              const mensajes = error.error.error.validationErrors.map((e: any) => e.message).join('<br>');
+              this.toastr.error(mensajes, 'Revisa los datos', { enableHtml: true });
+            } else {
+              // Si fue error de Duplicado (409) u otro
+              const errorMsg = error.error?.error?.message || 'No se pudo registrar el usuario';
+              this.toastr.error(errorMsg, 'Error de registro');
+            }
           }
         }
       } else {
         this.toastr.warning('Formulario de registro no válido', 'Datos incorrectos');
       }
-      this.registerForm.reset();
     }
-
   }
-
-
-
 }

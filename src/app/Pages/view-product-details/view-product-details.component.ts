@@ -6,8 +6,8 @@ import { ProductsServiceService } from '../../Services/products-service.service'
 import { ComparativesService } from '../../Services/comparatives.service';
 import { FavoritesService } from '../../Services/favorites.service';
 import { StoreService } from '../../Services/stores.service';
-import { AuthService } from '../../Services/auth.service'; // Importamos AuthService
-import { UserI } from '../../Interfaces/user.interface'; // Importamos la interfaz de usuario
+import { AuthService } from '../../Services/auth.service';
+import { UserI } from '../../Interfaces/user.interface';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -42,37 +42,56 @@ export class ViewProductDetailsComponent implements OnInit {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (productId) {
-      this.product = this.productsService.getProductById(productId);
-
-      if (!this.product) {
-        this.toastr.error('Producto no encontrado', 'Error');
-        this.router.navigate(['/']);
-        return;
-      }
-
-      // Suscribirse al usuario actual para validaciones de seguridad
+      // 1. Obtenemos el usuario (independiente del producto)
       this.authService.getCurrentUser().subscribe((user) => {
         this.currentUser = user;
       });
 
-      // Check favorite status
-      this.favoritesService.favorites$.subscribe((favs) => {
-        this.isFavorite = favs.some((p) => p.id === this.product?.id);
-      });
+      // 2. Buscamos el producto en el backend
+      this.productsService.getProductById(productId).subscribe({
+        next: (producto) => {
+          if (!producto) {
+            this.toastr.error('Producto no encontrado', 'Error');
+            this.router.navigate(['/']);
+            return;
+          }
 
-      // Check comparison status
-      this.comparativesService.getProducts().subscribe((products) => {
-        this.isInComparison = products.some((p) => p.id === this.product?.id);
-      });
+          // Asignamos el producto
+          this.product = producto;
 
-      // Load store info
-      if (this.product.storeId) {
-        const store = this.storeService.getStoreById(this.product.storeId);
-        if (store) {
-          this.storeLogoUrl = store.logo;
-          this.storeName = store.name;
+          // Cargar info de la tienda (síncrono o mock local)
+          if (this.product.storeId) {
+            this.storeService.getStoreById(this.product.storeId).subscribe({
+              next: (store) => {
+                if (store) {
+                  this.storeLogoUrl = store.logo || 'assets/default-store.png';
+                  this.storeName = store.name || 'Tienda Oficial';
+                }
+              },
+              error: (err) => {
+                console.error('Error al cargar tienda real:', err);
+                // Fallback por si la tienda no existe
+                this.storeName = producto.storeName || 'Tienda Oficial';
+              }
+            });
+          }
+
+          // Verificar si es favorito (ahora tu servicio usa un array de IDs)
+          this.favoritesService.favorites$.subscribe((favIds) => {
+            this.isFavorite = favIds.includes(this.product!.id);
+          });
+
+          // Verificar si está en comparación
+          this.comparativesService.getProducts().subscribe((products) => {
+            this.isInComparison = products.some((p) => p.id === this.product!.id);
+          });
+        },
+        error: (err) => {
+          console.error('Error al cargar del backend', err);
+          this.toastr.error('Error de conexión con el servidor');
+          this.router.navigate(['/']);
         }
-      }
+      });
     }
   }
 
@@ -83,7 +102,6 @@ export class ViewProductDetailsComponent implements OnInit {
   }[] {
     if (!this.product?.caracteristics) return [];
 
-    // Diccionario de iconos según la especificación
     const iconMap: Record<string, string> = {
       processor: 'memory',
       ram: 'developer_board',
@@ -105,7 +123,6 @@ export class ViewProductDetailsComponent implements OnInit {
     return Object.entries(this.product.caracteristics).map(([key, value]) => ({
       key: this.formatCharacteristicKey(key),
       value: typeof value === 'boolean' ? (value ? 'Sí' : 'No') : value,
-      // Si no encuentra icono específico, usa 'settings' por defecto
       icon: iconMap[key] || 'settings',
     }));
   }
@@ -149,7 +166,6 @@ export class ViewProductDetailsComponent implements OnInit {
     const rawRating = this.product?.ratings || 0;
     const stars = [];
 
-    // Lógica estricta: si tiene decimales, fuerza la media estrella
     const rating =
       rawRating % 1 !== 0 ? Math.floor(rawRating) + 0.5 : rawRating;
 
@@ -157,7 +173,6 @@ export class ViewProductDetailsComponent implements OnInit {
       if (rating >= i) {
         stars.push({ icon: 'star', class: 'star-filled' });
       } else if (rating >= i - 0.5) {
-        // Usamos 'star_rate_half' que es el nombre correcto en Material Symbols
         stars.push({ icon: 'star_rate_half', class: 'star-filled' });
       } else {
         stars.push({ icon: 'star', class: 'star-empty' });
@@ -167,7 +182,6 @@ export class ViewProductDetailsComponent implements OnInit {
   }
 
   toggleFavorite(): void {
-    // 1. Verificación de seguridad: Usuario logueado
     if (!this.currentUser) {
       this.toastr.info(
         'Debes iniciar sesión para agregar favoritos',
@@ -176,11 +190,10 @@ export class ViewProductDetailsComponent implements OnInit {
       return;
     }
 
-    // 2. Lógica normal
     if (this.product) {
-      this.favoritesService.toggleFavorite(this.product);
+      // Pasamos únicamente el ID, tal como definimos en el servicio
+      this.favoritesService.toggleFavorite(this.product.id);
 
-      // Feedback visual opcional
       if (!this.isFavorite) {
         this.toastr.success('Producto agregado a favoritos', '¡Éxito!');
       } else {

@@ -78,9 +78,9 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     exynos: 60,
   };
 
-  // Mapeo de características por categoría
+  // Mapeo de características por categoría (Soporta las nuevas de la BD)
   characteristicsLabels: { [key: string]: { [key: string]: string } } = {
-    notebook: {
+    notebooks: {
       processor: 'Procesador',
       ram: 'Memoria RAM',
       storage: 'Almacenamiento',
@@ -90,7 +90,7 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       weight: 'Peso',
       os: 'Sistema Operativo',
     },
-    tablet: {
+    tablets: {
       processor: 'Procesador',
       ram: 'Memoria RAM',
       storage: 'Almacenamiento',
@@ -109,6 +109,18 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       rgb: 'Iluminación RGB',
       sensor: 'Tipo de Sensor',
       polling: 'Tasa de Sondeo',
+    },
+    'placas de video': {
+      graphics: 'Memoria VRAM',
+      processor: 'Arquitectura / Chip',
+      connectivity: 'Puertos de Salida',
+      rgb: 'Iluminación RGB',
+    },
+    procesadores: {
+      processor: 'Núcleos e Hilos',
+      connectivity: 'Socket',
+      graphics: 'Gráficos Integrados',
+      power: 'Consumo (TDP)',
     },
   };
 
@@ -156,16 +168,15 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get category(): string {
-    return this.products.length > 0 ? this.products[0].category : '';
+    return this.products.length > 0 ? this.products[0].category || '' : '';
+  }
+
+  get normalizedCategory(): string {
+    return this.category.toLowerCase();
   }
 
   get categoryLabel(): string {
-    const labels: { [key: string]: string } = {
-      notebook: 'Notebooks',
-      tablet: 'Tablets',
-      mouse: 'Mouse',
-    };
-    return labels[this.category] || this.category;
+    return this.category;
   }
 
   hasRatings(): boolean {
@@ -176,14 +187,12 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getCharacteristicKeys(): string[] {
     if (this.products.length === 0) return [];
-    const cat = this.products[0].category;
-    return Object.keys(this.characteristicsLabels[cat] || {});
+    return Object.keys(this.characteristicsLabels[this.normalizedCategory] || {});
   }
 
   getCharacteristicLabel(key: string): string {
     if (this.products.length === 0) return key;
-    const cat = this.products[0].category;
-    return this.characteristicsLabels[cat]?.[key] || key;
+    return this.characteristicsLabels[this.normalizedCategory]?.[key] || key;
   }
 
   getCharacteristicValue(product: ProductI, key: string): string {
@@ -234,9 +243,10 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!characteristics) return breakdown;
 
-    const category = product.category;
+    const cat = this.normalizedCategory;
 
-    if (category === 'notebook' || category === 'tablet') {
+    // Soportamos plurales y singulares
+    if (cat === 'notebooks' || cat === 'tablets' || cat === 'notebook' || cat === 'tablet') {
       breakdown['processor'] = this.scoreProcessor(
         characteristics['processor'] as string,
       );
@@ -247,9 +257,8 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       breakdown['screen'] = this.scoreScreen(
         characteristics['screen'] as string,
       );
-    }
-
-    if (category === 'mouse') {
+    } 
+    else if (cat === 'mouse') {
       breakdown['dpi'] = this.scoreDPI(characteristics['dpi'] as string);
       breakdown['buttons'] = this.scoreButtons(
         characteristics['buttons'] as string,
@@ -257,6 +266,14 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       breakdown['weight'] = this.scoreMouseWeight(
         characteristics['weight'] as string,
       );
+    } 
+    else if (cat === 'placas de video') {
+      breakdown['graphics'] = this.scoreVRAM(characteristics['graphics'] as string);
+      breakdown['processor'] = this.scoreGPUGeneration(product.name);
+    } 
+    else if (cat === 'procesadores') {
+      breakdown['processor'] = this.scoreCores(characteristics['processor'] as string);
+      breakdown['generation'] = this.scoreProcessor(product.name);
     }
 
     if (product.ratings) {
@@ -264,6 +281,42 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     return breakdown;
+  }
+
+  // Nuevas validaciones para Hardware
+  private scoreVRAM(vram: string | undefined): number {
+    if (!vram) return 30;
+    const match = vram.match(/(\d+)\s*GB/i);
+    if (!match) return 30;
+    const gb = parseInt(match[1]);
+    if (gb >= 24) return 100;
+    if (gb >= 16) return 85;
+    if (gb >= 12) return 70;
+    if (gb >= 8) return 50;
+    return 30;
+  }
+
+  private scoreCores(coresString: string | undefined): number {
+    if (!coresString) return 30;
+    const match = coresString.match(/(\d+)\s*Cores/i);
+    if (!match) return 30;
+    const cores = parseInt(match[1]);
+    if (cores >= 24) return 100;
+    if (cores >= 16) return 90;
+    if (cores >= 12) return 80;
+    if (cores >= 8) return 65;
+    if (cores >= 6) return 50;
+    return 35;
+  }
+
+  private scoreGPUGeneration(name: string): number {
+    if (!name) return 50;
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('4090')) return 100;
+    if (lowerName.includes('7900 xtx') || lowerName.includes('4080')) return 95;
+    if (lowerName.includes('4070') || lowerName.includes('7800')) return 85;
+    if (lowerName.includes('4060') || lowerName.includes('7600')) return 70;
+    return 50;
   }
 
   private scoreProcessor(processor: string | undefined): number {
@@ -888,9 +941,9 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getRadarDimensions(): { key: string; label: string }[] {
-    const category = this.category;
+    const cat = this.normalizedCategory;
 
-    if (category === 'notebook' || category === 'tablet') {
+    if (cat === 'notebooks' || cat === 'tablets' || cat === 'notebook' || cat === 'tablet') {
       return [
         { key: 'processor', label: 'Procesador' },
         { key: 'ram', label: 'RAM' },
@@ -900,11 +953,27 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       ];
     }
 
-    if (category === 'mouse') {
+    if (cat === 'mouse') {
       return [
         { key: 'dpi', label: 'DPI' },
         { key: 'buttons', label: 'Botones' },
         { key: 'weight', label: 'Peso' },
+        { key: 'ratings', label: 'Valoración' },
+      ];
+    }
+
+    if (cat === 'placas de video') {
+      return [
+        { key: 'graphics', label: 'Memoria VRAM' },
+        { key: 'processor', label: 'Potencia de Chip' },
+        { key: 'ratings', label: 'Valoración' },
+      ];
+    }
+
+    if (cat === 'procesadores') {
+      return [
+        { key: 'processor', label: 'Multinúcleo' },
+        { key: 'generation', label: 'Potencia Single-Core' },
         { key: 'ratings', label: 'Valoración' },
       ];
     }

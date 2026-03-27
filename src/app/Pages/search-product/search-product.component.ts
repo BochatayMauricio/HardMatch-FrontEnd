@@ -9,13 +9,13 @@ import { CATEGORY_MAP } from '../../../utils/normalization';
 
 @Component({
   selector: 'app-search-product',
+  standalone: true,
   imports: [CardComponent, CommonModule, FormsModule],
   templateUrl: './search-product.component.html',
   styleUrl: './search-product.component.css',
 })
 export class SearchProductComponent implements OnInit {
   allProducts: ProductI[] = [];
-
   filteredProducts: ProductI[] = [];
 
   searchTerm: string = '';
@@ -29,28 +29,50 @@ export class SearchProductComponent implements OnInit {
   priceRange: number = 1000000;
 
   sortBy: string = '';
+  isLoading: boolean = true; // Control de estado de carga
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductsServiceService,
-  ) {
-    this.allProducts = this.productService.getProducts();
-    console.log(this.allProducts);
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.categoryParam = params['category'] || '';
-      this.searchTerm = params['search'] || '';
+    // 1. Primero nos suscribimos para obtener los productos de la BD
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.allProducts = products;
+        
+        // 2. Extraemos las marcas dinámicamente
+        this.extractBrands();
 
-      this.extractBrands();
-      this.applyFilters();
+        // 3. Ajustamos el precio máximo dinámicamente según el producto más caro
+        if (this.allProducts.length > 0) {
+          const maxProductPrice = Math.max(...this.allProducts.map(p => p.price));
+          this.maxPrice = Math.ceil(maxProductPrice);
+          this.priceRange = this.maxPrice; // Seteamos el slider al tope inicial
+        }
+
+        // 4. Una vez que tenemos los datos, escuchamos los parámetros de la URL
+        this.route.params.subscribe((params) => {
+          this.categoryParam = params['category'] || '';
+          this.searchTerm = params['search'] || '';
+          
+          this.applyFilters();
+          this.isLoading = false; // Apagamos el loader
+        });
+      },
+      error: (err) => {
+        console.error('Error al cargar productos en Search:', err);
+        this.isLoading = false;
+      }
     });
   }
 
   extractBrands(): void {
     const brandSet = new Set<string>();
-    this.allProducts.forEach((product) => brandSet.add(product.brand));
+    this.allProducts.forEach((product) => {
+      if(product.brand) brandSet.add(product.brand);
+    });
     this.brands = Array.from(brandSet).sort();
   }
 
@@ -63,7 +85,7 @@ export class SearchProductComponent implements OnInit {
 
         const allowedVariants = CATEGORY_MAP[paramLower] || [paramLower];
         matchesCategory = allowedVariants.some(
-          (variant) =>
+          (variant: string) =>
             productCatLower.includes(variant) ||
             variant.includes(productCatLower),
         );
@@ -72,9 +94,7 @@ export class SearchProductComponent implements OnInit {
       const matchesSearch =
         !this.searchTerm ||
         product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        product.description
-          .toLowerCase()
-          .includes(this.searchTerm.toLowerCase());
+        product.description.toLowerCase().includes(this.searchTerm.toLowerCase());
 
       const matchesBrand =
         !this.selectedBrand || product.brand === this.selectedBrand;
@@ -100,7 +120,7 @@ export class SearchProductComponent implements OnInit {
   resetFilters(): void {
     this.selectedBrand = '';
     this.minPrice = 0;
-    this.priceRange = 1000000;
+    this.priceRange = this.maxPrice; // Volvemos al máximo dinámico real
     this.sortBy = '';
     this.applyFilters();
   }
