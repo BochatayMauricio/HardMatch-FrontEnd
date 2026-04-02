@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../Services/chatbot.service';
 import { ChatMessage } from '../../Interfaces/chatbot.interface';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-chat-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MarkdownComponent],
   templateUrl: './chatbot-widget.component.html',
   styleUrls: ['./chatbot-widget.component.css']
 })
@@ -28,7 +29,7 @@ export class ChatWidgetComponent {
 
     if (this.isOpen) {
       if (this.history.length === 0) {
-        this.typeWriter('¡Hola! Soy Scrapy, el experto de HardMatch. ¿En qué puedo ayudarte hoy?');
+        this.typeWriter('¡Hola! Soy **Scrapy**, el experto de HardMatch. ¿En qué puedo ayudarte hoy?');
       } else {
         this.scrollToBottom();
       }

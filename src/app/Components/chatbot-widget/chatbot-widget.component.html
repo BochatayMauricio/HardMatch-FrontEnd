@@ -17,7 +17,7 @@
           class="message-wrapper" 
           [ngClass]="msg.role"> 
         <div class="bubble">
-          {{ msg.parts[0].text }}
+          <markdown [data]="msg.parts[0].text"></markdown>
         </div>
       </div>
       
