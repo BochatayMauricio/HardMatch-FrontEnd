@@ -10,6 +10,7 @@ import { NavbarComponent } from './Components/navbar/navbar.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { ComparativesService } from './Services/comparatives.service';
 import { map, Observable } from 'rxjs';
+import { ChatWidgetComponent } from './Components/chatbot-widget/chatbot-widget.component';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ import { map, Observable } from 'rxjs';
     FooterComponent,
     CommonModule,
     RouterLinkWithHref,
+    ChatWidgetComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
