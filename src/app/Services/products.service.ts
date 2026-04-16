@@ -36,11 +36,16 @@ export class ProductsService {
       storeLocation: l.store?.location,
       urlAccess: l.urlAccess || '#',
       percentOff: Number(l.percentOff || l.percent_off || 0),
+      // Tomamos el precio específico de este listing
       price: Number(l.priceTotal || l.price_total || backendData.price || 0)
     }));
 
+    // Calculamos el precio final de bolsillo para poder comparar
+    const getFinalPrice = (listing: any) => listing.price * (1 - (listing.percentOff / 100));
+
+    // Buscamos la oferta que resulte en el MENOR precio final
     const bestListing = mappedListings.length > 0
-      ? mappedListings.reduce((prev, curr) => (curr.percentOff > prev.percentOff ? curr : prev))
+      ? mappedListings.reduce((prev, curr) => (getFinalPrice(curr) < getFinalPrice(prev) ? curr : prev))
       : null;
 
     const rawFeatures = backendData.features || backendData.products_details || [];
@@ -55,7 +60,9 @@ export class ProductsService {
       id: backendData.id,
       name: backendData.name,
       image: backendData.urlAccess || 'assets/default-product.png',
-      price: Number(backendData.price) || 0,
+      
+      // EL CAMBIO CLAVE: Usamos el precio original de la tienda ganadora, no el genérico
+      price: bestListing ? bestListing.price : (Number(backendData.price) || 0),
 
       brand: backendBrand || backendData.brandName || 'Genérica',
       category: backendCategory || backendData.categoryName || 'General',

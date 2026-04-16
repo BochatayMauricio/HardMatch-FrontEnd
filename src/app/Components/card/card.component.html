@@ -36,7 +36,7 @@
   <div class="price-container">
     @if (product.offer) {
       <span class="card-price">
-        ${{ (product.price * (1 - (+product.offer / 100))) | number:'1.0-0':'es-AR' }}<span class="price-decimals">{{ (product.price * (1 - (+product.offer / 100)) % 1 * 100) | number:'2.0-0' }}</span>
+        ${{ finalPrice | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
       </span>
       <span class="price-original">${{ product.price | number:'1.0-0':'es-AR' }}</span>
     } @else {
