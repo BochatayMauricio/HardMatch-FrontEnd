@@ -2,18 +2,22 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 import { routes } from './app.routes';
-import { authInterceptor } from './interceptors/auth.interceptor';
-
-import { provideToastr } from 'ngx-toastr';
+import { authInterceptor } from './Services/auth.interceptor';
+import { provideMarkdown } from 'ngx-markdown';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
+    provideMarkdown(),
+    provideHttpClient(
+    withInterceptors([authInterceptor])
+    ),
+
     provideToastr({
       positionClass: 'toast-bottom-center',
       preventDuplicates: true,

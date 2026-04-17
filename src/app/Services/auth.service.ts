@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.hasRole(['admin', 'administrador']);
+    return this.hasRole(['ADMIN', 'administrador']);
   }
 
   isAuthenticated(): boolean {

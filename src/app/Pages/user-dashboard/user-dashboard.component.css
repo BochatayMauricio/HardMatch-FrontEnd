@@ -222,4 +222,211 @@ input:checked + .slider:before {
     margin-top: 5px;
 }
 
+/* --- LAYOUT DEL FORMULARIO PRINCIPAL --- */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
 
+.form-row.full-width {
+    grid-template-columns: 1fr; /* Una sola columna para el email */
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between; /* Botón de contraseña a la izq, guardar a la der */
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.disabled-input {
+    background-color: #606164;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* --- ESTILOS DEL MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.error-text {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Estilos de botones genéricos por si no los tenías */
+.outline-button {
+    background: transparent;
+    border: 1px solid #007bff; /* Cambiá por el color primario de HardMatch */
+    color: #007bff;
+}
+
+.text-button {
+    background: transparent;
+    border: none;
+    color: #666;
+}
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.full-width {
+    grid-template-columns: 1fr;
+}
+
+/* Estilo para la caja de seguridad */
+.security-box {
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px border-color; /* Usa tu variable de color de borde */
+}
+
+.security-box h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    padding: 0.6rem 1.2rem;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background-color: #f1f5f9;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.primary-button {
+    padding: 0.8rem 2rem;
+    min-width: 180px;
+}
+
+/* --- DESACTIVAR OJOS NATIVOS DEL NAVEGADOR --- */
+/* Edge / IE */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* Chrome / Safari / Firefox (por si acaso, aunque no suelen forzarlo) */
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
+/* --- ESTILOS DEL INPUT WRAPPER Y EL OJO --- */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    /* Le damos espacio a la derecha para que el texto no se pise con el icono */
+    padding-right: 2.5rem; 
+}
+
+.eye-btn {
+    position: absolute;
+    right: 0.75rem; /* Separación del borde derecho */
+    background: none;
+    border: none;
+    color: #64748b; /* Gris discreto */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.eye-btn:hover {
+    color: #0f172a; /* Se oscurece al pasar el mouse */
+}
+
+/* Para asegurar que el icono mantenga un tamaño amigable */
+.eye-btn .material-symbols-outlined {
+    font-size: 1.25rem;
+}

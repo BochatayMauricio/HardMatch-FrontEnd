@@ -1,0 +1,49 @@
+<div class="widget-container">
+  <div class="chat-window" *ngIf="isOpen">
+    
+    <div class="chat-header">
+      <div class="bot-info">
+        <img src="assets/logo-chatbot.png" alt="Scrapy" class="bot-avatar">
+        <strong>Scrapy</strong>
+      </div>
+      <button class="close-btn" (click)="toggleChat()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="chat-messages">
+  
+      <div *ngFor="let msg of history" 
+          class="message-wrapper" 
+          [ngClass]="msg.role"> 
+        <div class="bubble">
+          <markdown [data]="msg.parts[0].text"></markdown>
+        </div>
+      </div>
+      
+      <div *ngIf="isLoading" class="message-wrapper model">
+        <div class="bubble loading-dots"><span>.</span><span>.</span><span>.</span></div>
+      </div>
+      
+      <div #scrollAnchor style="height: 1px; width: 100%;"></div>
+    </div>
+      
+    <div class="chat-footer">
+      <input 
+        type="text" 
+        [(ngModel)]="userInput" 
+        (keyup.enter)="sendMessage()"
+        placeholder="Escribe tu mensaje..."
+        [disabled]="isLoading || isTyping"
+      />
+      <button (click)="sendMessage()" [disabled]="isLoading || !userInput.trim()">
+        Enviar
+      </button>
+    </div>
+  </div>
+
+  <button class="floating-btn" (click)="toggleChat()" [ngClass]="{'open': isOpen}">
+    <span *ngIf="!isOpen" class="material-symbols-outlined">chat</span>
+    <span *ngIf="isOpen" class="material-symbols-outlined">close</span>
+  </button>
+</div>
