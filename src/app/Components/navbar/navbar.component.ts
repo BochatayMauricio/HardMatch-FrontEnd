@@ -36,12 +36,15 @@ export class NavbarComponent implements OnInit {
     private categoriesService: CategoriesService,
     private toastr: ToastrService
   ) {
-    this.hasUnreadNotifications$ = this.notificationService.hasUnread$.asObservable();
+    this.hasUnreadNotifications$ = this.notificationService.hasUnread$;
   }
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      if (this.currentUser) {
+        this.notificationService.fetchNotifications();
+      }
     });
 
     this.storeService.getAllStores().subscribe({

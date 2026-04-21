@@ -24,7 +24,8 @@ export class LoginComponent {
   
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required)
+    password: new FormControl('', Validators.required),
+    rememberMe: new FormControl(false)
   });
 
   registerForm = new FormGroup({
@@ -57,11 +58,14 @@ export class LoginComponent {
       if (this.loginForm.valid) {
         const email = this.loginForm.get('email')?.value;
         const password = this.loginForm.get('password')?.value;
+        const rememberMe = this.loginForm.get('rememberMe')?.value || false;
+
         if (email && password) {
           try {
-            const user = await this.authService.login(email, password);
+            const user = await this.authService.login(email, password, rememberMe);
             if (user) {
               this.toastr.success('Inicio de sesión exitoso', 'Éxito');
+              
               localStorage.setItem('email', JSON.stringify(email));
               this.router.navigate(['/']);
             } else {

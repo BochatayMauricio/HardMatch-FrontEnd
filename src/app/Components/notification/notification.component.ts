@@ -1,7 +1,9 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿// src/app/Components/notification/notification.component.ts
+import { Component, OnInit } from '@angular/core';
 import { NotificationI } from '../../Interfaces/notification.interface';
 import { DatePipe, CommonModule } from '@angular/common';
 import { NotificationService } from '../../Services/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification',
@@ -16,52 +18,13 @@ export class NotificationComponent implements OnInit {
   titleButton: string = "Mostrar todas";
   notifications: NotificationI[] = [];
 
-  constructor(public notificationService: NotificationService) {}
+  constructor(public notificationService: NotificationService, private router: Router) {}
 
   ngOnInit(): void {
-    const initialData: NotificationI[] = [
-      {
-        id: 1,
-        title: "Nuevo mensaje de soporte",
-        explanation: "Tu solicitud de soporte ha sido respondida. Revisa tu bandeja de entrada para más detalles.",
-        isRead: true,
-        userId: 123,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 2,
-        title: "Oferta especial en notebooks",
-        explanation: "Aprovecha un 15% de descuento en todas las notebooks hasta fin de mes.",
-        isRead: true,
-        userId: 123,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 3,
-        title: "Actualización de seguridad",
-        explanation: "Hemos implementado nuevas medidas de seguridad para proteger tu cuenta.",
-        isRead: false,
-        userId: 123,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: 4,
-        title: "Recordatorio de carrito abandonado",
-        explanation: "Tienes artículos en tu carrito esperando ser comprados. ¡No te los pierdas!",
-        isRead: false,
-        userId: 123,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
+    // 1. Mandamos a pedir las notificaciones reales al backend
+    this.notificationService.fetchNotifications();
 
-    setTimeout(() => {
-      this.notificationService.setNotifications(initialData);
-    }, 0);
-
+    // 2. Nos suscribimos a los cambios
     this.notificationService.notifications$.subscribe(data => {
       this.notifications = data;
     });
@@ -79,5 +42,22 @@ export class NotificationComponent implements OnInit {
   markAllAsRead(): void {
     this.notificationService.markAllAsRead();
   }
-}
 
+  onNotificationClick(notification: NotificationI): void {
+    // 1. Si no está leída, la marcamos como leída en segundo plano
+    if (!notification.isRead) {
+      this.markAsRead(notification.id);
+    }
+
+    // 2. Si tiene una URL, lo redirigimos
+    if (notification.actionUrl) {
+      // Chequeamos si es una URL externa (http) o una ruta interna de Angular (/producto/11)
+      if (notification.actionUrl.startsWith('http')) {
+        window.open(notification.actionUrl, '_blank'); // Abre en pestaña nueva
+      } else {
+        this.router.navigate([notification.actionUrl]); // Navega internamente
+        // Opcional: podés cerrar el menú desplegable de notificaciones acá si querés
+      }
+    }
+  }
+}

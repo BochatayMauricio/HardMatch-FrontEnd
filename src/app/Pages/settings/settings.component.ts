@@ -14,6 +14,7 @@ import {
 import { AuthService } from '../../Services/auth.service';
 import { CategoryI } from '../../Interfaces/category.interface';
 import { CategoriesService } from '../../Services/categories.service';
+import { UserService } from '../../Services/user.service'; // <-- Importamos el UserService
 
 type CategoryOption = {
   value: ProductCategory;
@@ -52,16 +53,23 @@ export class SettingsComponent implements OnInit {
 
   draggedPriority: MatchingPriority | null = null;
 
-  private readonly STORAGE_KEY = 'user_matching_preferences';
-
   constructor(
     private authService: AuthService,
     private categoriesService: CategoriesService,
+    private userService: UserService // <-- Lo inyectamos en el constructor
   ) {}
 
   ngOnInit(): void {
     this.syncCategoriesFromBackend();
-    this.loadPreferences();
+    
+    // Primero obtenemos el ID del usuario actual para el estado local,
+    // y luego disparamos la carga desde la base de datos.
+    this.authService.getCurrentUser().subscribe((user) => {
+      if (user?.id) {
+        this.preferences.userId = user.id;
+        this.loadPreferences();
+      }
+    });
   }
 
   private syncCategoriesFromBackend(): void {
@@ -160,53 +168,54 @@ export class SettingsComponent implements OnInit {
     return map[key] || null;
   }
 
+  // --- MÉTODOS ACTUALIZADOS PARA USAR LA BASE DE DATOS ---
+
   loadPreferences(): void {
     this.isLoading = true;
 
-    this.authService.getCurrentUser().subscribe((user) => {
-      if (user?.id) {
-        this.preferences.userId = user.id;
-
-        const savedPrefs = localStorage.getItem(
-          `${this.STORAGE_KEY}_${user.id}`,
-        );
-        if (savedPrefs) {
-          try {
-            const parsed = JSON.parse(savedPrefs);
-            this.preferences = { ...this.preferences, ...parsed };
-          } catch (e) {
-            console.warn('Error parsing saved preferences:', e);
-          }
+    this.userService.getPreferences().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // El backend ya nos devuelve el objeto con la estructura de la interfaz
+          this.preferences = { 
+            ...DEFAULT_MATCHING_PREFERENCES, 
+            ...response.data,
+            userId: this.preferences.userId 
+          };
         }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar preferencias:', error);
+        this.isLoading = false;
       }
-      this.isLoading = false;
     });
   }
 
   savePreferences(): void {
+    if (this.isLoading) return;
+    
     this.isLoading = true;
     this.saveMessage = '';
 
-    setTimeout(() => {
-      const prefsToSave = {
-        ...this.preferences,
-        updatedAt: new Date(),
-      };
-
-      localStorage.setItem(
-        `${this.STORAGE_KEY}_${this.preferences.userId}`,
-        JSON.stringify(prefsToSave),
-      );
-
-      this.hasChanges = false;
-      this.isLoading = false;
-      this.saveMessage = '¡Preferencias guardadas correctamente!';
-
-      setTimeout(() => {
-        this.saveMessage = '';
-      }, 3000);
-    }, 500);
+    this.userService.savePreferences(this.preferences).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.hasChanges = false;
+          this.saveMessage = '¡Preferencias sincronizadas correctamente!';
+          setTimeout(() => this.saveMessage = '', 3000);
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al guardar preferencias:', error);
+        this.saveMessage = 'Error en la conexión con el servidor.';
+        this.isLoading = false;
+      }
+    });
   }
+
+  // -------------------------------------------------------
 
   markAsChanged(): void {
     this.hasChanges = true;
@@ -401,4 +410,3 @@ export class SettingsComponent implements OnInit {
     this.markAsChanged();
   }
 }
-

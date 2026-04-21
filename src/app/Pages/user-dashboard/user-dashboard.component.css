@@ -47,13 +47,18 @@
     flex-grow: 1;
     padding: 40px;
 }
-
+.user-dashboard-container {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding: 40px 20px;
+}
 
 .page-content {
     background-color: white;
     border-radius: 20px;
     margin: 0 2rem 2rem 2rem;
-    padding: 1rem 0.5rem 0.5rem 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .page-content h2 {
@@ -74,9 +79,6 @@
     border-top: 1px solid #e5e7eb;
     margin: 30px 0;
 }
-
-
-
 
 .btn.primary-button {
     background: var(--buttons-primary-color); 

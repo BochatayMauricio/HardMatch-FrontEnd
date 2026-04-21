@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UserI } from '../Interfaces/user.interface';
 // Ajustá la ruta de tu constante si es diferente
 import { BACKEND_API_URL } from '../../utils/constants'; 
+import { UserMatchingPreferences } from '../Interfaces/user-preferences.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,15 @@ export class UserService {
 
   updatePassword(passwordData: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/change-password`, passwordData);
+  }
+
+  getPreferences(): Observable<{ success: boolean; data: UserMatchingPreferences }> {
+    return this.http.get<{ success: boolean; data: UserMatchingPreferences }>(
+      `${this.apiUrl}/preferences`
+    );
+  }
+
+  savePreferences(preferences: UserMatchingPreferences): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/preferences`, preferences);
   }
 }

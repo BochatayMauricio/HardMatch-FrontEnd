@@ -15,7 +15,8 @@ export class AuthService {
   currentUser = new BehaviorSubject<UserI | null>(null);
 
   constructor(private http: HttpClient) { 
-    const storedUser = localStorage.getItem('user');
+    // CORRECCIÓN: Buscamos en ambos storages al iniciar el servicio
+    const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (storedUser) {
       this.currentUser.next(JSON.parse(storedUser));
     }
@@ -44,10 +45,11 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    // CORRECCIÓN: Verificamos si el token existe en cualquiera de las dos memorias
+    return !!(localStorage.getItem('token') || sessionStorage.getItem('token'));
   }
 
-  async login(email: string, password: string): Promise<UserI|null> {
+  async login(email: string, password: string, rememberMe: boolean = false): Promise<UserI|null> {
     try {
       const response = await firstValueFrom(
         this.http.post<ResponseAuth>(`${this.apiUrl}/login`, { email, password })
@@ -55,9 +57,10 @@ export class AuthService {
 
       if (response.success && response.data) {
         const { user, token } = response.data;
+        const storage = rememberMe ? localStorage : sessionStorage;
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        storage.setItem('token', token);
+        storage.setItem('user', JSON.stringify(user));
         
         this.currentUser.next(user);
         return user;
@@ -77,8 +80,8 @@ export class AuthService {
       if (response.success && response.data) {
         const { user, token } = response.data;
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('user', JSON.stringify(user));
         
         this.currentUser.next(user);
         return user;
@@ -92,6 +95,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     this.currentUser.next(null);
   }
 }
