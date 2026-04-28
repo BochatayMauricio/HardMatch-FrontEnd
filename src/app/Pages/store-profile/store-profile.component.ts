@@ -57,16 +57,16 @@ export class StoreProfileComponent implements OnInit {
   private loadStoreProducts(storeId: number): void {
     this.isLoadingProducts = true;
 
-    this.productService.getProducts().subscribe({
-      next: (allProducts) => {
-        this.storeProducts = allProducts.filter(product => 
-          product.storeId === storeId || 
-          product.listings?.some(l => l.storeId === storeId)
-        );
+    // Llamamos directamente a nuestro nuevo método en el StoreService
+    this.storeService.getProductsByStore(storeId).subscribe({
+      next: (products) => {
+        // El backend ya nos devolvió exactamente lo que la Card necesita
+        this.storeProducts = products;
         this.isLoadingProducts = false;
+        console.log(`Productos cargados para la tienda ${storeId}:`, this.storeProducts);
       },
       error: (err) => {
-        console.error('Error al cargar productos:', err);
+        console.error('Error al cargar los productos de la tienda:', err);
         this.isLoadingProducts = false;
       }
     });

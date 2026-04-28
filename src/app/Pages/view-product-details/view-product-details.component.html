@@ -103,7 +103,7 @@
 
         
         <div class="price-section">
-          @if (product.offer) {
+          @if (product.offer != "0") {
             <div class="price-with-discount">
               <div class="original-price-row">
                 <span class="original-price">${{ product.price | number: "1.0-0" : "es-AR" }}</span>
@@ -115,7 +115,7 @@
               </div>
 
               <span class="current-price">
-                ${{ getDiscountedPrice() | number: "1.0-0" : "es-AR" }}<span class="decimal-small">00</span>
+                ${{ getDiscountedPrice() | number: "1.0-0" : "es-AR" }} <span class="decimal-small">00</span>
               </span>
             </div>
           } @else {
@@ -135,7 +135,6 @@
             }
           </div>
         }
-
         
         <div class="action-buttons">
           <button class="btn-primary btn-buy" (click)="visitProductUrl()">
@@ -346,9 +345,9 @@
               </div>
 
               <div class="listing-action">
-                <a [href]="listing.urlAccess" target="_blank" class="btn btn-outline-primary w-100">
+                <button class="btn btn-outline-primary w-100" (click)="onGoToStore(listing.id, listing.urlAccess)">
                   Ver oferta <span class="material-symbols-outlined ms-1" style="font-size: 16px;">open_in_new</span>
-                </a>
+                </button>
               </div>
             </div>
           }

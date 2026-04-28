@@ -101,7 +101,9 @@ export class CardComponent implements OnInit {
   }
 
   seeDetails(product: ProductI): void {
-    this.router.navigate(['/producto', product.id]);
+    this.router.navigate(['/producto', product.id], { 
+      queryParams: { store: product.storeId } 
+    });
   }
 
   deleteProductFromCompare(productId: number): void {

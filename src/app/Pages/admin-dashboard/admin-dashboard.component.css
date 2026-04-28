@@ -6,6 +6,9 @@
   --buttons-primary-color: #7c3aed;
 }
 
+/* =========================================
+   ESTILOS GENERALES DEL DASHBOARD
+   ========================================= */
 .admin-container {
   min-height: 100vh;
   background-color: var(--background-color);
@@ -14,7 +17,6 @@
   margin: 0 auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
-
 
 .admin-header {
   display: flex;
@@ -53,7 +55,9 @@
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-
+/* =========================================
+   KPIS ORIGINALES (Si aún los usás)
+   ========================================= */
 .kpi-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -95,7 +99,9 @@
   color: var(--text-secondary-color);
 }
 
-
+/* =========================================
+   GRÁFICOS
+   ========================================= */
 .charts-section {
   margin-bottom: 2rem;
 }
@@ -125,7 +131,9 @@
   width: 100%;
 }
 
-
+/* =========================================
+   TABLAS Y UTILIDADES GENERALES
+   ========================================= */
 .table-section {
   background: white;
   border-radius: 16px;
@@ -148,7 +156,7 @@
 }
 
 .custom-table th {
-  background: #f9fafb;
+  background: var(--background-color);
   padding: 1rem;
   text-align: left;
   color: var(--text-principal-color);
@@ -179,7 +187,6 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-
 .status-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
@@ -207,3 +214,241 @@
 .text-danger { color: #ef4444; font-weight: 500;}
 .text-success { color: #10b981; font-weight: 500;}
 .text-primary { color: var(--primary-color); font-weight: 500;}
+
+/* =========================================
+   NUEVO: KPIs SUPERIORES (User Stats)
+   ========================================= */
+.user-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.stats-mini-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease;
+}
+
+.stats-mini-card:hover {
+  transform: translateY(-3px);
+}
+
+.active-users {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.total-queries {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #6d28d9 100%);
+}
+
+.stats-icon {
+  font-size: 2.5rem;
+  margin-right: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem;
+  border-radius: 12px;
+  line-height: 1;
+}
+
+.stats-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* =========================================
+   NUEVO: GRILLA DE REPORTES (Tarjetas)
+   ========================================= */
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.report-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.2rem;
+}
+
+.bg-blue-light { background-color: #eff6ff; }
+.bg-pink-light { background-color: #fdf2f8; }
+
+.card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-principal-color); /* Adaptado a tu tema */
+}
+
+.card-body {
+  flex-grow: 1;
+  padding: 1.5rem;
+}
+
+/* =========================================
+   NUEVO: LISTA DE BÚSQUEDAS (Ranking)
+   ========================================= */
+.report-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: var(--background-color); /* Adaptado a tu tema */
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.list-row:hover {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.term-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank-number {
+  font-weight: 800;
+  color: var(--text-secondary-color); /* Adaptado a tu tema */
+  font-size: 0.9rem;
+}
+
+.search-term {
+  font-weight: 600;
+  color: var(--text-principal-color); /* Adaptado a tu tema */
+  text-transform: capitalize;
+}
+
+.count-badge {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.count-number {
+  font-weight: 800;
+}
+
+.count-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* =========================================
+   NUEVO: TABLA MODERNA (Favoritos)
+   ========================================= */
+.table-modern {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-modern th {
+  text-align: left;
+  padding: 12px 24px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary-color); /* Adaptado a tu tema */
+  background-color: var(--background-color); /* Adaptado a tu tema */
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.table-modern th.text-end {
+  text-align: right;
+}
+
+.table-modern td {
+  padding: 14px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.table-row-hover:hover td {
+  background-color: var(--background-color);
+}
+
+.table-row-hover:last-child td {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: 600;
+  color: var(--text-principal-color); /* Adaptado a tu tema */
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favorite-pill {
+  display: inline-block;
+  background-color: #fce7f3;
+  color: #be185d;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.text-end {
+  text-align: right;
+}

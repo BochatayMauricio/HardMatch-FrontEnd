@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../../Services/products.service';
 import { CATEGORY_MAP } from '../../../utils/normalization';
+import { SearchLoggerService } from '../../Services/query.service';
 
 @Component({
   selector: 'app-search-product',
@@ -34,6 +35,7 @@ export class SearchProductComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductsService,
+    private searchLogger: SearchLoggerService
   ) {}
 
   ngOnInit(): void {
@@ -52,14 +54,32 @@ export class SearchProductComponent implements OnInit {
         this.route.params.subscribe((params) => {
           this.categoryParam = params['category'] || '';
           this.searchTerm = params['search'] || '';
-          
           this.applyFilters();
+          if (this.searchTerm) {
+            this.logFoundProducts(this.searchTerm, this.filteredProducts);
+          }
           this.isLoading = false;
         });
       },
       error: (err) => {
         console.error('Error al cargar productos en Search:', err);
         this.isLoading = false;
+      }
+    });
+
+  }
+
+  private logFoundProducts(query: string, products: ProductI[]): void {
+    if (!products || products.length === 0) return;
+
+    // Cortamos el array para no saturar la base de datos
+    const top5Products = products.slice(0, 5);
+    
+    // Suponiendo que tu ProductI tiene un campo 'id' (o ajustalo si se llama de otra forma)
+    top5Products.forEach(prod => {
+      // Usamos el id, asumiendo que está definido en ProductI
+      if (prod.id) {
+        this.searchLogger.logSearch(query, prod.id);
       }
     });
   }

@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { ResponseStore } from '../Interfaces/response-store.interface';
 import { StoreI } from '../Interfaces/store.intefrace';
 import { BACKEND_API_URL } from '../../utils/constants';
+import { ProductI } from '../Interfaces/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -43,4 +44,11 @@ export class StoreService {
     }
     return response as T;
   }
+
+  getProductsByStore(storeId: number): Observable<ProductI[]> {
+  return this.http.get<{ success: boolean, data: ProductI[] }>(`${this.apiUrl}/${storeId}/products`)
+    .pipe(
+      map(response => response.data) // <-- Extraemos el array 'data' de tu respuesta estandarizada
+    );
+}
 }

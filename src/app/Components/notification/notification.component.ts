@@ -57,6 +57,7 @@ export class NotificationComponent implements OnInit {
       } else {
         this.router.navigate([notification.actionUrl]); // Navega internamente
         // Opcional: podés cerrar el menú desplegable de notificaciones acá si querés
+        
       }
     }
   }

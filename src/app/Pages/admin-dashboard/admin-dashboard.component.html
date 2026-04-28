@@ -35,7 +35,6 @@
         <span class="kpi-title">Redirecciones (Clicks)</span>
       </div>
       <div class="kpi-value">{{ totalClicks | number }}</div>
-      <div class="kpi-subtext text-primary">Conversión promedio: 8.4%</div>
     </div>
   </div>
 
@@ -102,6 +101,84 @@
           }
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="user-stats-row my-4">
+    <div class="stats-mini-card active-users">
+      <div class="stats-icon">👥</div>
+      <div class="stats-details">
+        <span class="stats-label">Usuarios Activos</span>
+        <strong class="stats-value">{{ generalStats.activeUsers }}</strong>
+      </div>
+    </div>
+    
+    <div class="stats-mini-card total-queries">
+      <div class="stats-icon">⚡</div>
+      <div class="stats-details">
+        <span class="stats-label">Total Consultas</span>
+        <strong class="stats-value">{{ generalStats.totalQueries }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="reports-grid">
+    
+    <div class="report-card shadow-sm">
+      <div class="card-header">
+        <div class="header-icon bg-blue-light">🔍</div>
+        <h3 class="card-title">Términos más buscados</h3>
+      </div>
+      
+      <div class="card-body">
+        <ul class="report-list">
+          @for (item of topSearches; track item.search; let i = $index) {
+            <li class="list-row">
+              <div class="term-wrapper">
+                <span class="rank-number">#{{ i + 1 }}</span>
+                <span class="search-term">{{ item.search }}</span>
+              </div>
+              <div class="count-badge">
+                <span class="count-number">{{ item.count }}</span>
+                <span class="count-label">búsquedas</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="report-card shadow-sm">
+      <div class="card-header">
+        <div class="header-icon bg-pink-light">⭐</div>
+        <h3 class="card-title">Favoritos de la comunidad</h3>
+      </div>
+      
+      <div class="card-body p-0"> <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th class="text-end">Favoritos</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (prod of topProducts; track prod.id) {
+                <tr class="table-row-hover">
+                  <td>
+                    <span class="product-name" title="{{ prod.name }}">{{ prod.name }}</span>
+                  </td>
+                  <td class="text-end">
+                    <div class="favorite-pill">
+                      ❤️ {{ prod.favoritesCount }}
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 </div>

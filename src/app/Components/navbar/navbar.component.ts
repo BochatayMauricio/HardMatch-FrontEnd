@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from '../../Services/categories.service';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { SearchLoggerService } from '../../Services/query.service';
 
 @Component({
   selector: 'app-navbar',
@@ -42,7 +43,9 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-      if (this.currentUser) {
+      console.log('Usuario detectado:', this.currentUser, "Con id: ", this.currentUser?.id);
+      if (this.currentUser && this.currentUser.id) {
+        console.log("Entró acá")
         this.notificationService.fetchNotifications();
       }
     });
