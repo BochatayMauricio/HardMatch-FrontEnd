@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarruselComponent, CardComponent, DatePipe, RouterLink],
+  imports: [CarruselComponent, CardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
