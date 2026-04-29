@@ -46,9 +46,15 @@ export class StoreService {
   }
 
   getProductsByStore(storeId: number): Observable<ProductI[]> {
-  return this.http.get<{ success: boolean, data: ProductI[] }>(`${this.apiUrl}/${storeId}/products`)
-    .pipe(
-      map(response => response.data) // <-- Extraemos el array 'data' de tu respuesta estandarizada
-    );
-}
+    return this.http.get<{ success: boolean, data: any[] }>(`${this.apiUrl}/${storeId}/products`)
+      .pipe(
+        map(response => {
+          return response.data.map(item => ({
+            ...item,
+            image: item.imageUrl || item.urlAccess || 'assets/default-product.png',
+            urlAcces: item.urlAccess || '#'
+          }));
+        })
+      );
+  }
 }
