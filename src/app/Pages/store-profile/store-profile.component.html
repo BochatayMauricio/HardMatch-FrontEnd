@@ -8,10 +8,12 @@
 } @else {
   @if (store) {
     <div class="store-profile-container">
-      
-      <div class="store-banner" [style.background-image]="store.banner ? 'url(' + store.banner + ')' : 'url(assets/default-banner.png)'">
-        <div class="banner-overlay"></div>
-      </div>
+        <div class="store-banner" 
+            [style.background]="store.banner?.startsWith('#') ? store.banner : (store.banner ? 'url(' + store.banner + ')' : 'var(--primary-color)')">
+          
+          <div class="banner-overlay"></div>
+          
+        </div>
 
       <div class="container content-wrapper">
         
