@@ -37,6 +37,7 @@ export class CardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Datos del producto:', this.product)
     this.authService.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
     });
@@ -50,17 +51,22 @@ export class CardComponent implements OnInit {
     });
 
     this.storeName = this.product.storeName || 'Tienda Oficial';
-    
-    if (this.product.listings && this.product.listings.length > 0) {
-      const mainListing = this.product.listings.find(l => l.storeId === this.product.storeId);
-      if (mainListing && mainListing.storeLogo) {
-        this.storeLogoUrl = mainListing.storeLogo;
-      }
-    } else if (this.product.storeId) {
+
+    // Buscamos el listing que corresponde a la tienda del producto
+    const mainListing = this.product.listings?.find(l => l.storeId === this.product.storeId);
+
+    if (mainListing) {
+      // Intentamos sacar el logo del listing (que ya debería venir del service)
+      this.storeLogoUrl = mainListing.storeLogo || this.storeLogoUrl;
+      this.storeName = mainListing.storeName || this.storeName;
+    } 
+
+    // Plan B: Si aún no tenemos logo y hay un storeId, llamamos al servicio de tiendas
+    if (this.storeLogoUrl === 'assets/default-store.svg' && this.product.storeId) {
       this.storeService.getStoreById(this.product.storeId).subscribe({
         next: (store) => {
-          if (store) {
-            this.storeLogoUrl = store.logo || this.storeLogoUrl;
+          if (store && store.logo) {
+            this.storeLogoUrl = store.logo;
             this.storeName = store.name || this.storeName;
           }
         }
@@ -134,4 +140,3 @@ export class CardComponent implements OnInit {
     });
   }
 }
-

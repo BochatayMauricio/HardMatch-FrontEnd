@@ -36,6 +36,7 @@ export interface ResponseProduct {
   id: number;
   name: string;
   urlAccess?: string;
+  imageUrl?: string;
   price?: number | string;
   brand?: { name?: string } | string;
   brandName?: string;

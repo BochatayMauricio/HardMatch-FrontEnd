@@ -30,14 +30,11 @@ export class ProductsService {
       id: l.id,
       storeId: l.store?.id || 1,
       storeName: l.store?.name || 'Tienda Oficial',
-      storeLogo: l.store?.logo || 'assets/default-store.svg',
-      storeBanner: l.store?.banner,
-      storeDescription: l.store?.description,
-      storeLocation: l.store?.location,
+      // CAMBIO AQUÍ: Aseguramos que mapeamos el logo que viene del backend
+      storeLogo: l.store?.logo || 'assets/default-store.svg', 
       urlAccess: l.urlAccess || '#',
-      percentOff: Number(l.percentOff || l.percent_off || 0),
-      // Tomamos el precio específico de este listing
-      price: Number(l.priceTotal || l.price_total || backendData.price || 0)
+      percentOff: Number(l.percentOff || 0),
+      price: Number(l.priceTotal || backendData.price || 0)
     }));
 
     // Calculamos el precio final de bolsillo para poder comparar
@@ -59,7 +56,7 @@ export class ProductsService {
     return {
       id: backendData.id,
       name: backendData.name,
-      image: backendData.urlAccess || 'assets/default-product.png',
+      image: backendData.imageUrl || 'assets/default-product.png',
       
       // EL CAMBIO CLAVE: Usamos el precio original de la tienda ganadora, no el genérico
       price: bestListing ? bestListing.price : (Number(backendData.price) || 0),
