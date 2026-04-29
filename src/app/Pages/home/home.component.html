@@ -60,7 +60,25 @@
             </div>
         }
     </div>
+    <section class="popular-categories-section">
+      <h2 class="section-title">Categorías populares</h2>
+      
+      <div class="categories-container">
+        @for (category of popularCategories; track category.name) {
+          <div class="category-card" [routerLink]="category.route">
+            
+            <div class="card-icon-wrapper">
+              <img [src]="category.image" [alt]="category.name" class="category-img">
+            </div>
 
+            <div class="card-text-wrapper">
+              <span class="category-name">{{ category.name }}</span>
+            </div>
+
+          </div>
+        }
+      </div>
+    </section>
   }
 </div>
 

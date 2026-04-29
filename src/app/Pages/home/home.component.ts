@@ -5,13 +5,13 @@ import { ProductI } from '../../Interfaces/product.interface';
 import { ProductsService } from '../../Services/products.service';
 import { AuthService } from '../../Services/auth.service';
 import { RecommendationService } from '../../Services/recomendation.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CarruselComponent, CardComponent, DatePipe, RouterLink],
+  imports: [CarruselComponent, CardComponent, DatePipe, RouterLink, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -23,6 +23,49 @@ export class HomeComponent implements OnInit {
   recommendations: any[] = [];
   productosRecomendados: ProductI[] = [];
   isLoggedIn = false;
+
+  popularCategories = [
+    { 
+      name: 'Notebooks', 
+      image: 'https://omnitech.ar/wp-content/uploads/2025/03/macbook-air-m1.webp', 
+      route: ['/categoria/notebooks'],
+    },
+    { 
+      name: 'Procesadores', 
+      image: 'https://www.profesionalreview.com/wp-content/uploads/2023/10/j1p-Intel-Core-i9-14900K-h3z-Review-12.png', 
+      route: ['/categoria/procesadores'], 
+    },
+    { 
+      name: 'Monitores', 
+      image: 'https://images.fravega.com/f500/39f1d52ecda3b99857b58a44d18959e2.png', 
+      route: ['/categoria/monitores'],
+    },
+    { 
+      name: 'Mouses', 
+      image: 'https://www.gamerspoint.com.ar/wp-content/uploads/MOUSE-REDRAGON-IMPACT.png', 
+      route: '/categoria/mouse' 
+    },
+    { 
+      name: 'Memorias RAM', 
+      image: 'https://www.venex.com.ar/products_images/1729175241_d35g_2000x2000_1_black.png', 
+      route: '/categoria/Memorias RAM' 
+    },
+    { 
+      name: 'Placas de Video', 
+      image: 'https://www.comeros.com.ar/wp-content/uploads/2025/06/Placa-de-Video-ASUS-Dual-GeForce-RTX-5060-8GB-GDDR7-a.png', 
+      route: '/categoria//Placas de Video' 
+    },
+    { 
+      name: 'Auriculares', 
+      image: 'https://theapplewiki.com/images/applewiki/thumb/d/d9/AirPods_Max.png/300px-AirPods_Max.png', 
+      route: '/categoria/auriculares' 
+    },
+    { 
+      name: 'Tablets', 
+      image: 'https://mobilequilla.com/wp-content/uploads/2025/04/IPADS-MINI-11-TH-256.png', 
+      route: '/categoria/tablets' 
+    }
+  ];
   
   constructor(
     private productService: ProductsService,
