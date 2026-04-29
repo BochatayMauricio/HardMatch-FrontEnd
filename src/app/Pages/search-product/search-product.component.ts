@@ -73,10 +73,10 @@ export class SearchProductComponent implements OnInit {
     if (!products || products.length === 0) return;
 
     // Cortamos el array para no saturar la base de datos
-    const top5Products = products.slice(0, 5);
+    const topProduct = products.slice(0, 1);
     
     // Suponiendo que tu ProductI tiene un campo 'id' (o ajustalo si se llama de otra forma)
-    top5Products.forEach(prod => {
+    topProduct.forEach(prod => {
       // Usamos el id, asumiendo que está definido en ProductI
       if (prod.id) {
         this.searchLogger.logSearch(query, prod.id);

@@ -4,7 +4,6 @@ import { CardComponent } from "../../Components/card/card.component";
 import { ProductI } from '../../Interfaces/product.interface';
 import { ProductsService } from '../../Services/products.service';
 import { AuthService } from '../../Services/auth.service';
-import { RecommendationService } from '../../Services/recomendation.service';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -16,68 +15,118 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  products: ProductI[] = [];
+  // Estado para Mejores Descuentos
   discountedProducts: ProductI[] = [];
-  categories: string[] = [];
-  isLoading: boolean = true;
-  recommendations: any[] = [];
+  discountsPage: number = 1;
+  discountsTotalPages: number = 1;
+  discountsVisiblePages: number[] = []; // <-- Array para los 5 números
+  isLoadingDiscounts: boolean = true;
+
+  // Estado para Recomendados
   productosRecomendados: ProductI[] = [];
+  recommendedPage: number = 1;
+  recommendedTotalPages: number = 1;
+  recommendedVisiblePages: number[] = [];
+  isLoadingRecommended: boolean = true;
+
   isLoggedIn = false;
   
   constructor(
     private productService: ProductsService,
-    private recommendationService: RecommendationService,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: (data) => {
-        this.products = data;
-        
-        this.discountedProducts = data.filter(p => p.offer && Number(p.offer) > 0);
-        
-        this.categories = this.extractCategories();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar productos en Home:', err);
-        this.isLoading = false;
-      }
-    });
+    // Primero verificamos la sesión, porque el límite de descuentos depende de esto
     this.authService.getCurrentUser().subscribe(user => {
       this.isLoggedIn = !!user;
+      
+      // AHORA que sabemos si está logueado o no, cargamos los descuentos
+      this.loadTopDiscounts(1);
+
+      // Y si está logueado, cargamos sus recomendaciones
       if (this.isLoggedIn) {
-        this.loadRecommendations();
+        this.loadRecommendations(1);
+      } else {
+        this.isLoadingRecommended = false;
       }
     });
   }
 
-  loadRecommendations(): void {
-    this.recommendationService.getMyRecommendations().subscribe({
-      next: (data) => {
-        this.recommendations = data;
+  // --- LÓGICA DE MEJORES DESCUENTOS ---
+  loadTopDiscounts(page: number): void {
+    this.isLoadingDiscounts = true;
+    
+    // Límite dinámico: 8 si está logueado, 16 si es invitado
+    const limit = this.isLoggedIn ? 8 : 16;
 
-        for (let prod of this.products) {
-          for (let rec of this.recommendations) {
-            if (prod.id === rec.product.id) {
-              this.productosRecomendados.push(prod);
-            }
-          }
-        }
+    this.productService.getTopDiscounts(page, limit).subscribe({ 
+      next: (res) => {
+        this.discountedProducts = res.data;
+        this.discountsPage = res.currentPage;
+        this.discountsTotalPages = res.totalPages;
         
+        // Calculamos los 5 numeritos a mostrar
+        this.discountsVisiblePages = this.calculateVisiblePages(this.discountsPage, this.discountsTotalPages);
+        
+        this.isLoadingDiscounts = false;
       },
-      error: (err) => console.error('Error al cargar recomendaciones:', err)
+      error: (err) => {
+        console.error('Error cargando descuentos:', err);
+        this.isLoadingDiscounts = false;
+      }
     });
   }
 
-  private extractCategories(): string[] {
-    const categorySet = new Set<string>();
-    this.products.forEach(product => {
-      if (product.category) {
-        categorySet.add(product.category);
+  // Función matemática para sacar hasta 5 números centrados en la página actual
+  calculateVisiblePages(current: number, total: number): number[] {
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+
+    if (current <= 2) {
+      end = 5;
+    } else if (current >= total - 1) {
+      start = total - 4;
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  // --- LÓGICA DE RECOMENDADOS (Mantenemos igual por ahora, límite 4 u 8 según prefieras) ---
+  // --- LÓGICA DE RECOMENDADOS ---
+  loadRecommendations(page: number): void {
+    this.isLoadingRecommended = true;
+    this.productService.getRecommended(page, 4).subscribe({ 
+      next: (res) => {
+        this.productosRecomendados = res.data;
+        this.recommendedPage = res.currentPage;
+        this.recommendedTotalPages = res.totalPages;
+        
+        // Calculamos los 5 numeritos a mostrar para las recomendaciones
+        this.recommendedVisiblePages = this.calculateVisiblePages(this.recommendedPage, this.recommendedTotalPages);
+        
+        this.isLoadingRecommended = false;
+      },
+      error: (err) => {
+        console.error('Error cargando recomendaciones:', err);
+        this.isLoadingRecommended = false;
       }
     });
-    return Array.from(categorySet);
+  }
+
+  nextRecommendedPage(): void {
+    if (this.recommendedPage < this.recommendedTotalPages) {
+      this.loadRecommendations(this.recommendedPage + 1);
+    }
+  }
+
+  prevRecommendedPage(): void {
+    if (this.recommendedPage > 1) {
+      this.loadRecommendations(this.recommendedPage - 1);
+    }
   }
 }

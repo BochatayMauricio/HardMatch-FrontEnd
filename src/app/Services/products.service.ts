@@ -11,11 +11,21 @@ import {
 } from '../Interfaces/response-product.interface';
 import { BACKEND_API_URL } from '../../utils/constants';
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
+
 export class ProductsService {
   private readonly apiUrl = `${BACKEND_API_URL}/products`;
+
+  
 
   private favoritesIds = new BehaviorSubject<number[]>([]);
   favorites$ = this.favoritesIds.asObservable();
@@ -81,6 +91,44 @@ export class ProductsService {
       createdAt: new Date(backendData.createdAt || Date.now()),
       updatedAt: new Date(backendData.updatedAt || Date.now())
     };
+  }
+
+  getTopDiscounts(page: number = 1, limit: number = 8): Observable<PaginatedResponse<ProductI>> {
+    // Usamos el endpoint estático que creamos
+    return this.http.get<any>(`${this.apiUrl}/top-discounts?page=${page}&limit=${limit}`).pipe(
+      map((response) => {
+        if (response && response.success && response.data) {
+          return {
+            ...response.data,
+            // Reutilizamos tu excelente mapeo para que las cards sigan funcionando igual
+            data: response.data.data.map((item: any) => this.mapProductFromBackend(item))
+          };
+        }
+        return { data: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+      }),
+      catchError((error) => {
+        console.error('Error al cargar mejores descuentos:', error);
+        return of({ data: [], totalItems: 0, totalPages: 0, currentPage: 1 });
+      })
+    );
+  }
+
+  getRecommended(page: number = 1, limit: number = 8): Observable<PaginatedResponse<ProductI>> {
+    return this.http.get<any>(`${this.apiUrl}/recommended?page=${page}&limit=${limit}`).pipe(
+      map((response) => {
+        if (response && response.success && response.data) {
+          return {
+            ...response.data,
+            data: response.data.data.map((item: any) => this.mapProductFromBackend(item))
+          };
+        }
+        return { data: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+      }),
+      catchError((error) => {
+        console.error('Error al cargar recomendaciones:', error);
+        return of({ data: [], totalItems: 0, totalPages: 0, currentPage: 1 });
+      })
+    );
   }
 
   private parseFeatures(features: ResponseProductFeature[]): Record<string, ResponseProductFeatureValue> {
