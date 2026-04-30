@@ -317,23 +317,7 @@
                     }
                   </td>
                 }
-              </tr>
-
-              
-              <tr>
-                <td class="characteristic-name">Disponibilidad</td>
-                @for (product of products; track product.id) {
-                  <td [class.low-stock]="product.stock && product.stock < 5">
-                    @if (product.stock) {
-                      {{ product.stock }} unidades
-                    } @else {
-                      Consultar
-                    }
-                  </td>
-                }
-              </tr>
-
-              
+              </tr>              
               <tr>
                 <td class="characteristic-name">Envío gratis</td>
                 @for (product of products; track product.id) {
@@ -353,110 +337,73 @@
       <section class="summary-section">
         <h2>Resumen y Recomendación</h2>
         <div class="summary-cards">
+          
+          <!-- Mejor Calidad-Precio -->
           <div class="summary-card highlight">
             <div class="summary-icon value">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                ></path>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
               </svg>
             </div>
             <div class="summary-content">
               <span class="label">Mejor relación calidad-precio</span>
-              <span class="value">{{
-                products[getBestValueIndex()]?.brand
-              }}</span>
-              <span class="detail"
-                >{{ formatPrice(products[getBestValueIndex()]?.price || 0) }} ·
-                {{ getProductScore(getBestValueIndex())?.valueScore }} pts</span
-              >
+              <!-- Usamos el nombre del producto truncado y mostramos el completo al pasar el mouse (title) -->
+              <span class="value" [title]="products[getBestValueIndex()]?.name">
+                {{ products[getBestValueIndex()]?.name || '' }}
+              </span>
+              <span class="detail">
+                {{ formatPrice(products[getBestValueIndex()]?.price || 0) }} · 
+                {{ getProductScore(getBestValueIndex())?.valueScore }} pts
+              </span>
             </div>
           </div>
 
+          <!-- Mejores Specs -->
           <div class="summary-card">
             <div class="summary-icon specs">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
                 <rect x="9" y="9" width="6" height="6"></rect>
-                <line x1="9" y1="1" x2="9" y2="4"></line>
-                <line x1="15" y1="1" x2="15" y2="4"></line>
-                <line x1="9" y1="20" x2="9" y2="23"></line>
-                <line x1="15" y1="20" x2="15" y2="23"></line>
-                <line x1="20" y1="9" x2="23" y2="9"></line>
-                <line x1="20" y1="14" x2="23" y2="14"></line>
-                <line x1="1" y1="9" x2="4" y2="9"></line>
-                <line x1="1" y1="14" x2="4" y2="14"></line>
+                <line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line>
+                <line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line>
+                <line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line>
+                <line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>
               </svg>
             </div>
             <div class="summary-content">
               <span class="label">Mejores especificaciones</span>
-              <span class="value">{{
-                products[getBestSpecsIndex()]?.brand
-              }}</span>
-              <span class="detail"
-                >{{
-                  getProductScore(getBestSpecsIndex())?.specsScore
-                }}
-                puntos</span
-              >
+              <span class="value" [title]="products[getBestSpecsIndex()]?.name">
+                {{ products[getBestSpecsIndex()]?.name || '' }}
+              </span>
+              <span class="detail">
+                {{ getProductScore(getBestSpecsIndex())?.specsScore }} puntos
+              </span>
             </div>
           </div>
 
+          <!-- Mejor Precio -->
           <div class="summary-card">
             <div class="summary-icon price">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="1" x2="12" y2="23"></line>
-                <path
-                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-                ></path>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
             </div>
             <div class="summary-content">
               <span class="label">Mejor precio</span>
-              <span class="value">{{
-                products[getPriceComparison().cheapest]?.brand
-              }}</span>
-              <span class="detail">{{
-                formatPrice(products[getPriceComparison().cheapest]?.price || 0)
-              }}</span>
+              <span class="value" [title]="products[getPriceComparison().cheapest]?.name">
+                {{ products[getPriceComparison().cheapest]?.name || '' }}
+              </span>
+              <span class="detail">
+                {{ formatPrice(products[getPriceComparison().cheapest]?.price || 0) }}
+              </span>
             </div>
           </div>
 
+          <!-- Ahorro Potencial -->
           <div class="summary-card">
             <div class="summary-icon savings">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                 <polyline points="17 6 23 6 23 12"></polyline>
               </svg>
@@ -467,6 +414,19 @@
               <span class="detail">Diferencia de precios</span>
             </div>
           </div>
+        </div>
+
+        <!-- 🤖 CAJA DE RECOMENDACIÓN INTELIGENTE 🤖 -->
+        <div class="ai-recommendation-box" *ngIf="products.length > 1">
+          <div class="ai-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path>
+              <path d="M9 16v-2"></path>
+              <path d="M15 16v-2"></path>
+            </svg>
+            <h3>Análisis HardMatch</h3>
+          </div>
+          <p>{{ getSmartRecommendation() }}</p>
         </div>
       </section>
     }

@@ -48,7 +48,7 @@ export class SettingsComponent implements OnInit {
   saveMessage: string = '';
 
   priceSliderMin: number = 0;
-  priceSliderMax: number = 1000000;
+  priceSliderMax: number = 10000000;
   priceStep: number = 10000;
 
   draggedPriority: MatchingPriority | null = null;

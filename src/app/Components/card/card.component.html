@@ -36,12 +36,12 @@
   <div class="price-container">
     @if (product.offer) {
       <span class="card-price">
-        ${{ finalPrice | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
+        ${{ product.price | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
       </span>
-      <span class="price-original">${{ product.price | number:'1.0-0':'es-AR' }}</span>
+      <span class="price-original">${{ finalPrice | number:'1.0-0':'es-AR' }}</span>
     } @else {
       <span class="card-price">
-        ${{ product.price | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
+        ${{ finalPrice | number:'1.0-0':'es-AR' }}<span class="price-decimals">00</span>
       </span>
     }
   </div>

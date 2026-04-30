@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     { 
       name: 'Notebooks', 
       image: 'https://omnitech.ar/wp-content/uploads/2025/03/macbook-air-m1.webp', 
-      route: ['/categoria/notebooks'],
+      route: ['/categoria/notebook'],
     },
     { 
       name: 'Procesadores', 
@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
     { 
       name: 'Mouses', 
       image: 'https://www.gamerspoint.com.ar/wp-content/uploads/MOUSE-REDRAGON-IMPACT.png', 
-      route: '/categoria/mouse' 
+      route: '/categoria/mouses' 
     },
     { 
       name: 'Memorias RAM', 
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
     { 
       name: 'Tablets', 
       image: 'https://mobilequilla.com/wp-content/uploads/2025/04/IPADS-MINI-11-TH-256.png', 
-      route: '/categoria/tablets' 
+      route: '/categoria/tablet' 
     }
   ];
   
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
   // --- LÓGICA DE RECOMENDADOS ---
   loadRecommendations(page: number): void {
     this.isLoadingRecommended = true;
-    this.productService.getRecommended(page, 4).subscribe({ 
+    this.productService.getRecommended(page, 8).subscribe({ 
       next: (res) => {
         this.productosRecomendados = res.data;
         this.recommendedPage = res.currentPage;

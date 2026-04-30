@@ -720,3 +720,31 @@
   }
 }
 
+.ai-recommendation-box {
+  background: linear-gradient(145deg, rgba(124, 58, 237, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ai-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.ai-recommendation-box p {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}

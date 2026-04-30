@@ -182,7 +182,7 @@ export class ViewProductDetailsComponent implements OnInit {
       const discount = this.product.offer ? Number(this.product.offer) : 0;
 
       if (discount > 0) {
-        const discountedPrice = this.product.price * (1 - discount / 100);
+        const discountedPrice = this.product.price * (1 + discount / 100);
         return Math.round(discountedPrice);
       }
 
@@ -192,7 +192,7 @@ export class ViewProductDetailsComponent implements OnInit {
 
   getSavings(): number {
     if (!this.product?.offer) return 0;
-    return this.product.price - this.getDiscountedPrice();
+    return this.getDiscountedPrice() - this.product.price;
   }
 
   getStars(): { icon: string; class: string }[] {

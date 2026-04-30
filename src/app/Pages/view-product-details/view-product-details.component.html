@@ -106,7 +106,7 @@
           @if (product.offer != "0") {
             <div class="price-with-discount">
               <div class="original-price-row">
-                <span class="original-price">${{ product.price | number: "1.0-0" : "es-AR" }}</span>
+                <span class="original-price">${{  getDiscountedPrice() | number: "1.0-0" : "es-AR" }}</span>
                 
                 <div class="savings-badge-premium">
                   <span class="material-symbols-outlined money-icon">paid</span>
@@ -115,7 +115,7 @@
               </div>
 
               <span class="current-price">
-                ${{ getDiscountedPrice() | number: "1.0-0" : "es-AR" }} <span class="decimal-small">00</span>
+                ${{ product.price | number: "1.0-0" : "es-AR" }} <span class="decimal-small">00</span>
               </span>
             </div>
           } @else {
@@ -126,15 +126,7 @@
         </div>
 
         
-        @if (product.stock) {
-          <div class="stock-info" [class.low-stock]="product.stock < 5">
-            @if (product.stock < 5) {
-              <span>¡Solo quedan {{ product.stock }} unidades!</span>
-            } @else {
-              <span>{{ product.stock }} unidades disponibles</span>
-            }
-          </div>
-        }
+       
         
         <div class="action-buttons">
           <button class="btn-primary btn-buy" (click)="visitProductUrl()">
@@ -336,11 +328,11 @@
                 @if (listing.percentOff > 0) {
                   <span class="badge bg-success mb-1">{{ listing.percentOff }}% OFF</span>
                   <div class="fs-4 fw-bold text-primary">
-                    ${{ (listing.price * (1 - listing.percentOff / 100)) | number:'1.0-0':'es-AR' }}
+                    ${{ listing.price  | number:'1.0-0':'es-AR' }}
                   </div>
-                  <small class="text-decoration-line-through text-muted">${{ listing.price | number:'1.0-0':'es-AR' }}</small>
+                  <small class="text-decoration-line-through text-muted">${{ (listing.price * (1 + listing.percentOff / 100))  | number:'1.0-0':'es-AR' }}</small>
                 } @else {
-                  <div class="fs-4 fw-bold text-primary">${{ listing.price | number:'1.0-0':'es-AR' }}</div>
+                  <div class="fs-4 fw-bold text-primary">${{ (listing.price * (1 + listing.percentOff / 100)) | number:'1.0-0':'es-AR' }}</div>
                 }
               </div>
 

@@ -16,19 +16,29 @@ import { SearchLoggerService } from '../../Services/query.service';
   styleUrl: './search-product.component.css',
 })
 export class SearchProductComponent implements OnInit {
-  allProducts: ProductI[] = [];
   filteredProducts: ProductI[] = [];
-
+  
+  currentPage: number = 1;
+  totalPages: number = 1;
+  visiblePages: number[] = [];
+  
   searchTerm: string = '';
   categoryParam: string = '';
-
+  
+  // Marcas Dinámicas
   brands: string[] = [];
   selectedBrand: string = '';
-
-  minPrice: number = 0;
-  maxPrice: number = 1000000;
-  priceRange: number = 1000000;
-
+  
+  // Precios Manuales
+  minPriceInput: number | null = null;
+  maxPriceInput: number | null = null;
+  // Precios Visuales (Para el HTML con puntos)
+  minPriceDisplay: string = '';
+  maxPriceDisplay: string = '';
+  
+  // Dato Informativo
+  absoluteMaxPrice: number = 0; 
+  
   sortBy: string = '';
   isLoading: boolean = true;
 
@@ -39,105 +49,112 @@ export class SearchProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: (products) => {
-        this.allProducts = products;
-        
-        this.extractBrands();
+    this.route.params.subscribe((params) => {
+      this.categoryParam = params['category'] || '';
+      this.searchTerm = params['search'] || '';
+      
+      this.loadData(1);
+    });
+  }
 
-        if (this.allProducts.length > 0) {
-          const maxProductPrice = Math.max(...this.allProducts.map(p => p.price));
-          this.maxPrice = Math.ceil(maxProductPrice);
-          this.priceRange = this.maxPrice;
+  loadData(page: number = 1): void {
+    this.isLoading = true;
+    this.currentPage = page;
+
+    // Tomamos los valores exactos que ingresó el usuario
+    const filters: any = {
+      search: this.searchTerm,
+      brandName: this.selectedBrand,
+      minPrice: this.minPriceInput != null ? this.minPriceInput : undefined,
+      maxPrice: this.maxPriceInput != null ? this.maxPriceInput : undefined,
+      sortBy: this.sortBy
+    };
+
+    if (this.categoryParam) {
+      const paramLower = this.categoryParam.toLowerCase();
+      filters.categoryNames = CATEGORY_MAP[paramLower] || [paramLower];
+    }
+
+    this.productService.getProducts(this.currentPage, 12, filters).subscribe({
+      next: (res) => {
+        this.filteredProducts = res.data;
+        this.totalPages = res.totalPages;
+        this.visiblePages = this.calculateVisiblePages(this.currentPage, this.totalPages);
+        
+        // Guardamos las marcas que nos devuelve el backend
+        if (res.brands && res.brands.length > 0 && this.brands.length === 0) {
+            // Solo pisamos las marcas si no las habíamos cargado antes, 
+            // para no perderlas al filtrar por precio.
+            this.brands = res.brands;
         }
 
-        this.route.params.subscribe((params) => {
-          this.categoryParam = params['category'] || '';
-          this.searchTerm = params['search'] || '';
-          this.applyFilters();
-          if (this.searchTerm) {
-            this.logFoundProducts(this.searchTerm, this.filteredProducts);
-          }
-          this.isLoading = false;
-        });
-      },
-      error: (err) => {
-        console.error('Error al cargar productos en Search:', err);
+        if (res.maxPrice) {
+          this.absoluteMaxPrice = res.maxPrice;
+        }
+        
+        if (this.searchTerm && this.currentPage === 1) {
+          this.logFoundProducts(this.searchTerm, this.filteredProducts);
+        }
+        
         this.isLoading = false;
-      }
-    });
-
-  }
-
-  private logFoundProducts(query: string, products: ProductI[]): void {
-    if (!products || products.length === 0) return;
-
-    // Cortamos el array para no saturar la base de datos
-    const topProduct = products.slice(0, 1);
-    
-    // Suponiendo que tu ProductI tiene un campo 'id' (o ajustalo si se llama de otra forma)
-    topProduct.forEach(prod => {
-      // Usamos el id, asumiendo que está definido en ProductI
-      if (prod.id) {
-        this.searchLogger.logSearch(query, prod.id);
-      }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      error: () => this.isLoading = false
     });
   }
+  
+  onPriceChange(value: string, type: 'min' | 'max'): void {
+    // 1. Borramos cualquier letra o punto viejo para quedarnos solo con los números crudos
+    const rawString = value.replace(/\D/g, '');
+    const num = rawString ? parseInt(rawString, 10) : null;
 
-  extractBrands(): void {
-    const brandSet = new Set<string>();
-    this.allProducts.forEach((product) => {
-      if(product.brand) brandSet.add(product.brand);
-    });
-    this.brands = Array.from(brandSet).sort();
+    // 2. Le agregamos un punto cada 3 caracteres usando una expresión regular
+    const formatted = num !== null ? num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '';
+
+    // 3. Guardamos el texto formateado para la vista, y el número real para el backend
+    if (type === 'min') {
+      this.minPriceInput = num;
+      this.minPriceDisplay = formatted;
+    } else {
+      this.maxPriceInput = num;
+      this.maxPriceDisplay = formatted;
+    }
   }
 
   applyFilters(): void {
-    this.filteredProducts = this.allProducts.filter((product) => {
-      let matchesCategory = true;
-      if (this.categoryParam) {
-        const paramLower = this.categoryParam.toLowerCase();
-        const productCatLower = product.category.toLowerCase();
-
-        const allowedVariants = CATEGORY_MAP[paramLower] || [paramLower];
-        matchesCategory = allowedVariants.some(
-          (variant: string) =>
-            productCatLower.includes(variant) ||
-            variant.includes(productCatLower),
-        );
-      }
-
-      const matchesSearch =
-        !this.searchTerm ||
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      const matchesBrand =
-        !this.selectedBrand || product.brand === this.selectedBrand;
-      const matchesPrice =
-        product.price >= this.minPrice && product.price <= this.priceRange;
-
-      return matchesCategory && matchesSearch && matchesBrand && matchesPrice;
-    });
-
-    this.sortProducts();
-  }
-
-  sortProducts(): void {
-    if (this.sortBy === 'price-asc') {
-      this.filteredProducts.sort((a, b) => a.price - b.price);
-    } else if (this.sortBy === 'price-desc') {
-      this.filteredProducts.sort((a, b) => b.price - a.price);
-    } else if (this.sortBy === 'name') {
-      this.filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    this.loadData(1); 
   }
 
   resetFilters(): void {
     this.selectedBrand = '';
-    this.minPrice = 0;
-    this.priceRange = this.maxPrice;
+    this.minPriceInput = null;
+    this.maxPriceInput = null;
+    this.minPriceDisplay = '';
+    this.maxPriceDisplay = '';
     this.sortBy = '';
-    this.applyFilters();
+    this.loadData(1);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.loadData(page);
+    }
+  }
+
+  calculateVisiblePages(current: number, total: number): number[] {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (current <= 2) end = 5;
+    else if (current >= total - 1) start = total - 4;
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  private logFoundProducts(query: string, products: ProductI[]): void {
+    if (!products || products.length === 0) return;
+    const topProduct = products[0];
+    if (topProduct && topProduct.id) {
+      this.searchLogger.logSearch(query, topProduct.id);
+    }
   }
 }

@@ -1,94 +1,190 @@
-﻿<div class="container-fluid search-container">
-  
-  @if (isLoading) {
-    <div class="loading-state text-center my-5" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
-      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem; margin: 0 auto;">
-        <span class="visually-hidden">Buscando productos...</span>
-      </div>
-      <p class="mt-3">Buscando los mejores productos para vos...</p>
-    </div>
-  } @else {
+﻿<div class="container py-4">
+  <div class="row">
     
-    <div class="row">
-      <div class="col-lg-3 col-md-4 filters-sidebar">
-        <div class="filters-card">
-          <h3 class="filters-title">Filtros</h3>
-          
-          <div class="filter-group">
-            <h5 class="filter-label">Marca</h5>
-            <select class="form-select filter-select" [(ngModel)]="selectedBrand" (change)="applyFilters()">
+    <!-- ==========================================
+         SIDEBAR: FILTROS (Columna Izquierda)
+         ========================================== -->
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h4 class="card-title fw-bold mb-4">Filtros</h4>
+
+          <!-- Buscador de texto -->
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Buscar producto</label>
+            <input type="text" class="form-control" placeholder="Ej: Monitor 144hz..." [(ngModel)]="searchTerm">
+          </div>
+
+          <!-- Filtro por Marca -->
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Marca</label>
+            <select class="form-select" [(ngModel)]="selectedBrand">
               <option value="">Todas las marcas</option>
               @for (brand of brands; track brand) {
-                <option [value]="brand">{{brand}}</option>
+                <option [value]="brand">{{ brand }}</option>
               }
             </select>
           </div>
 
-          <div class="filter-group">
-            <h5 class="filter-label">Rango de precio</h5>
-            <div class="price-range-container">
-              <input 
-                type="range" 
-                class="form-range price-slider" 
-                [min]="minPrice" 
-                [max]="maxPrice" 
-                [(ngModel)]="priceRange" 
-                (input)="applyFilters()">
-              <div class="price-display mt-2">
-                <span>Hasta: ${{priceRange | number:'1.0-0':'es-AR'}}</span>
+          <!-- Filtro por Precio Máximo -->
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Rango de Precio</label>
+            
+            <div class="row g-2 align-items-center">
+              <div class="col-5">
+                <input type="text" class="form-control form-control-sm" placeholder="Mín ($)" 
+                       [ngModel]="minPriceDisplay" 
+                       (ngModelChange)="onPriceChange($event, 'min')">
+              </div>
+              <div class="col-2 text-center text-muted small">
+                hasta
+              </div>
+              <div class="col-5">
+                <input type="text" class="form-control form-control-sm" placeholder="Máx ($)" 
+                       [ngModel]="maxPriceDisplay" 
+                       (ngModelChange)="onPriceChange($event, 'max')">
               </div>
             </div>
+
+            @if (absoluteMaxPrice > 0) {
+              <div class="mt-2 text-end text-muted" style="font-size: 0.75rem;">
+                Máximo sugerido: ${{ absoluteMaxPrice | number:'1.0-0' }}
+              </div>
+            }
           </div>
 
-          <div class="filter-group">
-            <h5 class="filter-label">Ordenar por</h5>
-            <select class="form-select filter-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+          <!-- Ordenar Por -->
+          <div class="mb-4">
+            <label class="form-label text-muted small fw-bold">Ordenar por</label>
+            <select class="form-select" [(ngModel)]="sortBy">
               <option value="">Relevancia</option>
-              <option value="price-asc">Menor precio</option>
-              <option value="price-desc">Mayor precio</option>
-              <option value="name">Nombre A-Z</option>
+              <option value="price-asc">Menor a mayor precio</option>
+              <option value="price-desc">Mayor a menor precio</option>
+              <option value="name">Nombre (A-Z)</option>
             </select>
           </div>
 
-          <button class="btn reset-btn w-100 mt-3" (click)="resetFilters()">Limpiar filtros</button>
-        </div>
-      </div>
+          <!-- Botones de Acción -->
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary fw-bold" (click)="applyFilters()">
+              Aplicar Filtros
+            </button>
+            <button class="btn btn-outline-secondary" (click)="resetFilters()">
+              Limpiar
+            </button>
+          </div>
 
-      <div class="col-lg-9 col-md-8">
-        <div class="results-header">
-          <h2 class="results-title">
-            @if (categoryParam) {
-              {{categoryParam | uppercase}}
-            } @else if (searchTerm) {
-              Resultados para "{{searchTerm}}"
-            } @else {
-              Todos los productos
-            }
-          </h2>
-          <p class="results-count">{{filteredProducts.length}} productos encontrados</p>
-        </div>
-
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          @for(product of filteredProducts; track product.id) {
-            <div class="col">
-              <app-card [product]="product"></app-card>
-            </div>
-          }
-          @empty {
-            <div class="col-12">
-              <div class="no-results text-center p-5">
-                <svg xmlns="http://www.w3.org/2000/svg" height="80" width="80" viewBox="0 0 512 512" style="margin-bottom: 20px;">
-                  <path fill="var(--text-secondary-color)" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
-                </svg>
-                <h3>No se encontraron productos</h3>
-                <p>Intenta ajustar los filtros de búsqueda</p>
-                <button class="btn btn-outline-primary mt-3" (click)="resetFilters()">Quitar filtros</button>
-              </div>
-            </div>
-          }
         </div>
       </div>
     </div>
-  }
-</div>
 
+    <!-- ==========================================
+         MAIN CONTENT: PRODUCTOS (Columna Derecha)
+         ========================================== -->
+    <div class="col-md-9">
+      
+      <!-- Título de resultados -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0 fw-bold">
+          @if (searchTerm || categoryParam) {
+            Resultados para "{{ searchTerm || categoryParam }}"
+          } @else {
+            Catálogo completo
+          }
+        </h2>
+      </div>
+
+      <!-- Estado de Carga -->
+      @if (isLoading) {
+        <div class="text-center my-5 py-5">
+          <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Buscando...</span>
+          </div>
+          <h5 class="mt-3 text-muted">Buscando las mejores ofertas...</h5>
+        </div>
+      } @else {
+        
+        <!-- Grilla de Resultados -->
+        @if (filteredProducts.length > 0) {
+          <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @for(product of filteredProducts; track product.id) {
+                <div class="col">
+                    <app-card [product]="product"></app-card>
+                </div>
+            }
+          </div>
+
+          <!-- Controles de Paginación -->
+          <nav aria-label="Paginación de resultados" class="mt-5">
+            <ul class="pagination custom-pagination justify-content-center">
+              
+              <!-- Botón Anterior -->
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <button class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Anterior">
+                  <span aria-hidden="true">&laquo;</span>
+                </button>
+              </li>
+    
+              <!-- Páginas Dinámicas -->
+              @for (pageNumber of visiblePages; track pageNumber) {
+                <li class="page-item" [class.active]="pageNumber === currentPage">
+                  <button class="page-link" (click)="goToPage(pageNumber)">
+                    {{ pageNumber }}
+                  </button>
+                </li>
+              }
+    
+              <!-- Botón Siguiente -->
+              <li class="page-item" [class.disabled]="currentPage >= totalPages">
+                <button class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Siguiente">
+                  <span aria-hidden="true">&raquo;</span>
+                </button>
+              </li>
+              
+            </ul>
+          </nav>
+
+        } @else {
+          <!-- Estado: Sin Resultados -->
+          <div class="text-center bg-white p-5 rounded shadow-sm border-0 my-4">
+            <h3 class="fw-bold text-dark mb-3">No encontramos resultados</h3>
+            <p class="text-muted mb-3">No hay productos que coincidan con los filtros que aplicaste:</p>
+            
+            <!-- Lista de filtros activos -->
+            <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+              @if (searchTerm) {
+                <span class="badge bg-light text-dark border px-3 py-2">
+                  <i class="bi bi-search me-1"></i> Búsqueda: "{{ searchTerm }}"
+                </span>
+              }
+              @if (categoryParam) {
+                <span class="badge bg-light text-dark border px-3 py-2">
+                  <i class="bi bi-tag me-1"></i> Categoría: "{{ categoryParam }}"
+                </span>
+              }
+              @if (selectedBrand) {
+                <span class="badge bg-light text-dark border px-3 py-2">
+                  <i class="bi bi-bookmark-star me-1"></i> Marca: {{ selectedBrand }}
+                </span>
+              }
+              @if (minPriceInput) {
+                <span class="badge bg-light text-dark border px-3 py-2">
+                  <i class="bi bi-cash-stack me-1"></i> Precio Mín: ${{ minPriceInput | number:'1.0-0' }}
+                </span>
+              }
+              @if (maxPriceInput) {
+                <span class="badge bg-light text-dark border px-3 py-2">
+                  <i class="bi bi-cash-stack me-1"></i> Precio Máx: ${{ maxPriceInput | number:'1.0-0' }}
+                </span>
+              }
+            </div>
+
+            <button class="btn btn-primary px-4 py-2 fw-bold" (click)="resetFilters()">
+              <i class="bi bi-arrow-counterclockwise me-2"></i> Limpiar todos los filtros
+            </button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
