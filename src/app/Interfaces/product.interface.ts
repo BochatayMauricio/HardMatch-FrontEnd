@@ -56,7 +56,6 @@ export interface ProductI {
   description: string;
   category: string;
   image: string;
-  stock?: number;
   offer?: string;
   caracteristics?: ProductCharacteristics;
   ratings?: number;

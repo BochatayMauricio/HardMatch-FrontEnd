@@ -1,5 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http'; // Asegurate de agregar este import arriba
 import { BehaviorSubject, Observable, map, catchError, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ProductI } from '../Interfaces/product.interface';
@@ -16,6 +17,8 @@ export interface PaginatedResponse<T> {
   totalItems: number;
   totalPages: number;
   currentPage: number;
+  maxPrice?: number;
+  brands?: string[];
 }
 
 @Injectable({
@@ -48,7 +51,7 @@ export class ProductsService {
     }));
 
     // Calculamos el precio final de bolsillo para poder comparar
-    const getFinalPrice = (listing: any) => listing.price * (1 - (listing.percentOff / 100));
+    const getFinalPrice = (listing: any) => listing.price;
 
     // Buscamos la oferta que resulte en el MENOR precio final
     const bestListing = mappedListings.length > 0
@@ -84,7 +87,6 @@ export class ProductsService {
 
       listings: mappedListings,
 
-      stock: backendData.stock || 0,
       ratings: backendData.ratings || 0,
       reviews: backendData.reviews || 0,
       freeShipping: !!backendData.freeShipping,
@@ -148,21 +150,40 @@ export class ProductsService {
     return result;
   }
 
-  getProducts(): Observable<ProductI[]> {
-    return this.http.get<ResponseProductApi<ResponseProduct[]>>(this.apiUrl).pipe(
+  getProducts(page: number = 1, limit: number = 12, filters: any = {}): Observable<PaginatedResponse<ProductI>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    if (filters.search) params = params.set('search', filters.search);
+    if (filters.minPrice !== undefined && filters.minPrice !== null) {
+      params = params.set('minPrice', filters.minPrice.toString());
+    }
+    if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+      params = params.set('maxPrice', filters.maxPrice.toString());
+    }
+    if (filters.brandName) params = params.set('brandName', filters.brandName);
+    if (filters.sortBy) params = params.set('sortBy', filters.sortBy);
+    
+    // Si hay array de variantes de categoría, las mandamos unidas por coma
+    if (filters.categoryNames && filters.categoryNames.length > 0) {
+      params = params.set('categoryNames', filters.categoryNames.join(','));
+    }
+
+    return this.http.get<any>(this.apiUrl, { params }).pipe(
       map((response) => {
         if (response && response.success && response.data) {
-          return response.data.map((item) => this.mapProductFromBackend(item));
+          return {
+            ...response.data,
+            data: response.data.data.map((item: any) => this.mapProductFromBackend(item))
+          };
         }
-        return [];
+        return { data: [], totalItems: 0, totalPages: 0, currentPage: 1 };
       }),
       catchError((error) => {
-        console.error('Error crítico al conectar con el backend:', error);
-        this.toastr.error(
-          'No pudimos obtener el listado de productos. Intenta nuevamente en unos minutos.',
-          'Error al cargar productos',
-        );
-        return of([]);
+        console.error('Error al buscar productos:', error);
+        this.toastr.error('Error al cargar resultados de búsqueda.');
+        return of({ data: [], totalItems: 0, totalPages: 0, currentPage: 1 });
       })
     );
   }

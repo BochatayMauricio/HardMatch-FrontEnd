@@ -146,3 +146,151 @@
   }
 }
 
+.custom-pagination .page-link {
+  color: #495057;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .page-link:hover {
+  background-color: #f8f9fa;
+  color: #0d6efd; /* Color primario de tu tema */
+}
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 5px; /* Opcional, para un botón más cuadradito adentro */
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+  background-color: #fff;
+}
+
+/* =========================================
+   ESTILOS DE PAGINACIÓN PERSONALIZADOS
+   ========================================= */
+
+.custom-pagination .page-item {
+  margin: 0 4px; /* Separación entre las "burbujas" */
+}
+
+.custom-pagination .page-item .page-link {
+  color: #495057; /* Color del texto base */
+  border: none; /* Quitamos el borde duro de Bootstrap */
+  border-radius: 8px; /* Bordes redondeados modernos */
+  font-weight: 600;
+  padding: 8px 16px;
+  background-color: #f8f9fa; /* Fondo gris muy clarito */
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); /* Sombrita sutil */
+}
+
+/* Efecto al pasar el mouse por un número no activo */
+.custom-pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+  background-color: #e2e6ea;
+  color: #0d6efd; /* Color primario (podés cambiarlo al color principal de tu marca) */
+  transform: translateY(-2px); /* Pequeño salto hacia arriba */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el número de la página actual */
+.custom-pagination .page-item.active .page-link {
+  background-color: #0d6efd; /* Tu color principal */
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.4); /* Sombra con el color de la marca */
+  transform: translateY(-2px);
+}
+
+/* Estilo para los botones bloqueados (ej: Anterior en página 1) */
+.custom-pagination .page-item.disabled .page-link {
+  background-color: transparent;
+  color: #adb5bd;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Estilo específico para los símbolos de Anterior/Siguiente */
+.custom-pagination .page-item .page-link span {
+  font-size: 1.1rem;
+  line-height: 1;
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-principal-color);
+  margin-bottom: 1.5rem;
+}
+}
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-card {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--text-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 90px;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon-wrapper {
+  background: var(--buttons-primary-color);
+  width: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.category-img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.25));
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-img {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.card-text-wrapper {
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.category-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-principal-color);
+}
+
+/* Responsividad para celulares */
+@media (max-width: 600px) {
+  .categories-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .category-card {
+    height: 80px;
+  }
+
+  .card-icon-wrapper {
+    width: 80px;
+  }
+}

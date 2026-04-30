@@ -79,7 +79,7 @@ export class CardComponent implements OnInit {
       return this.product.price;
     }
     const discount = parseFloat(this.product.offer);
-    return Math.round(this.product.price * (1 - (discount / 100)));
+    return Math.round(this.product.price * (1 + (discount / 100)));
   }
 
   addToCompare(product: ProductI): void {
