@@ -3,7 +3,7 @@
 <div class="container mt-4 mb-5">
 
   <!-- SECCIÓN 1: LOS MEJORES DESCUENTOS -->
-  <h2 class="title mt-5">Los mejores descuentos</h2>
+  <h2 class="section-title"><b>Los mejores descuentos</b></h2>
   
   @if (isLoadingDiscounts) {
     <div class="text-center my-4">
@@ -54,7 +54,7 @@
   @if (isLoggedIn) {
     <section class="recommendations-wrapper my-5">
       <div class="section-header mb-4">
-        <h2 class="fw-bold m-0">✨ Seleccionado para vos</h2>
+        <h2 class="section-title"><b>Seleccionados para vos</b></h2>
         <p class="text-muted">Basado en tu historial y favoritos</p>
       </div>
       
@@ -113,7 +113,7 @@
   <!-- SECCIÓN 3: CATEGORÍAS POPULARES -->
     
     <section class="popular-categories-section">
-      <h2 class="section-title">Categorías populares</h2>
+      <h2 class="section-title"><b>Categorías populares</b></h2>
       
       <div class="categories-container">
         @for (category of popularCategories; track category.name) {
