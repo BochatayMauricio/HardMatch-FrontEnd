@@ -46,7 +46,6 @@ export interface ResponseProduct {
   features?: ResponseProductFeature[];
   products_details?: ResponseProductFeature[];
   listings?: ResponseProductListing[];
-  stock?: number;
   ratings?: number;
   reviews?: number;
   freeShipping?: boolean;

@@ -84,7 +84,6 @@ export class ProductsService {
 
       listings: mappedListings,
 
-      stock: backendData.stock || 0,
       ratings: backendData.ratings || 0,
       reviews: backendData.reviews || 0,
       freeShipping: !!backendData.freeShipping,
