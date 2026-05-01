@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboardComponent, canActivate: [adminGuard] },
   { path: 'favoritos', component: UserFavoritesComponent, canActivate: [authGuard] },
   { path: 'stores/:name', component: StoreProfileComponent },
-  { path: 'comparativas', component: ComparativesComponent, canActivate: [authGuard] },
+  { path: 'comparativas', component: ComparativesComponent },
   { path: 'producto/:id', component: ViewProductDetailsComponent },
   { path: 'configuracion', component: SettingsComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },

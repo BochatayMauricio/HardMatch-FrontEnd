@@ -98,9 +98,9 @@
               <td>
                 <button class="btn-action" 
                         (click)="retestSource(site.id)" 
-                        [disabled]="site.status === 'Procesando...'" 
+                        [disabled]="site.status === 'Procesando...' || site.status === 'Procesando'" 
                         title="Refrescar">
-                  {{ site.status === 'Actualizando...' ? '⏳' : '↻' }}
+                  {{ (site.status === 'Procesando...' || site.status === 'Procesando') ? '⏳' : '↻' }}
                 </button>
               </td>
             </tr>

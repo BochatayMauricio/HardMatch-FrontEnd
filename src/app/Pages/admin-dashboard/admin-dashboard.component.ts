@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AdminReportService } from '../../Services/reports.service';
 import { ScraperService, ScraperParams } from '../../Services/scraper.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription, interval } from 'rxjs'; // 💡 IMPORTAMOS RXJS
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -47,6 +48,7 @@ export class AdminDashboardComponent implements OnInit {
   // Referencias a instancias de gráficos para poder destruirlos/actualizarlos
   private productsChart: any;
   private trafficChart: any;
+  private pollingSubscription?: Subscription;
 
   constructor(
     private toastr: ToastrService,
@@ -90,6 +92,9 @@ export class AdminDashboardComponent implements OnInit {
         this.marketplaceStatus = data;
         // Una vez que tenemos las tiendas, inicializamos o actualizamos el gráfico
         this.initProductsChart();
+        if (this.marketplaceStatus.some(s => s.status?.includes('Procesando'))) {
+          this.startPolling();
+        }
       },
       error: () => this.toastr.error('Error al sincronizar estados de tiendas')
     });
@@ -112,6 +117,58 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  startPolling(): void {
+    if (this.pollingSubscription) return;
+
+    console.log("Iniciando Polling (Modo Radar Activado 📡)");
+    
+    // Consulta cada 5 segundos
+    this.pollingSubscription = interval(5000).subscribe(() => {
+      this.adminReportService.getMarketplaceStatuses().subscribe({
+        next: (newStoresData) => {
+          let isAnyoneProcessing = false;
+
+          newStoresData.forEach((newStore: any) => {
+            const existingStore = this.marketplaceStatus.find(s => s.id === newStore.id);
+            if (existingStore) {
+              
+              // 💡 DETECTAMOS EL CAMBIO A ONLINE
+              if (existingStore.status?.includes('Procesando') && newStore.status === 'Online') {
+                this.toastr.success(`¡${existingStore.name} finalizó la sincronización!`, 'Scraping Completo');
+              }
+              
+              existingStore.status = newStore.status || 'Online';
+              existingStore.lastUpdate = newStore.lastUpdate || newStore.updatedAt;
+              existingStore.productCount = newStore.productCount;
+            }
+
+            if (newStore.status?.includes('Procesando')) {
+              isAnyoneProcessing = true;
+            }
+          });
+
+          // Actualizamos el gráfico si cambiaron las cantidades
+          this.initProductsChart();
+
+          if (!isAnyoneProcessing) {
+            console.log("Todos los scrapers finalizaron. Deteniendo Polling.");
+            this.stopPolling();
+            // Actualizamos los KPIs principales ya que terminamos
+            this.loadAllData();
+          }
+        },
+        error: (err) => console.error("Error en polling:", err)
+      });
+    });
+  }
+
+  stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = undefined;
+    }
+  }
+
   /**
    * Ejecuta el proceso de scraping simulado (Mock)
    */
@@ -131,7 +188,9 @@ export class AdminDashboardComponent implements OnInit {
       next: (response) => {
         this.isSyncing = false;
         // Podés usar una librería bonita como SweetAlert en lugar de un alert feo
-        alert('¡Sincronización global completada con éxito!');
+        this.toastr.success('Sincronización global iniciada en segundo plano.', 'En proceso');
+        this.marketplaceStatus.forEach(site => site.status = 'Procesando...');
+        this.startPolling();
         
         // Acá podrías llamar a un this.loadDashboardData() para actualizar los KPIs
       },
@@ -181,12 +240,9 @@ export class AdminDashboardComponent implements OnInit {
 
     request$.subscribe({
       next: (response: any) => {
-        // 2. El servidor responde con el 202 (Aceptado y corriendo en background)
-        // Usamos el mensaje real que manda tu backend en el JSON
         this.toastr.success(response.message || `Scraping de ${site.name} corriendo en segundo plano.`, 'Orden Recibida');
-        
-        // Dejamos la tabla en estado de "Trabajando" para que el admin sepa que está ocupado
         site.status = 'Procesando...'; 
+        this.startPolling();
       },
       error: (error) => {
         console.error(`Error enviando orden a ${site.name}:`, error);
@@ -197,12 +253,11 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      'OK': 'badge-ok',
-      'ERROR': 'badge-error',
-      'WARNING': 'badge-warn'
-    };
-    return classes[status] || 'badge-warn';
+    if (!status) return 'badge-warn';
+    const s = status.toUpperCase();
+    if (s.includes('ONLINE') || s.includes('OK')) return 'badge-ok';
+    if (s.includes('ERROR')) return 'badge-error';
+    return 'badge-warn'; // Procesando o Warning quedan amarillo/azul
   }
 
   initProductsChart(): void {
