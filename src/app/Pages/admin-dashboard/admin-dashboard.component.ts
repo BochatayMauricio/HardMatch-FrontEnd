@@ -3,22 +3,38 @@ import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import Chart from 'chart.js/auto';
 import { ToastrService } from 'ngx-toastr';
 import { AdminReportService } from '../../Services/reports.service';
+import { ScraperService, ScraperParams } from '../../Services/scraper.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, DatePipe, DecimalPipe],
+  imports: [CommonModule, DatePipe, DecimalPipe, FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
   // KPIs Superiores (Métricas del Scraper)
+  private targetCategories: string[] = [
+    "notebook", "tablet", "monitor", "mouse", 
+    "procesador", "placa de video", "memoria ram", "auriculares"
+  ];
+  isSyncing: boolean = false;
   totalSources = 0;
   activeSources = 0;
   failedSources = 0;
   totalScrapedProducts = 0;
   newProductsToday = 0;
   totalClicks = 0;
+  availableQueries: string[] = [
+    "notebook", "tablet", "monitor", "mouse", 
+    "procesador", "placa de video", "memoria ram", "auriculares"
+  ];
+  
+  maxPages: number = 1;
+  activeScraper: string | null = null;
+  statusMessage: string = '';
+  isSuccess: boolean = false;
 
   // Estado de Marketplaces (Tabla Principal)
   marketplaceStatus: any[] = [];
@@ -34,7 +50,8 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private toastr: ToastrService,
-    private adminReportService: AdminReportService
+    private adminReportService: AdminReportService,
+    private scraperService: ScraperService
   ) {}
 
   ngOnInit(): void {
@@ -99,22 +116,84 @@ export class AdminDashboardComponent implements OnInit {
    * Ejecuta el proceso de scraping simulado (Mock)
    */
   syncAllSources(): void {
-    this.toastr.info('Iniciando comunicación con el motor de scraping...', 'Sincronizando');
+    if (this.isSyncing) return; // Evita doble click
 
-    this.adminReportService.triggerScraper().subscribe({
-      next: (res) => {
-        this.toastr.success(res.message, 'Proceso Iniciado');
-        // Opcional: Recargar datos después de un tiempo
-        setTimeout(() => this.loadAllData(), 3000);
+    this.isSyncing = true;
+
+    // Armamos el payload con el array completo
+    const payload: ScraperParams = {
+      queries: this.targetCategories,
+      maxPages: 1 // o la cantidad de páginas por defecto que quieras scrapear
+    };
+
+    // Llamamos al servicio general
+    this.scraperService.syncAllStores(payload).subscribe({
+      next: (response) => {
+        this.isSyncing = false;
+        // Podés usar una librería bonita como SweetAlert en lugar de un alert feo
+        alert('¡Sincronización global completada con éxito!');
+        
+        // Acá podrías llamar a un this.loadDashboardData() para actualizar los KPIs
       },
-      error: () => this.toastr.error('No se pudo establecer conexión con el scraper')
+      error: (error) => {
+        this.isSyncing = false;
+        console.error("Error en sincronización:", error);
+        alert(`Error al sincronizar: ${error.error?.message || 'Revisa la conexión con el servidor'}`);
+      }
     });
   }
 
   retestSource(id: number): void {
     const site = this.marketplaceStatus.find(s => s.id === id);
-    this.toastr.warning(`Verificando selectores HTML y conectividad para ${site?.name}`);
-    // Aquí podrías llamar a un endpoint de "test-individual" en el futuro
+    
+    if (!site) {
+      this.toastr.error('No se encontró la información de la tienda.');
+      return;
+    }
+
+    // 1. Avisamos que estamos enviando la orden al servidor
+    this.toastr.info(`Conectando con el servidor para ${site.name}...`, 'Iniciando');
+    
+    const previousStatus = site.status;
+    site.status = 'Conectando...';
+
+    const payload: ScraperParams = {
+      queries: this.targetCategories,
+      maxPages: 1
+    };
+
+    let request$;
+    const storeName = site.name.toLowerCase();
+    
+    if (storeName.includes('mercado')) {
+      request$ = this.scraperService.syncMercadoLibre(payload);
+    } else if (storeName.includes('gamer')) {
+      request$ = this.scraperService.syncCompraGamer(payload);
+    } else if (storeName.includes('venex')) {
+      request$ = this.scraperService.syncVenex(payload);
+    } else if (storeName.includes('fravega')) {
+      request$ = this.scraperService.syncFravega(payload);
+    } else {
+      this.toastr.error(`No hay un scraper configurado para ${site.name}`);
+      site.status = previousStatus;
+      return;
+    }
+
+    request$.subscribe({
+      next: (response: any) => {
+        // 2. El servidor responde con el 202 (Aceptado y corriendo en background)
+        // Usamos el mensaje real que manda tu backend en el JSON
+        this.toastr.success(response.message || `Scraping de ${site.name} corriendo en segundo plano.`, 'Orden Recibida');
+        
+        // Dejamos la tabla en estado de "Trabajando" para que el admin sepa que está ocupado
+        site.status = 'Procesando...'; 
+      },
+      error: (error) => {
+        console.error(`Error enviando orden a ${site.name}:`, error);
+        this.toastr.error(`No se pudo iniciar el scraping en ${site.name}.`, 'Error de conexión');
+        site.status = 'Warning';
+      }
+    });
   }
 
   getStatusClass(status: string): string {
@@ -160,6 +239,43 @@ export class AdminDashboardComponent implements OnInit {
         }
       }
     });
+  }
+
+  runScraper(store: 'ALL' | 'ML' | 'CG' | 'VENEX' | 'FRAVEGA'): void {
+    this.activeScraper = store;
+    this.showMessage(`Iniciando scraping del catálogo completo en ${store}... Esto tomará varios minutos.`, true, true);
+
+    // 💡 ACÁ ESTÁ LA MAGIA: Enviamos siempre el arreglo completo
+    const payload = { 
+      queries: this.availableQueries, 
+      maxPages: this.maxPages 
+    };
+
+    let request$;
+
+    switch (store) {
+      case 'ALL': request$ = this.scraperService.syncAllStores(payload); break;
+      case 'ML': request$ = this.scraperService.syncMercadoLibre(payload); break;
+      case 'CG': request$ = this.scraperService.syncCompraGamer(payload); break;
+      case 'VENEX': request$ = this.scraperService.syncVenex(payload); break;
+      case 'FRAVEGA': request$ = this.scraperService.syncFravega(payload); break;
+    }
+
+    request$.subscribe({
+      next: () => {
+        this.activeScraper = null;
+        this.showMessage(`¡Éxito! Catálogo base actualizado correctamente en ${store}.`, true);
+      },
+      error: (err) => {
+        this.activeScraper = null;
+        this.showMessage(`Error en ${store}: ${err.error?.message || 'Error desconocido'}`, false);
+      }
+    });
+  }
+
+  private showMessage(msg: string, isSuccess: boolean, isLoading: boolean = false): void {
+    this.statusMessage = msg;
+    this.isSuccess = isSuccess;
   }
 
   initTrafficChart(trafficData: number[]): void {
