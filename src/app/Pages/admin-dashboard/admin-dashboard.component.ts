@@ -17,8 +17,7 @@ import { Subscription, interval } from 'rxjs'; // 💡 IMPORTAMOS RXJS
 export class AdminDashboardComponent implements OnInit {
   // KPIs Superiores (Métricas del Scraper)
   private targetCategories: string[] = [
-    "notebook", "tablet", "monitor", "mouse", 
-    "procesador", "placa de video", "memoria ram", "auriculares"
+    "notebook", "tablet", "monitor", "mouse", "auriculares", "procesador", "placa de video", "memoria ram"
   ];
   isSyncing: boolean = false;
   totalSources = 0;
@@ -28,8 +27,7 @@ export class AdminDashboardComponent implements OnInit {
   newProductsToday = 0;
   totalClicks = 0;
   availableQueries: string[] = [
-    "notebook", "tablet", "monitor", "mouse", 
-    "procesador", "placa de video", "memoria ram", "auriculares"
+    "notebook", "tablet", "monitor", "mouse", "auriculares", "procesador", "placa de video", "memoria ram"
   ];
   
   maxPages: number = 1;
@@ -67,17 +65,27 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  /**
-   * Carga masiva de datos desde el servicio de reportes
-   */
+  updateHealthStats(): void {
+    if (!this.marketplaceStatus) return;
+
+    this.totalSources = this.marketplaceStatus.length;
+
+    // Cuenta como OK solo a los que digan 'Online' o 'OK'
+    this.activeSources = this.marketplaceStatus.filter(site => 
+      site.status && (site.status.toUpperCase().includes('ONLINE') || site.status.toUpperCase() === 'OK')
+    ).length;
+
+    // Cuenta como fallidos a los que digan 'Error' o 'Warning'
+    this.failedSources = this.marketplaceStatus.filter(site => 
+      site.status && (site.status.toUpperCase().includes('ERROR') || site.status.toUpperCase().includes('WARN'))
+    ).length;
+  }
+
   loadAllData(): void {
     // 1. Estadísticas de salud del Scraper y Clicks
     this.adminReportService.getScraperStats().subscribe({
       next: (data) => {
         if (data) {
-          this.totalSources = data.totalSources;
-          this.activeSources = data.activeSources;
-          this.failedSources = data.failedSources;
           this.totalScrapedProducts = data.totalScrapedProducts;
           this.newProductsToday = data.newProductsToday;
           this.totalClicks = data.totalClicks;
@@ -91,6 +99,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (data) => {
         this.marketplaceStatus = data;
         // Una vez que tenemos las tiendas, inicializamos o actualizamos el gráfico
+        this.updateHealthStats(); // 💡 ACTUALIZAMOS KPIs ACÁ
         this.initProductsChart();
         if (this.marketplaceStatus.some(s => s.status?.includes('Procesando'))) {
           this.startPolling();
@@ -123,7 +132,7 @@ export class AdminDashboardComponent implements OnInit {
     console.log("Iniciando Polling (Modo Radar Activado 📡)");
     
     // Consulta cada 5 segundos
-    this.pollingSubscription = interval(5000).subscribe(() => {
+    this.pollingSubscription = interval(20000).subscribe(() => {
       this.adminReportService.getMarketplaceStatuses().subscribe({
         next: (newStoresData) => {
           let isAnyoneProcessing = false;
@@ -149,11 +158,10 @@ export class AdminDashboardComponent implements OnInit {
 
           // Actualizamos el gráfico si cambiaron las cantidades
           this.initProductsChart();
-
+          this.updateHealthStats();  
           if (!isAnyoneProcessing) {
             console.log("Todos los scrapers finalizaron. Deteniendo Polling.");
             this.stopPolling();
-            // Actualizamos los KPIs principales ya que terminamos
             this.loadAllData();
           }
         },
@@ -169,9 +177,6 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  /**
-   * Ejecuta el proceso de scraping simulado (Mock)
-   */
   syncAllSources(): void {
     if (this.isSyncing) return; // Evita doble click
 
@@ -190,10 +195,9 @@ export class AdminDashboardComponent implements OnInit {
         // Podés usar una librería bonita como SweetAlert en lugar de un alert feo
         this.toastr.success('Sincronización global iniciada en segundo plano.', 'En proceso');
         this.marketplaceStatus.forEach(site => site.status = 'Procesando...');
+        this.updateHealthStats();  
         this.startPolling();
-        
-        // Acá podrías llamar a un this.loadDashboardData() para actualizar los KPIs
-      },
+        },
       error: (error) => {
         this.isSyncing = false;
         console.error("Error en sincronización:", error);
@@ -209,12 +213,10 @@ export class AdminDashboardComponent implements OnInit {
       this.toastr.error('No se encontró la información de la tienda.');
       return;
     }
-
-    // 1. Avisamos que estamos enviando la orden al servidor
-    this.toastr.info(`Conectando con el servidor para ${site.name}...`, 'Iniciando');
     
     const previousStatus = site.status;
     site.status = 'Conectando...';
+    this.updateHealthStats();  
 
     const payload: ScraperParams = {
       queries: this.targetCategories,
@@ -242,12 +244,14 @@ export class AdminDashboardComponent implements OnInit {
       next: (response: any) => {
         this.toastr.success(response.message || `Scraping de ${site.name} corriendo en segundo plano.`, 'Orden Recibida');
         site.status = 'Procesando...'; 
+        this.updateHealthStats();  
         this.startPolling();
       },
       error: (error) => {
         console.error(`Error enviando orden a ${site.name}:`, error);
         this.toastr.error(`No se pudo iniciar el scraping en ${site.name}.`, 'Error de conexión');
         site.status = 'Warning';
+        this.updateHealthStats();  
       }
     });
   }
