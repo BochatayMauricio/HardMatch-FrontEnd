@@ -453,6 +453,12 @@
   text-align: right;
 }
 
+.badge-outdated {
+  background-color: #ffedd5; /* Naranja muy clarito */
+  color: #c2410c; /* Texto naranja oscuro */
+  border: 1px solid #fdba74;
+}
+
 @keyframes indeterminate {
   0% { transform: translateX(-100%); width: 50%; }
   100% { transform: translateX(200%); width: 50%; }

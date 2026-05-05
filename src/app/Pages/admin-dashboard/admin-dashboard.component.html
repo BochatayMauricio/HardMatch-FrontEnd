@@ -5,7 +5,6 @@
       <p>Monitoreo de Scraping y Conversión de Clicks</p>
     </div>
     <div class="action-section">
-      <!-- 💡 El botón original, pero ahora se desactiva y cambia el texto si está cargando -->
       <button class="btn-sync" (click)="syncAllSources()" [disabled]="isSyncing">
         {{ isSyncing ? 'Sincronizando (puede demorar)...' : 'Sincronizar Scrapers' }}
       </button>
@@ -65,7 +64,7 @@
         <thead>
           <tr>
             <th>Marketplace</th>
-            <th>Última Sincro</th>
+            <th>Última Sincronización</th>
             <th>Productos</th>
             <th>Clicks</th>
             <th>Variación</th>
@@ -82,16 +81,22 @@
                   <strong>{{ site.name }}</strong>
                 </div>
               </td>
-              <td>{{ site.lastUpdate | date:'HH:mm' }} hs</td>
+              <td>
+                @if (isToday(site.lastUpdate)) {
+                  <span class="text-success">Hoy, {{ site.lastUpdate | date:'HH:mm' }} hs</span>
+                } @else {
+                  <span class="text-muted">{{ site.lastUpdate | date:'dd/MM/yyyy' }}</span>
+                }
+              </td>
               <td>{{ site.productCount | number }}</td>
               <td>{{ site.totalClicks }}</td>
               <td>
-                <span [class]="site.priceDrop ? 'price-down' : 'price-up'">
+                <span [class]="site.priceDrop ? 'price-up' : 'price-down'" title="% de variación de productos">
                   {{ site.priceDrop ? '↓' : '↑' }} {{ site.avgVariation }}%
                 </span>
               </td>
               <td>
-                <span class="status-badge" [ngClass]="getStatusClass(site.status)">
+                <span class="status-badge" title="Estado del scraper" [ngClass]="getStatusClass(site.status, site.lastUpdate)">   
                   {{ site.status }}
                 </span>
                 @if (site.status === 'Procesando' || site.status === 'Procesando...') {

@@ -178,14 +178,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   syncAllSources(): void {
-    if (this.isSyncing) return; // Evita doble click
-
+    if (this.isSyncing) return; 
     this.isSyncing = true;
 
-    // Armamos el payload con el array completo
-    const payload: ScraperParams = {
+   const payload: ScraperParams = {
       queries: this.targetCategories,
-      maxPages: 1 // o la cantidad de páginas por defecto que quieras scrapear
+      maxPages: 1 
     };
 
     // Llamamos al servicio general
@@ -256,12 +254,27 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  getStatusClass(status: string): string {
+  getStatusClass(status: string, lastUpdate?: string | Date): string {
     if (!status) return 'badge-warn';
     const s = status.toUpperCase();
-    if (s.includes('ONLINE') || s.includes('OK')) return 'badge-ok';
+    if (s.includes('ONLINE') || s === 'OK') {
+      if (lastUpdate && !this.isToday(lastUpdate)) {
+        return 'badge-outdated'; 
+      }
+      return 'badge-ok'; // Si fue hoy, verde normal
+    }
     if (s.includes('ERROR')) return 'badge-error';
     return 'badge-warn'; // Procesando o Warning quedan amarillo/azul
+  }
+
+  isToday(dateString: string | Date): boolean {
+    if (!dateString) return false;
+    const date = new Date(dateString);
+    const today = new Date();
+    
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
   }
 
   initProductsChart(): void {
