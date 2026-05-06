@@ -1,17 +1,27 @@
+<div class="chat-backdrop" *ngIf="isFullscreen" (click)="toggleFullscreen()"></div>
+
 <div class="widget-container">
-  <div class="chat-window" *ngIf="isOpen">
+  <div class="chat-window" *ngIf="isOpen" [class.fullscreen]="isFullscreen">
     
     <div class="chat-header">
       <div class="bot-info">
         <img src="assets/logo-chatbot.png" alt="Scrapy" class="bot-avatar">
         <strong>Scrapy</strong>
       </div>
-      <button class="close-btn" (click)="toggleChat()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
+      
+      <div class="header-actions" style="display: flex; gap: 5px;">
+        <button class="close-btn" (click)="toggleFullscreen()">
+          <span class="material-symbols-outlined">
+            {{ isFullscreen ? 'close_fullscreen' : 'open_in_full' }}
+          </span>
+        </button>
+        <button class="close-btn" (click)="toggleChat()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
     </div>
 
-    <div class="chat-messages">
+    <div class="chat-messages" #chatScroll>
   
       <div *ngFor="let msg of history" 
           class="message-wrapper" 

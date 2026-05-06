@@ -16,6 +16,7 @@ export class ChatWidgetComponent {
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   isOpen = false;
+  isFullscreen = false; 
   isLoading = false;
   isTyping = false;
   userInput = '';
@@ -31,9 +32,17 @@ export class ChatWidgetComponent {
       if (this.history.length === 0) {
         this.typeWriter('¡Hola! Soy **Scrapy**, el experto de HardMatch. ¿En qué puedo ayudarte hoy?');
       } else {
-        this.scrollToBottom();
+        this.hacerScroll(true); 
       }
+    } else {
+      this.isFullscreen = false; 
     }
+  }
+
+  // --- ACÁ ESTÁ LA FUNCIÓN QUE FALTABA ---
+  toggleFullscreen() {
+    this.isFullscreen = !this.isFullscreen;
+    setTimeout(() => this.hacerScroll(true), 200); 
   }
 
   private typeWriter(fullText: string) {
@@ -47,10 +56,8 @@ export class ChatWidgetComponent {
 
     const interval = setInterval(() => {
       if (i < fullText.length) {
-        // Solo agregamos la letra al objeto, NO recreamos el arreglo entero
         botMsg.parts[0].text += fullText.charAt(i);
-        
-        this.scrollToBottom();
+        this.hacerScroll(); // Scroll inteligente automático
         i++;
       } else {
         clearInterval(interval);
@@ -72,7 +79,7 @@ export class ChatWidgetComponent {
     const newUserMsg: ChatMessage = { role: 'user', parts: [{ text: userText }] };
     this.history.push(newUserMsg);
     
-    this.scrollToBottom();
+    this.hacerScroll(true); 
     this.isLoading = true;
 
     this.chatService.sendMessage({ message: userText, history: historyToSend }).subscribe({
@@ -86,23 +93,25 @@ export class ChatWidgetComponent {
         console.error('Error en el chat:', err);
         this.isLoading = false;
         this.history.push({ role: 'model', parts: [{ text: 'Ups, tuve un cortocircuito. Intenta de nuevo más tarde.' }] });
-        this.scrollToBottom();
+        this.hacerScroll(true); 
       }
     });
   }
 
-  private scrollToBottom(): void {
-    // Un pequeño delay para permitir que Angular dibuje la letra nueva en el HTML
+  // --- ACÁ ESTÁ LA OTRA FUNCIÓN CLAVE ---
+  private hacerScroll(forzar: boolean = false): void {
     setTimeout(() => {
       try {
         if (this.chatScrollContainer && this.chatScrollContainer.nativeElement) {
           const container = this.chatScrollContainer.nativeElement;
-          container.scrollTop = container.scrollHeight;
-        } else {
-          // Respaldo por si Angular se marea con el ViewChild
-          const chatElement = document.querySelector('.chat-messages');
-          if (chatElement) {
-            chatElement.scrollTop = chatElement.scrollHeight;
+          const distanciaAlFondo = container.scrollHeight - container.scrollTop - container.clientHeight;
+          const tolerancia = 100;
+
+          if (forzar || distanciaAlFondo <= tolerancia) {
+            container.scrollTo({
+              top: container.scrollHeight,
+              behavior: 'smooth'
+            });
           }
         }
       } catch(err) { }

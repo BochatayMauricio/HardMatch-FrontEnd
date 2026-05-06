@@ -249,3 +249,36 @@
 ::ng-deep .bubble ol:last-child {
   margin-bottom: 0;
 }
+
+.chat-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 9990;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.chat-window.fullscreen {
+  position: fixed;
+  top: 5vh;
+  left: 5vw;
+  width: 90vw;
+  height: 90vh;
+  bottom: auto;
+  right: auto;
+  z-index: 9999;
+  transition: all 0.3s ease-out;
+}
+
+.chat-window.fullscreen .chat-messages {
+  height: calc(90vh - 130px); /* Le restamos la altura del header y footer */
+}
+
+.header-actions {
+  display: flex;
+  gap: 5px;
+}
