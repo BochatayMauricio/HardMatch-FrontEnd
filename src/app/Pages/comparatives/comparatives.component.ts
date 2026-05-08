@@ -500,7 +500,8 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
       ['oled', 'amoled', 'ips', 'va', 'tn'],
       ['ddr5', 'ddr4', 'ddr3'],
       ['ax', 'ac', 'n'],
-      ['nvme', 'pcie', 'sata', 'hdd']
+      ['nvme', 'pcie', 'sata', 'hdd'],
+      ['rtx 5090','rtx 5080','rtx 5070','rtx 5060','rtx 5050','rtx 4090', 'rtx 4080', 'rtx 4070', 'rx 7900', 'rtx 3080', 'rtx 4060', 'rtx 3070', 'rx 7600', 'rtx 3060', 'rtx 3050', 'rtx 2050', 'gtx 1660', 'gtx 1650', 'arc', 'iris xe', 'radeon graphics', 'uhd graphics', 'integrada']
     ];
 
     for (const tierList of hierarchies) {
@@ -594,6 +595,35 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.products.length < 2) return 0;
     const prices = this.products.map((p) => p.price);
     return Math.max(...prices) - Math.min(...prices);
+  }
+
+  // --- LÓGICA DE ESTILOS Y PLACAS DE VIDEO ---
+
+  private isDedicatedGPU(value: string): boolean {
+    if (!value) return false;
+    const lowerVal = value.toLowerCase();
+    
+    if (lowerVal.includes('integrada') || lowerVal.includes('iris') || lowerVal.includes('uhd') || lowerVal.includes('radeon graphics')) {
+      return false;
+    }
+    
+    return lowerVal.includes('rtx') || lowerVal.includes('gtx') || lowerVal.match(/\brx\b/) !== null || lowerVal.includes('dedicada') || lowerVal.includes('geforce') || lowerVal.includes('radeon pro');
+  }
+
+  getGpuCssClass(productIndex: number, key: string): string {
+    const lowerKey = key.toLowerCase();
+    // Si no es la fila de video, no aplicamos ninguna clase extra
+    if (!lowerKey.includes('video') && !lowerKey.includes('gpu') && !lowerKey.includes('gráficos')) {
+      return '';
+    }
+
+    const val = this.getCharacteristicValue(this.products[productIndex], key);
+    const isDedicated = this.isDedicatedGPU(val);
+    const isBest = this.isCharacteristicBest(productIndex, key);
+
+    if (isDedicated && isBest) return 'gpu-dedicated-best';
+    if (isDedicated) return 'gpu-dedicated';
+    return 'gpu-integrated';
   }
 
   // --- CHART.JS ---

@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { NotificationComponent } from "../notification/notification.component";
 import { Router, RouterLink } from '@angular/router';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { NotificationService } from '../../Services/notification.service';
 import { UserI } from '../../Interfaces/user.interface';
@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from '../../Services/categories.service';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
-import { SearchLoggerService } from '../../Services/query.service';
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +22,9 @@ import { SearchLoggerService } from '../../Services/query.service';
 export class NavbarComponent implements OnInit {
 
   searchQuery = new FormControl('');
+  searchForm = new FormGroup({
+  query: new FormControl('')
+});
   currentUser: UserI | null = null;
   hasUnreadNotifications$: Observable<boolean>;
   
@@ -71,12 +73,21 @@ export class NavbarComponent implements OnInit {
   }
 
   onSearch(): void {
-    const query = this.searchQuery.value?.trim();
-    if (query) {
-      this.router.navigate(['/buscar', query]);
-    }
-    this.searchQuery.setValue('');
+  const query = this.searchForm.value.query?.trim();
+  console.log('Iniciando búsqueda de:', query);
+
+  if (query) {
+    this.router.navigate(['/buscar', query]).then(nav => {
+      if(nav) {
+        console.log('Redirección exitosa');
+      } else {
+        console.error('La redirección falló. Verificá que la ruta /buscar/:query exista.');
+      }
+    });
   }
+  
+  this.searchForm.reset();
+}
 
   isAdminUser(): boolean {
     return this.authService.isAdmin();
