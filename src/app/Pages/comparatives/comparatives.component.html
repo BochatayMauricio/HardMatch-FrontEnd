@@ -183,10 +183,9 @@
               </div>
             }
           </div>
-
-          <a [href]="product.urlAcces" target="_blank" class="btn-view">
-            Ver producto
-          </a>
+          <button (click)="seeDetails(product)" class="btn-view">
+            Ver producto  
+          </button>
         </div>
       }
     </section>
@@ -305,8 +304,6 @@
                   }
                 </tr>
               }
-
-              
               <tr class="price-row">
                 <td class="characteristic-name">Precio</td>
                 @for (product of products; track product.id; let i = $index) {

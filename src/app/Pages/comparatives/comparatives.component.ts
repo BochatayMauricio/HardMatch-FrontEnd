@@ -842,4 +842,10 @@ export class ComparativesComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!text) return 'Producto';
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   }
+
+  seeDetails(product: ProductI): void {
+    this.router.navigate(['/producto', product.id], { 
+      queryParams: { store: product.storeId } 
+    });
+  }
 }

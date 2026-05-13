@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewChecked, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../Services/chatbot.service';
@@ -12,7 +12,7 @@ import { MarkdownComponent } from 'ngx-markdown';
   templateUrl: './chatbot-widget.component.html',
   styleUrls: ['./chatbot-widget.component.css']
 })
-export class ChatWidgetComponent {
+export class ChatWidgetComponent implements AfterViewChecked {
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   isOpen = false;
@@ -23,14 +23,29 @@ export class ChatWidgetComponent {
   
   history: ChatMessage[] = [];
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {}
+
+  ngAfterViewChecked() {
+    const links = this.el.nativeElement.querySelectorAll('.chat-messages a');
+    
+    links.forEach((link: HTMLAnchorElement) => {
+      if (link.getAttribute('target') !== '_blank') {
+        this.renderer.setAttribute(link, 'target', '_blank');
+        this.renderer.setAttribute(link, 'rel', 'noopener noreferrer'); 
+      }
+    });
+  }
 
   toggleChat() {
     this.isOpen = !this.isOpen;
 
     if (this.isOpen) {
       if (this.history.length === 0) {
-        this.typeWriter('¡Hola! Soy **Scrapy**, el experto de HardMatch. ¿En qué puedo ayudarte hoy?');
+        this.typeWriter('¡Hola! Soy *Scrapy*, el experto de HardMatch. ¿En qué puedo ayudarte hoy?');
       } else {
         this.hacerScroll(true); 
       }
